@@ -54,6 +54,7 @@ final class FakeVehicle: VehicleTransport {
         var awaitingReply = false
         var requestsReceived = 0
         var overlappingRequests = 0
+        var isClosed = false
     }
 
     private let vin: String
@@ -89,6 +90,8 @@ final class FakeVehicle: VehicleTransport {
     var requestsReceived: Int { state.withLock { $0.requestsReceived } }
     /// Requests that arrived while an earlier one was still awaiting its final reply.
     var overlappingRequests: Int { state.withLock { $0.overlappingRequests } }
+    /// Whether `close()` has been called.
+    var isClosed: Bool { state.withLock { $0.isClosed } }
 
     /// Before answering the next request, sends a reply addressed to another app's
     /// routing address, carrying a body status that differs from `bodyStatus`.
@@ -112,6 +115,7 @@ final class FakeVehicle: VehicleTransport {
     }
 
     func close() {
+        state.withLock { $0.isClosed = true }
         continuation.finish()
     }
 

@@ -51,7 +51,11 @@ targets:
   SentryTests:
     type: bundle.unit-test
     platform: iOS
-    sources: [SentryTests]
+    sources:
+      - SentryTests
+      # Shared with TeslaKitTests so app-level tests drive the same in-process car.
+      - TeslaKitTests/FakeVehicle.swift
+      - TeslaKitTests/TestVectors.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

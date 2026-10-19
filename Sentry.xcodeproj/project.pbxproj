@@ -7,16 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A9CC7029493B126E54B9220 /* VehicleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B640D44DE3C9A054940451 /* VehicleService.swift */; };
 		122FFEBFE46E6D207E0E244B /* signatures.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E3B73BA8BE1228458F3E02 /* signatures.pb.swift */; };
 		17139B8A48C47D2A4D3707B0 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 6638C96A8B1FB8727E236987 /* SwiftProtobuf */; };
 		19F12ACD6DD5CB93A4100565 /* VehicleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E710A144E3FD753F6CBEF0 /* VehicleError.swift */; };
 		1D4214979AF6C23318015E6D /* managed_charging.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */; };
 		2170768139886BEB3E8274C6 /* TeslaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2589987102A81AD3E94A75BC /* SessionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5065007EA4C6779D9864A /* SessionKeyTests.swift */; };
+		2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC271C63F4C42D155618AB /* DebugHomeView.swift */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
 		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
 		607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */; };
+		65CDE58472C87223F287B59F /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
 		67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */; };
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
 		69E62D64011C89F97A40BEC1 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
@@ -32,18 +35,25 @@
 		8238302F989E1D8F15890BA7 /* VehicleCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */; };
 		8F770EA8048EDF465057EFF9 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523692D445578EA0DC4E44D4 /* FakeVehicle.swift */; };
 		9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B02D86A56943EFC8BD095B48 /* KeyAgreementKey.swift */; };
+		94C1A748E1E9F9B7F440C60E /* VIN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E4765ECE955E66D931494A /* VIN.swift */; };
 		A28FBB30E069A94FA5537670 /* common.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */; };
+		A338BF8220E8851FDE84E75A /* PairingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D45700D952BEBC798F1A2 /* PairingModel.swift */; };
 		B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */; };
 		BD0C0AEB0D564DE8C332214A /* VehicleClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965D878EC01553C82B9F045C /* VehicleClientTests.swift */; };
+		BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523692D445578EA0DC4E44D4 /* FakeVehicle.swift */; };
 		C232FE04095E8A633C60D78B /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7480424B821C9B77994181D6 /* SessionKey.swift */; };
+		C3A583ED19E061E06D05A6E3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6565C04D62CD831E5EFF4 /* OnboardingView.swift */; };
 		CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */; };
 		D0FBB06AB06DFC36074DA76A /* ProtoSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */; };
 		D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */; };
 		DD90F02EBE69BFBB7C8125F7 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */; };
 		E339D8880429FF6B84DD896E /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
 		E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B58790A35267E9F0F915 /* BLETransport.swift */; };
+		F2A7FF79CD10301E0694E873 /* VINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3356DC0C8A6925CA90C4E4C /* VINTests.swift */; };
 		F3978C427AC1B9138A24D5A0 /* universal_message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */; };
+		F66A47E6682A8BED262DE873 /* VehicleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853F96C882B9C2140333D919 /* VehicleServiceTests.swift */; };
 		F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC3B28E48C5B835B7529BB0 /* Framing.swift */; };
+		F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */; };
 		F99287B9D1012D1B48E6FB9D /* VehicleLocalName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */; };
 		F9F5D3AC41DA5679EEADFB78 /* TeslaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD1503603F2A99870FBD38D2 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
@@ -101,23 +111,30 @@
 /* Begin PBXFileReference section */
 		0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.pb.swift; sourceTree = "<group>"; };
 		116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoSmokeTests.swift; sourceTree = "<group>"; };
+		14AC271C63F4C42D155618AB /* DebugHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugHomeView.swift; sourceTree = "<group>"; };
+		1E8D45700D952BEBC798F1A2 /* PairingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingModel.swift; sourceTree = "<group>"; };
 		2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoreTests.swift; sourceTree = "<group>"; };
 		3599C40F668855094C4FCCDB /* KeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStore.swift; sourceTree = "<group>"; };
 		49E3B73BA8BE1228458F3E02 /* signatures.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signatures.pb.swift; sourceTree = "<group>"; };
+		4BB6565C04D62CD831E5EFF4 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4D040E428833CD69A54ADC63 /* VehicleTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTransport.swift; sourceTree = "<group>"; };
 		51B2B58790A35267E9F0F915 /* BLETransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransport.swift; sourceTree = "<group>"; };
 		523692D445578EA0DC4E44D4 /* FakeVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeVehicle.swift; sourceTree = "<group>"; };
 		5B5388A7E4F4760BFFBE269D /* SentryTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SentryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		60E4765ECE955E66D931494A /* VIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIN.swift; sourceTree = "<group>"; };
 		61B5065007EA4C6779D9864A /* SessionKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKeyTests.swift; sourceTree = "<group>"; };
 		6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryApp.swift; sourceTree = "<group>"; };
 		7480424B821C9B77994181D6 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
+		7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
 		82835EA33C41FAF105924137 /* SlidingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingWindow.swift; sourceTree = "<group>"; };
 		836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClient.swift; sourceTree = "<group>"; };
+		853F96C882B9C2140333D919 /* VehicleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceTests.swift; sourceTree = "<group>"; };
 		908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = managed_charging.pb.swift; sourceTree = "<group>"; };
 		91348FDD2FBD2536E13ABF5D /* DomainSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSession.swift; sourceTree = "<group>"; };
 		965D878EC01553C82B9F045C /* VehicleClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClientTests.swift; sourceTree = "<group>"; };
 		9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransportTests.swift; sourceTree = "<group>"; };
 		A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleLocalName.swift; sourceTree = "<group>"; };
+		A3356DC0C8A6925CA90C4E4C /* VINTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VINTests.swift; sourceTree = "<group>"; };
 		AF6CBD86D946C63F9C6624DB /* TeslaKitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TeslaKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B02D86A56943EFC8BD095B48 /* KeyAgreementKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyAgreementKey.swift; sourceTree = "<group>"; };
 		B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TeslaKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +150,7 @@
 		D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = errors.pb.swift; sourceTree = "<group>"; };
 		D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vcsec.pb.swift; sourceTree = "<group>"; };
 		E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCSECResponse.swift; sourceTree = "<group>"; };
+		E1B640D44DE3C9A054940451 /* VehicleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleService.swift; sourceTree = "<group>"; };
 		EABBA0CFCA5D835A3DB7E703 /* Sentry.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sentry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F032C097D6A682347A9B2EB9 /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = universal_message.pb.swift; sourceTree = "<group>"; };
@@ -173,6 +191,8 @@
 			isa = PBXGroup;
 			children = (
 				2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */,
+				853F96C882B9C2140333D919 /* VehicleServiceTests.swift */,
+				A3356DC0C8A6925CA90C4E4C /* VINTests.swift */,
 			);
 			path = SentryTests;
 			sourceTree = "<group>";
@@ -183,6 +203,8 @@
 				BC0BB62A2A553C2DA65C8B7F /* Info.plist */,
 				6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */,
 				5F731A3FFC5090074AE65A83 /* Car */,
+				54D3E80223DDF146DEEBA49F /* Debug */,
+				E48E2CD3BDD110F2C2FF66F3 /* Onboarding */,
 			);
 			path = Sentry;
 			sourceTree = "<group>";
@@ -236,6 +258,14 @@
 			path = TeslaKit;
 			sourceTree = "<group>";
 		};
+		54D3E80223DDF146DEEBA49F /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				14AC271C63F4C42D155618AB /* DebugHomeView.swift */,
+			);
+			path = Debug;
+			sourceTree = "<group>";
+		};
 		574B4316D4DB2B5A8437DC5C /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,7 +279,10 @@
 		5F731A3FFC5090074AE65A83 /* Car */ = {
 			isa = PBXGroup;
 			children = (
+				7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */,
 				3599C40F668855094C4FCCDB /* KeyStore.swift */,
+				E1B640D44DE3C9A054940451 /* VehicleService.swift */,
+				60E4765ECE955E66D931494A /* VIN.swift */,
 			);
 			path = Car;
 			sourceTree = "<group>";
@@ -290,6 +323,15 @@
 				4D040E428833CD69A54ADC63 /* VehicleTransport.swift */,
 			);
 			path = Transport;
+			sourceTree = "<group>";
+		};
+		E48E2CD3BDD110F2C2FF66F3 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				4BB6565C04D62CD831E5EFF4 /* OnboardingView.swift */,
+				1E8D45700D952BEBC798F1A2 /* PairingModel.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		EF0799A800D9A0E81F2AB701 /* Products */ = {
@@ -430,7 +472,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */,
 				67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */,
+				65CDE58472C87223F287B59F /* TestVectors.swift in Sources */,
+				F2A7FF79CD10301E0694E873 /* VINTests.swift in Sources */,
+				F66A47E6682A8BED262DE873 /* VehicleServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,8 +513,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */,
+				2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */,
 				75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */,
+				C3A583ED19E061E06D05A6E3 /* OnboardingView.swift in Sources */,
+				A338BF8220E8851FDE84E75A /* PairingModel.swift in Sources */,
 				B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */,
+				94C1A748E1E9F9B7F440C60E /* VIN.swift in Sources */,
+				0A9CC7029493B126E54B9220 /* VehicleService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
