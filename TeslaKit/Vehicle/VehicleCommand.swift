@@ -1,13 +1,19 @@
 import Foundation
 
 /// A command the vehicle executes, with the domain that handles it.
-public enum VehicleCommand: Sendable {
+public enum VehicleCommand: Sendable, Equatable {
     case moveTrunk, openFrunk, lock, unlock, wake, climateOn, climateOff
+    /// Sets both front zones to `celsius`.
+    case setTemperature(celsius: Double)
+    /// Turns defrost (maximum preconditioning) on or off.
+    case setDefrost(Bool)
+    /// Turns "Keep" climate mode on or off, which holds the cabin while parked.
+    case keepClimate(Bool)
 
     public var domain: UniversalMessage_Domain {
         switch self {
         case .moveTrunk, .openFrunk, .lock, .unlock, .wake: .vehicleSecurity
-        case .climateOn, .climateOff: .infotainment
+        case .climateOn, .climateOff, .setTemperature, .setDefrost, .keepClimate: .infotainment
         }
     }
 
@@ -27,6 +33,20 @@ public enum VehicleCommand: Sendable {
         case .wake: return try Self.vcsec(.rkeaction(.rkeActionWakeVehicle))
         case .climateOn: return try Self.hvacAuto(powerOn: true)
         case .climateOff: return try Self.hvacAuto(powerOn: false)
+        case .setTemperature(let celsius):
+            var action = CarServer_Action()
+            action.vehicleAction.hvacTemperatureAdjustmentAction.driverTempCelsius = Float(celsius)
+            action.vehicleAction.hvacTemperatureAdjustmentAction.passengerTempCelsius = Float(celsius)
+            return try action.serializedData()
+        case .setDefrost(let on):
+            var action = CarServer_Action()
+            action.vehicleAction.hvacSetPreconditioningMaxAction.on = on
+            return try action.serializedData()
+        case .keepClimate(let on):
+            var action = CarServer_Action()
+            action.vehicleAction.hvacClimateKeeperAction.climateKeeperAction = on ? .climateKeeperActionOn : .climateKeeperActionOff
+            action.vehicleAction.hvacClimateKeeperAction.manualOverride = true
+            return try action.serializedData()
         }
     }
 
@@ -35,6 +55,13 @@ public enum VehicleCommand: Sendable {
         var request = VCSEC_InformationRequest()
         request.informationRequestType = .getStatus
         return try vcsec(.informationRequest(request))
+    }
+
+    /// Asks infotainment for climate state; the reply's `vehicleData.climateState` carries it.
+    public static func climateStatePayload() throws -> Data {
+        var action = CarServer_Action()
+        action.vehicleAction.getVehicleData.getClimateState = CarServer_GetClimateState()
+        return try action.serializedData()
     }
 
     /// Asks infotainment for charge state; the reply's `vehicleData.chargeState` carries it.

@@ -4,6 +4,14 @@ import TeslaKit
 /// What pressing "toggle boot" is about to do, judged from the boot's state just before.
 enum BootToggleOutcome: Equatable {
     case opening, closing, moving
+
+    init(bootBefore state: VehicleSnapshot.ClosureState) {
+        self = switch state {
+        case .closed: .opening
+        case .open, .ajar: .closing
+        case .opening, .closing, .unknown: .moving
+        }
+    }
 }
 
 /// Runs one piece of work against the car: connect, use a fresh client, disconnect.
@@ -34,11 +42,7 @@ struct VehicleService: Sendable {
     func toggleBoot(before deadline: ContinuousClock.Instant? = nil) async throws -> BootToggleOutcome {
         try await withClient { client in
             let state = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
-            let outcome: BootToggleOutcome = switch state.rearTrunk {
-            case .closed: .opening
-            case .open, .ajar: .closing
-            case .opening, .closing, .unknown: .moving
-            }
+            let outcome = BootToggleOutcome(bootBefore: state.rearTrunk)
             try await client.execute(.moveTrunk, deadline: Self.limit(.seconds(8), to: deadline))
             return outcome
         }
@@ -47,15 +51,45 @@ struct VehicleService: Sendable {
     /// Reads battery level and range, waking the car first if it is asleep. Gives up
     /// at `deadline`, or after 20 seconds without one.
     func charge(before deadline: ContinuousClock.Instant? = nil) async throws -> ChargeSnapshot {
+        try await status(before: deadline).charge
+    }
+
+    /// Reads lock and closures, then charge and climate, over one connection, waking the car
+    /// first if it is asleep. Gives up at `deadline`, or after 20 seconds without one. Climate is
+    /// nil if only it couldn't be read.
+    func status(before deadline: ContinuousClock.Instant? = nil) async throws
+        -> (body: VehicleSnapshot, charge: ChargeSnapshot, climate: ClimateSnapshot?) {
         let deadline = deadline ?? .now + .seconds(20)
         return try await withClient { client in
-            let state = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
-            if state.isAsleep {
-                try await client.execute(.wake, deadline: Self.limit(.seconds(8), to: deadline))
-                try await client.waitForInfotainment(deadline: Self.limit(.seconds(15), to: deadline))
+            let body = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
+            if body.isAsleep {
+                try await Self.wake(client, before: deadline)
             }
-            return try await client.chargeState(deadline: Self.limit(.seconds(8), to: deadline))
+            let charge = try await client.chargeState(deadline: Self.limit(.seconds(8), to: deadline))
+            let climate = try? await client.climateState(deadline: Self.limit(.seconds(5), to: deadline))
+            return (body, charge, climate)
         }
+    }
+
+    /// Sends `command` and reads lock and closures again, so the caller can show what changed.
+    /// Climate commands wake a sleeping car first, since only an awake car can take them.
+    func send(_ command: VehicleCommand,
+              before deadline: ContinuousClock.Instant? = nil) async throws -> (before: VehicleSnapshot, after: VehicleSnapshot) {
+        let deadline = deadline ?? .now + .seconds(25)
+        return try await withClient { client in
+            let before = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
+            if before.isAsleep, command.domain == .infotainment {
+                try await Self.wake(client, before: deadline)
+            }
+            try await client.execute(command, deadline: Self.limit(.seconds(8), to: deadline))
+            let after = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
+            return (before, after)
+        }
+    }
+
+    private static func wake(_ client: VehicleClient, before deadline: ContinuousClock.Instant) async throws {
+        try await client.execute(.wake, deadline: limit(.seconds(8), to: deadline))
+        try await client.waitForInfotainment(deadline: limit(.seconds(15), to: deadline))
     }
 
     /// Reads charge and saves it to `store`; on failure the store keeps its last reading.
@@ -64,6 +98,20 @@ struct VehicleService: Sendable {
         let reading = ChargeReading(try await charge(before: deadline), readAt: now())
         store.save(reading)
         return reading
+    }
+
+    /// Reads lock, closures and charge, and saves both to `store`; on failure the store keeps
+    /// its last readings.
+    func refreshStatus(into store: ChargeStore, now: @Sendable () -> Date = Date.init,
+                       before deadline: ContinuousClock.Instant? = nil) async throws
+        -> (body: BodyReading, charge: ChargeReading, climate: ClimateSnapshot?) {
+        let status = try await status(before: deadline)
+        let readAt = now()
+        let body = BodyReading(status.body, readAt: readAt)
+        let charge = ChargeReading(status.charge, readAt: readAt)
+        store.save(body)
+        store.save(charge)
+        return (body, charge, status.climate)
     }
 
     func snapshot() async throws -> VehicleSnapshot {

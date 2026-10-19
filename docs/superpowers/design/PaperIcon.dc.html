@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sentry app icon concepts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 1340px; height: 520px; box-sizing: border-box; background: #E6E6E2; color: #111111; font-family: 'Geist', sans-serif; padding: 60px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 60px">
+
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div style="width: 260px; height: 260px; border-radius: 58px; background: #F3F3F1; display: flex; align-items: center; justify-content: center">
+      <svg width="260" height="260" viewBox="0 0 260 260" fill="none" role="img" aria-label="Charge bar icon">
+        <rect x="56" y="118" width="148" height="24" rx="12" fill="#DCDCD7"></rect>
+        <rect x="56" y="118" width="121" height="24" rx="12" fill="#111111"></rect>
+      </svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 16px; font-weight: 600">A · Charge bar</span>
+      <span style="font-size: 13px; color: #4F4F4A">The home screen's bar, alone</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div style="width: 260px; height: 260px; border-radius: 58px; background: #121211; display: flex; align-items: center; justify-content: center">
+      <svg width="260" height="260" viewBox="0 0 260 260" fill="none" role="img" aria-label="Charge bar icon, dark">
+        <rect x="56" y="118" width="148" height="24" rx="12" fill="#2A2A27"></rect>
+        <rect x="56" y="118" width="121" height="24" rx="12" fill="#EDEDEA"></rect>
+        <circle cx="196" cy="74" r="9" fill="#4ADE80"></circle>
+      </svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 16px; font-weight: 600">B · Bar, dark + nearby</span>
+      <span style="font-size: 13px; color: #4F4F4A">Green dot = car in range</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div style="width: 260px; height: 260px; border-radius: 58px; background: #111111; display: flex; align-items: center; justify-content: center">
+      <span style="font-size: 172px; font-weight: 500; letter-spacing: -0.08em; line-height: 1; color: #F3F3F1; margin-left: -8px; margin-top: -12px">S</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 16px; font-weight: 600">C · Letter S</span>
+      <span style="font-size: 13px; color: #4F4F4A">Geist, tight, nothing else</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div style="width: 260px; height: 260px; border-radius: 58px; background: #F3F3F1; display: flex; align-items: center; justify-content: center">
+      <svg width="260" height="260" viewBox="0 0 260 260" fill="none" role="img" aria-label="Open boot icon">
+        <path d="M54 128h152v66H54z" stroke="#111111" stroke-width="14" stroke-linejoin="round"></path>
+        <path d="M70 128l26-58h92" stroke="#111111" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 16px; font-weight: 600">D · Open boot</span>
+      <span style="font-size: 13px; color: #4F4F4A">What the Action Button does</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1340,"height":520}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
