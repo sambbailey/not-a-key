@@ -20,3 +20,9 @@
 - Hardening: `SessionKey.keyBytes` internal; epoch length == 16 check; resync throws on different public key; wrap CryptoKit errors in DomainSession.init; Framing precondition ≤1024; Metadata tag range guard.
 - Tests: corrupt-key paths (KeyStore, pairing, intent), Framing boundaries, malformed peer key, UserDefaults suite cleanup.
 - Style: single SWIFT_VERSION in project.yml; ClosureState top-level.
+
+## From the battery/range change (2026-10-19)
+- Debug screen: double-tap on Toggle Boot can start two connections before `.disabled` re-renders; add a synchronous guard (Plan 2 home screen).
+- BLE `close()` is async on the old transport's queue, so its cancel can land just after the next connect starts; consider awaiting teardown in `withClient`.
+- Action Button intent can still race an in-app charge read (separate BLE connections); consider an app-wide connection serializer.
+- Check at the car: battery % / miles shown on open, wake from sleep works, age label after leaving the car.
