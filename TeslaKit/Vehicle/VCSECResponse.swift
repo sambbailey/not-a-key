@@ -1,7 +1,7 @@
 import Foundation
 
 /// What to do with one of the up to three replies VCSEC sends for a request.
-public enum VCSECReply {
+public enum VCSECReply: Sendable {
     /// The final reply; for status requests it carries `vehicleStatus`.
     case done(VCSEC_FromVCSECMessage)
     /// An interim command status; keep reading.
