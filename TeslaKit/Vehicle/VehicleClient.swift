@@ -73,30 +73,64 @@ public actor VehicleClient {
     }
 
     public func execute(_ command: VehicleCommand, deadline: Duration = .seconds(8)) async throws {
-        let until = clock.now + deadline
-        let domain = command.domain
-        let payload = try command.payload()
         log.info("Execute \(String(describing: command), privacy: .public)")
         do {
-            try await exclusively(until: until) {
-                do {
-                    if sessions[domain] == nil {
-                        sessions[domain] = try await retrying(until: until) {
-                            try await handshakeAttempt(domain: domain, until: until)
-                        }
-                    }
-                    try await retrying(until: until) {
-                        try await commandAttempt(domain: domain, payload: payload, until: until)
-                    }
-                } catch VehicleError.notPaired {
-                    sessions[domain] = nil
-                    throw VehicleError.notPaired
-                }
-            }
+            _ = try await signedRequest(to: command.domain, payload: try command.payload(),
+                                        until: clock.now + deadline)
             log.info("Execute \(String(describing: command), privacy: .public) succeeded")
         } catch {
             log.error("Execute \(String(describing: command), privacy: .public) failed: \(String(describing: error), privacy: .public)")
             throw error
+        }
+    }
+
+    /// Reads battery level, range and charging state from infotainment, which must be awake;
+    /// see `waitForInfotainment`.
+    public func chargeState(deadline: Duration = .seconds(8)) async throws -> ChargeSnapshot {
+        do {
+            let response = try await signedRequest(to: .infotainment, payload: try VehicleCommand.chargeStatePayload(),
+                                                   until: clock.now + deadline)
+            guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
+            let snapshot = try ChargeSnapshot(response.vehicleData.chargeState)
+            log.info("Charge state: \(snapshot.batteryLevel, privacy: .public)% \(snapshot.rangeMiles, privacy: .public) mi charging=\(snapshot.isCharging, privacy: .public)")
+            return snapshot
+        } catch {
+            log.error("Charge state failed: \(String(describing: error), privacy: .public)")
+            throw error
+        }
+    }
+
+    /// Establishes the infotainment session, polling about every `pollEvery` while infotainment
+    /// wakes up: a sleeping car ignores the handshake until VCSEC wakes it. Returns at once if a
+    /// session already exists, and throws `.timeout` once `deadline` passes.
+    public func waitForInfotainment(deadline: Duration = .seconds(15), pollEvery: Duration = .seconds(1)) async throws {
+        guard sessions[.infotainment] == nil else { return }
+        let until = clock.now + deadline
+        while true {
+            let pollStarted = clock.now
+            let pollDeadline = min(until, pollStarted + pollEvery)
+            do {
+                let session = try await exclusively(until: pollDeadline) {
+                    try await retrying(until: pollDeadline) {
+                        try await handshakeAttempt(domain: .infotainment, until: pollDeadline)
+                    }
+                }
+                sessions[.infotainment] = session
+                log.info("Infotainment awake")
+                return
+            } catch VehicleError.busy, VehicleError.timeout {
+                // Still waking up, or this poll went unanswered.
+            } catch {
+                log.error("Waiting for infotainment failed: \(String(describing: error), privacy: .public)")
+                throw error
+            }
+            // A poll that failed fast still waits out its interval, so this never spins.
+            let nextPoll = pollStarted + pollEvery
+            guard nextPoll < until else {
+                log.error("Waiting for infotainment timed out")
+                throw VehicleError.timeout
+            }
+            try await Task.sleep(until: nextPoll, clock: clock)
         }
     }
 
@@ -138,6 +172,27 @@ public actor VehicleClient {
     }
 
     // MARK: Attempts
+
+    /// Signs and sends `payload` to `domain`, handshaking first if needed. Returns infotainment's
+    /// `CarServer.Response` once its action status is OK, or nil for VCSEC.
+    private func signedRequest(to domain: UniversalMessage_Domain, payload: Data,
+                               until deadline: ContinuousClock.Instant) async throws -> CarServer_Response? {
+        try await exclusively(until: deadline) {
+            do {
+                if sessions[domain] == nil {
+                    sessions[domain] = try await retrying(until: deadline) {
+                        try await handshakeAttempt(domain: domain, until: deadline)
+                    }
+                }
+                return try await retrying(until: deadline) {
+                    try await commandAttempt(domain: domain, payload: payload, until: deadline)
+                }
+            } catch VehicleError.notPaired {
+                sessions[domain] = nil
+                throw VehicleError.notPaired
+            }
+        }
+    }
 
     /// Runs `attempt` until it finishes: after `busyRetryInterval` while the vehicle is busy
     /// (throwing `.busy` once the deadline would pass), and once more after a resync.
@@ -184,7 +239,7 @@ public actor VehicleClient {
     }
 
     private func commandAttempt(domain: UniversalMessage_Domain, payload: Data,
-                                until deadline: ContinuousClock.Instant) async throws -> Attempt<Void> {
+                                until deadline: ContinuousClock.Instant) async throws -> Attempt<CarServer_Response?> {
         let uuid = Self.randomBytes(16)
         var message = request(to: domain, payload: payload, uuid: uuid)
         let requestHash = try sessions[domain]!.encrypt(&message, now: now())
@@ -211,7 +266,7 @@ public actor VehicleClient {
                 switch try VCSECReply.classify(Self.vcsecMessage(in: reply)) {
                 case .done:
                     log.info("VCSEC: done")
-                    return .done(())
+                    return .done(nil)
                 case .pending:
                     log.info("VCSEC: pending")
                     continue
@@ -226,11 +281,11 @@ public actor VehicleClient {
             } catch {
                 throw VehicleError.protocolFault(.rrorDecoding)
             }
-            if response.actionStatus.result == .rror {
+            guard response.actionStatus.result == .operationstatusOk else {
                 let reason = response.actionStatus.resultReason.plainText
                 throw VehicleError.rejected(reason.isEmpty ? "unspecified error" : reason)
             }
-            return .done(())
+            return .done(response)
         }
     }
 

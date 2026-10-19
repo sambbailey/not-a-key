@@ -37,6 +37,13 @@ public enum VehicleCommand: Sendable {
         return try vcsec(.informationRequest(request))
     }
 
+    /// Asks infotainment for charge state; the reply's `vehicleData.chargeState` carries it.
+    public static func chargeStatePayload() throws -> Data {
+        var action = CarServer_Action()
+        action.vehicleAction.getVehicleData.getChargeState = CarServer_GetChargeState()
+        return try action.serializedData()
+    }
+
     /// The raw `VCSEC.ToVCSECMessage` asking the car to whitelist `publicKeyX963` as a driver key.
     /// It is not wrapped in a RoutableMessage; the owner approves it with a key card tap.
     public static func addKeyEnvelope(publicKeyX963: Data) throws -> Data {

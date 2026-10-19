@@ -6,7 +6,8 @@ import Synchronization
 /// An in-process car for `VehicleClient` tests. It holds `TestVectors.vehiclePrivateKey`,
 /// answers session-info requests with properly tagged `SessionInfo`, verifies and decrypts
 /// commands as the real verifier would (epoch, counter, AES-GCM over the metadata), records
-/// what it decoded, and replies in plaintext according to its script.
+/// what it decoded, and replies according to its script. Replies to commands that set
+/// `FLAG_ENCRYPT_RESPONSE` are encrypted, as new firmware does.
 final class FakeVehicle: VehicleTransport {
     enum Script: Sendable {
         case success
@@ -23,6 +24,8 @@ final class FakeVehicle: VehicleTransport {
         case silent
         /// Reports `KEY_NOT_ON_WHITELIST` for the first `polls` infotainment handshakes.
         case pairAfter(polls: Int)
+        /// Answers infotainment actions with `OPERATIONSTATUS_ERROR` and `reason`.
+        case rejectsAction(reason: String)
     }
 
     struct Command: Sendable {
@@ -35,6 +38,7 @@ final class FakeVehicle: VehicleTransport {
     private struct DomainState {
         var epoch = Data((0..<16).map { _ in UInt8.random(in: 0...255) })
         var counter: UInt32 = 0
+        var responseCounter: UInt32 = 0
         var clockZero = Date()
         var sessionKey: SessionKey?
         var clientPublicKey = Data()
@@ -43,6 +47,10 @@ final class FakeVehicle: VehicleTransport {
     private struct State {
         var script: Script
         var bodyStatus = VCSEC_VehicleStatus()
+        var chargeState = CarServer_ChargeState()
+        var unansweredWhileAsleep = 0
+        var ignoresWake = false
+        var encryptedRepliesSent = 0
         var domains: [UniversalMessage_Domain: DomainState] = [:]
         var sessionInfoRequests: [UniversalMessage_Domain] = []
         var commands: [Command] = []
@@ -82,7 +90,30 @@ final class FakeVehicle: VehicleTransport {
         set { state.withLock { $0.bodyStatus = newValue } }
     }
 
+    /// Charge state returned to `getChargeState`.
+    var chargeState: CarServer_ChargeState {
+        get { state.withLock { $0.chargeState } }
+        set { state.withLock { $0.chargeState = newValue } }
+    }
+
+    /// Whether infotainment is asleep: VCSEC reports it, and infotainment ignores session-info
+    /// requests until a VCSEC wake command arrives.
+    var isAsleep: Bool {
+        get { state.withLock { $0.bodyStatus.vehicleSleepStatus == .vehicleSleepStatusAsleep } }
+        set { state.withLock { $0.bodyStatus.vehicleSleepStatus = newValue ? .vehicleSleepStatusAsleep : .vehicleSleepStatusAwake } }
+    }
+
+    /// Whether a wake command leaves the car asleep, as if it were slow to wake.
+    var ignoresWake: Bool {
+        get { state.withLock { $0.ignoresWake } }
+        set { state.withLock { $0.ignoresWake = newValue } }
+    }
+
     var sessionInfoRequests: [UniversalMessage_Domain] { state.withLock { $0.sessionInfoRequests } }
+    /// Infotainment session-info requests ignored because the car was asleep.
+    var unansweredWhileAsleep: Int { state.withLock { $0.unansweredWhileAsleep } }
+    /// Replies sent encrypted with AES-GCM, including interim VCSEC replies.
+    var encryptedRepliesSent: Int { state.withLock { $0.encryptedRepliesSent } }
     /// Commands that decrypted and verified, in arrival order.
     var commands: [Command] { state.withLock { $0.commands } }
     var statusRequests: Int { state.withLock { $0.statusRequests } }
@@ -156,6 +187,11 @@ final class FakeVehicle: VehicleTransport {
         return state.withLock { state in
             state.requestsReceived += 1
             if case .silent = state.script { return [] }
+            if state.bodyStatus.vehicleSleepStatus == .vehicleSleepStatusAsleep,
+               request.toDestination.domain == .infotainment, case .sessionInfoRequest? = request.payload {
+                state.unansweredWhileAsleep += 1
+                return []
+            }
             if state.awaitingReply { state.overlappingRequests += 1 }
             state.awaitingReply = true
 
@@ -269,10 +305,29 @@ final class FakeVehicle: VehicleTransport {
         var recorded = Command(domain: domain, counter: gcm.counter)
         if domain == .vehicleSecurity {
             recorded.vcsec = try? VCSEC_UnsignedMessage(serializedBytes: plaintext)
+            if recorded.vcsec?.rkeaction == .rkeActionWakeVehicle, !state.ignoresWake {
+                state.bodyStatus.vehicleSleepStatus = .vehicleSleepStatusAwake
+            }
         } else {
             recorded.carServer = try? CarServer_Action(serializedBytes: plaintext)
         }
         state.commands.append(recorded)
+
+        let replies = commandReplies(response, domain: domain, action: recorded.carServer, state: &state)
+        let encrypts = request.flags & (1 << UInt32(UniversalMessage_Flags.flagEncryptResponse.rawValue)) != 0
+        guard encrypts else { return replies }
+        let requestHash = Data([UInt8(Signatures_SignatureType.aesGcmPersonalized.rawValue)]) + gcm.tag
+        return replies.map { reply in
+            var reply = reply
+            encrypt(&reply.message, domain: domain, requestHash: requestHash, state: &state)
+            return reply
+        }
+    }
+
+    /// The plaintext replies to a verified command, per the script.
+    private func commandReplies(_ response: UniversalMessage_RoutableMessage, domain: UniversalMessage_Domain,
+                                action: CarServer_Action?, state: inout State) -> [Reply] {
+        var response = response
 
         switch state.script {
         case .busy(let times) where state.busyRepliesSent < times:
@@ -292,7 +347,15 @@ final class FakeVehicle: VehicleTransport {
 
         if domain == .infotainment {
             var result = CarServer_Response()
-            result.actionStatus.result = .operationstatusOk
+            if case .rejectsAction(let reason) = state.script {
+                result.actionStatus.result = .rror
+                result.actionStatus.resultReason.plainText = reason
+            } else {
+                result.actionStatus.result = .operationstatusOk
+                if action?.vehicleAction.getVehicleData.hasGetChargeState == true {
+                    result.vehicleData.chargeState = state.chargeState
+                }
+            }
             response.protobufMessageAsBytes = try! result.serializedData()
             return [Reply(message: response)]
         }
@@ -320,6 +383,29 @@ final class FakeVehicle: VehicleTransport {
         response.fromDestination.domain = domain
         response.requestUuid = request.uuid
         return response
+    }
+
+    /// Encrypts `message`'s payload in place per protocol.md "Response metadata".
+    private func encrypt(_ message: inout UniversalMessage_RoutableMessage, domain: UniversalMessage_Domain,
+                         requestHash: Data, state: inout State) {
+        var domainState = state.domains[domain]!
+        domainState.responseCounter += 1
+        state.domains[domain] = domainState
+        state.encryptedRepliesSent += 1
+        var meta = Metadata()
+        try! meta.add(.signatureType, Data([UInt8(Signatures_SignatureType.aesGcmResponse.rawValue)]))
+        try! meta.add(.domain, Data([UInt8(domain.rawValue)]))
+        try! meta.add(.personalization, Data(vin.utf8))
+        try! meta.add(.counter, uint32: domainState.responseCounter)
+        try! meta.add(.flags, uint32: message.flags)
+        try! meta.add(.requestHash, requestHash)
+        try! meta.add(.fault, uint32: UInt32(message.signedMessageStatus.signedMessageFault.rawValue))
+        let sealed = try! domainState.sessionKey!.seal(message.protobufMessageAsBytes,
+                                                       aad: Data(SHA256.hash(data: meta.serialized())))
+        message.protobufMessageAsBytes = sealed.ciphertext
+        message.signatureData.aesGcmResponseData.nonce = sealed.nonce
+        message.signatureData.aesGcmResponseData.counter = domainState.responseCounter
+        message.signatureData.aesGcmResponseData.tag = sealed.tag
     }
 
     /// An encrypted-looking reply to `request` whose tag cannot verify.

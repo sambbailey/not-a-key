@@ -44,6 +44,28 @@ struct VehicleService: Sendable {
         }
     }
 
+    /// Reads battery level and range, waking the car first if it is asleep. Gives up
+    /// at `deadline`, or after 20 seconds without one.
+    func charge(before deadline: ContinuousClock.Instant? = nil) async throws -> ChargeSnapshot {
+        let deadline = deadline ?? .now + .seconds(20)
+        return try await withClient { client in
+            let state = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
+            if state.isAsleep {
+                try await client.execute(.wake, deadline: Self.limit(.seconds(8), to: deadline))
+                try await client.waitForInfotainment(deadline: Self.limit(.seconds(15), to: deadline))
+            }
+            return try await client.chargeState(deadline: Self.limit(.seconds(8), to: deadline))
+        }
+    }
+
+    /// Reads charge and saves it to `store`; on failure the store keeps its last reading.
+    func refreshCharge(into store: ChargeStore, now: @Sendable () -> Date = Date.init,
+                       before deadline: ContinuousClock.Instant? = nil) async throws -> ChargeReading {
+        let reading = ChargeReading(try await charge(before: deadline), readAt: now())
+        store.save(reading)
+        return reading
+    }
+
     func snapshot() async throws -> VehicleSnapshot {
         try await withClient { try await $0.bodyControllerState() }
     }

@@ -5,6 +5,10 @@ import TeslaKit
 struct DebugHomeView: View {
     let store: CarStore
 
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var charge: ChargeReading? = ChargeStore().last
+    /// Whether `charge` was read since the app last came to the foreground.
+    @State private var chargeIsFresh = false
     @State private var snapshot: VehicleSnapshot?
     @State private var lastResult: String?
     @State private var lastError: String?
@@ -13,12 +17,25 @@ struct DebugHomeView: View {
     @State private var confirmingRepair = false
 
     private let keyStore = KeyStore()
+    private let chargeStore = ChargeStore()
 
     private struct KeyUnavailable: Error {}
 
     var body: some View {
         NavigationStack {
             Form {
+                Section("Battery") {
+                    LabeledContent("Charge", value: charge.map { $0.levelText + ($0.isCharging ? ", charging" : "") } ?? "-")
+                    LabeledContent("Range", value: charge?.rangeText ?? "-")
+                    if let charge, !chargeIsFresh {
+                        TimelineView(.everyMinute) { _ in
+                            Text("Updated \(charge.readAt, format: .relative(presentation: .named))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+
                 Section("Car") {
                     LabeledContent("VIN", value: store.vin ?? "-")
                     LabeledContent("Locked", value: snapshot.map { $0.isLocked ? "Yes" : "No" } ?? "-")
@@ -57,6 +74,12 @@ struct DebugHomeView: View {
                 }
             }
             .navigationTitle("Not a Key")
+            .refreshable { await refreshCharge() }
+            .task { await refreshCharge() }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active { Task { await refreshCharge() } }
+                if phase == .background { chargeIsFresh = false }
+            }
             .confirmationDialog("Re-pair this phone?", isPresented: $confirmingRepair, titleVisibility: .visible) {
                 Button("Delete key and re-pair", role: .destructive, action: repair)
             } message: {
@@ -74,6 +97,16 @@ struct DebugHomeView: View {
         await run { service in
             snapshot = try await service.snapshot()
             lastResult = "Refreshed"
+        }
+    }
+
+    /// Wakes the car if needed and reads charge. Skipped while another request is running,
+    /// since the car takes one connection at a time.
+    private func refreshCharge() async {
+        guard !isWorking else { return }
+        await run { service in
+            charge = try await service.refreshCharge(into: chargeStore)
+            chargeIsFresh = true
         }
     }
 
