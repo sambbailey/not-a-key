@@ -3,6 +3,8 @@ import Foundation
 import os
 import TeslaKit
 
+private let log = Logger(subsystem: "com.dodimead.sentry", category: "intent")
+
 /// Opens or closes the boot without opening the app. Meant for the Action Button, so it runs
 /// while the phone is locked and always answers with a banner rather than an error.
 struct ToggleBootIntent: AppIntent {
@@ -25,12 +27,18 @@ struct ToggleBootIntent: AppIntent {
         guard let vin = defaults.string(forKey: CarStore.vinKey),
               defaults.bool(forKey: CarStore.pairedKey),
               let key = try? keyStore.load()
-        else { return IntentMessages.setUpFirst }
+        else {
+            log.error("Toggle boot: not set up")
+            return IntentMessages.setUpFirst
+        }
         let service = VehicleService(vin: vin, key: key, connect: connect)
         let until = ContinuousClock.now + deadline
         do {
-            return IntentMessages.success(try await run(within: deadline) { try await service.toggleBoot(before: until) })
+            let outcome = try await run(within: deadline) { try await service.toggleBoot(before: until) }
+            log.info("Toggle boot succeeded: \(String(describing: outcome), privacy: .public)")
+            return IntentMessages.success(outcome)
         } catch {
+            log.error("Toggle boot failed: \(String(describing: error), privacy: .public)")
             return IntentMessages.failure(error)
         }
     }

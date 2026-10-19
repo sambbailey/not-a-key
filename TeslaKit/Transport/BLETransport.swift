@@ -1,5 +1,8 @@
 import CoreBluetooth
 import Foundation
+import os
+
+private let log = Logger(subsystem: "com.dodimead.sentry", category: "ble")
 
 /// A `VehicleTransport` over Tesla's BLE GATT service.
 ///
@@ -83,6 +86,7 @@ public final class BLETransport: NSObject, VehicleTransport, @unchecked Sendable
         central = CBCentralManager(delegate: self, queue: queue)
         queue.asyncAfter(deadline: .now() + timeout.timeInterval) { [weak self] in
             guard let self, setup != nil else { return }
+            log.error("Setup timed out after \(timeout, privacy: .public)")
             tearDown(VehicleError.notInRange)
         }
     }
@@ -116,6 +120,7 @@ public final class BLETransport: NSObject, VehicleTransport, @unchecked Sendable
         queue.asyncAfter(deadline: .now() + Self.chunkWriteTimeout.timeInterval) { [weak self] in
             guard let self, chunkSerial == serial, !sendQueue.isEmpty else { return }
             // A late acknowledgement would be credited to the wrong chunk, so the link is unusable.
+            log.error("Chunk write timed out")
             tearDown(VehicleError.timeout)
         }
     }
@@ -123,6 +128,7 @@ public final class BLETransport: NSObject, VehicleTransport, @unchecked Sendable
     /// Ends the connection: fails setup and every pending send with `error`, and finishes `incoming`.
     private func tearDown(_ error: Error) {
         guard !isClosed else { return }
+        log.info("Closing connection: \(String(describing: error), privacy: .public)")
         isClosed = true
         chunkSerial += 1
         central?.stopScan()
@@ -138,9 +144,11 @@ public final class BLETransport: NSObject, VehicleTransport, @unchecked Sendable
 
 extension BLETransport: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        log.info("Bluetooth state: \(central.state.name, privacy: .public)")
         switch central.state {
         case .poweredOn:
             guard setup != nil, peripheral == nil else { return }
+            log.info("Scanning")
             central.scanForPeripherals(withServices: [Self.serviceUUID])
         case .poweredOff, .resetting, .unsupported:
             tearDown(VehicleError.bluetoothOff)
@@ -155,7 +163,12 @@ extension BLETransport: CBCentralManagerDelegate {
         _ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
         advertisementData: [String: Any], rssi RSSI: NSNumber
     ) {
-        guard self.peripheral == nil, Self.matches(advertisement: advertisementData, vin: vin) else { return }
+        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "-"
+        guard self.peripheral == nil, Self.matches(advertisement: advertisementData, vin: vin) else {
+            log.debug("Skipped \(name, privacy: .private) RSSI \(RSSI.intValue, privacy: .public)")
+            return
+        }
+        log.info("Found \(name, privacy: .private) RSSI \(RSSI.intValue, privacy: .public), connecting")
         central.stopScan()
         self.peripheral = peripheral
         peripheral.delegate = self
@@ -163,16 +176,19 @@ extension BLETransport: CBCentralManagerDelegate {
     }
 
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        log.info("Connected, discovering services")
         peripheral.discoverServices([Self.serviceUUID])
     }
 
     public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        log.error("Failed to connect: \(String(describing: error), privacy: .public)")
         tearDown(VehicleError.notInRange)
     }
 
     public func centralManager(
         _ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?
     ) {
+        log.info("Disconnected: \(String(describing: error), privacy: .public)")
         tearDown(VehicleError.notInRange)
     }
 }
@@ -180,9 +196,11 @@ extension BLETransport: CBCentralManagerDelegate {
 extension BLETransport: CBPeripheralDelegate {
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let service = peripheral.services?.first(where: { $0.uuid == Self.serviceUUID }) else {
+            log.error("Vehicle service not found: \(String(describing: error), privacy: .public)")
             tearDown(error ?? VehicleError.notInRange)
             return
         }
+        log.info("Discovering characteristics")
         peripheral.discoverCharacteristics([Self.writeUUID, Self.notifyUUID], for: service)
     }
 
@@ -192,12 +210,14 @@ extension BLETransport: CBPeripheralDelegate {
         let characteristics = service.characteristics ?? []
         guard let write = characteristics.first(where: { $0.uuid == Self.writeUUID }),
               let notify = characteristics.first(where: { $0.uuid == Self.notifyUUID }) else {
+            log.error("Vehicle characteristics not found: \(String(describing: error), privacy: .public)")
             tearDown(error ?? VehicleError.notInRange)
             return
         }
         writeCharacteristic = write
         // One ATT Write Request per chunk, as Go does: the `.withResponse` limit (512) would force long writes.
         blockLength = min(peripheral.maximumWriteValueLength(for: .withoutResponse), Framing.maxMessageLength)
+        log.info("Block length \(self.blockLength, privacy: .public), subscribing")
         peripheral.setNotifyValue(true, for: notify)
     }
 
@@ -206,8 +226,10 @@ extension BLETransport: CBPeripheralDelegate {
     ) {
         guard characteristic.uuid == Self.notifyUUID else { return }
         if let error {
+            log.error("Subscribe failed: \(String(describing: error), privacy: .public)")
             tearDown(error)
         } else {
+            log.info("Subscribed, ready")
             finishSetup()
         }
     }
@@ -216,6 +238,7 @@ extension BLETransport: CBPeripheralDelegate {
         guard characteristic.uuid == Self.writeUUID, !sendQueue.isEmpty else { return }
         if let error {
             // The vehicle now holds a partial frame that would corrupt the next message.
+            log.error("Chunk write failed: \(String(describing: error), privacy: .public)")
             tearDown(error)
             return
         }
@@ -228,6 +251,20 @@ extension BLETransport: CBPeripheralDelegate {
         guard characteristic.uuid == Self.notifyUUID, error == nil, let value = characteristic.value else { return }
         for message in reassembler.append(value, at: Date()) {
             incomingContinuation.yield(message)
+        }
+    }
+}
+
+private extension CBManagerState {
+    var name: String {
+        switch self {
+        case .unknown: "unknown"
+        case .resetting: "resetting"
+        case .unsupported: "unsupported"
+        case .unauthorized: "unauthorized"
+        case .poweredOff: "poweredOff"
+        case .poweredOn: "poweredOn"
+        @unknown default: "rawValue \(rawValue)"
         }
     }
 }

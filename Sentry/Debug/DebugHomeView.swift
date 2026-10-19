@@ -8,6 +8,7 @@ struct DebugHomeView: View {
     @State private var snapshot: VehicleSnapshot?
     @State private var lastResult: String?
     @State private var lastError: String?
+    @State private var lastErrorDetail: String?
     @State private var isWorking = false
     @State private var confirmingRepair = false
 
@@ -41,6 +42,12 @@ struct DebugHomeView: View {
                 if let lastError {
                     Section("Last error") {
                         Text(lastError).foregroundStyle(.red)
+                        if let lastErrorDetail {
+                            Text(lastErrorDetail)
+                                .font(.caption.monospaced())
+                                .foregroundStyle(.secondary)
+                                .textSelection(.enabled)
+                        }
                     }
                 }
 
@@ -81,12 +88,15 @@ struct DebugHomeView: View {
         defer { isWorking = false }
         lastResult = nil
         lastError = nil
+        lastErrorDetail = nil
         do {
             try await work(try service())
         } catch is KeyUnavailable {
             lastError = "This phone's car key is missing or can't be read. Tap Re-pair to set it up again."
         } catch {
             lastError = IntentMessages.failure(error)
+            // The friendly copy folds many causes into one; the raw error tells them apart at the car.
+            lastErrorDetail = String(describing: error)
         }
     }
 
@@ -96,6 +106,7 @@ struct DebugHomeView: View {
             store.isPaired = false
         } catch {
             lastError = "Couldn't delete this phone's car key"
+            lastErrorDetail = String(describing: error)
         }
     }
 }

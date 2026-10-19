@@ -1,4 +1,7 @@
 import Foundation
+import os
+
+private let log = Logger(subsystem: "com.dodimead.sentry", category: "vehicle")
 
 /// Talks to one vehicle over a `VehicleTransport`: establishes a session per domain on
 /// first use, sends signed commands and reads replies until a terminal one arrives,
@@ -57,8 +60,15 @@ public actor VehicleClient {
     public func bodyControllerState(deadline: Duration = .seconds(5)) async throws -> VehicleSnapshot {
         let until = clock.now + deadline
         let payload = try VehicleCommand.bodyControllerStatePayload()
-        return try await exclusively(until: until) {
-            try await retrying(until: until) { try await statusAttempt(payload: payload, until: until) }
+        do {
+            let snapshot = try await exclusively(until: until) {
+                try await retrying(until: until) { try await statusAttempt(payload: payload, until: until) }
+            }
+            log.info("Body controller state: \(String(describing: snapshot), privacy: .public)")
+            return snapshot
+        } catch {
+            log.error("Body controller state failed: \(String(describing: error), privacy: .public)")
+            throw error
         }
     }
 
@@ -66,20 +76,27 @@ public actor VehicleClient {
         let until = clock.now + deadline
         let domain = command.domain
         let payload = try command.payload()
-        try await exclusively(until: until) {
-            do {
-                if sessions[domain] == nil {
-                    sessions[domain] = try await retrying(until: until) {
-                        try await handshakeAttempt(domain: domain, until: until)
+        log.info("Execute \(String(describing: command), privacy: .public)")
+        do {
+            try await exclusively(until: until) {
+                do {
+                    if sessions[domain] == nil {
+                        sessions[domain] = try await retrying(until: until) {
+                            try await handshakeAttempt(domain: domain, until: until)
+                        }
                     }
+                    try await retrying(until: until) {
+                        try await commandAttempt(domain: domain, payload: payload, until: until)
+                    }
+                } catch VehicleError.notPaired {
+                    sessions[domain] = nil
+                    throw VehicleError.notPaired
                 }
-                try await retrying(until: until) {
-                    try await commandAttempt(domain: domain, payload: payload, until: until)
-                }
-            } catch VehicleError.notPaired {
-                sessions[domain] = nil
-                throw VehicleError.notPaired
             }
+            log.info("Execute \(String(describing: command), privacy: .public) succeeded")
+        } catch {
+            log.error("Execute \(String(describing: command), privacy: .public) failed: \(String(describing: error), privacy: .public)")
+            throw error
         }
     }
 
@@ -89,6 +106,7 @@ public actor VehicleClient {
         let envelope = try VehicleCommand.addKeyEnvelope(publicKeyX963: publicKeyX963)
         let until = clock.now + Self.addKeyQueueDeadline
         try await exclusively(until: until) { try await send(envelope, before: until) }
+        log.info("Sent add-key request")
     }
 
     /// Polls the infotainment handshake until the vehicle reports our key as enrolled.
@@ -103,11 +121,18 @@ public actor VehicleClient {
                     }
                 }
                 sessions[.infotainment] = session
+                log.info("Pairing confirmed")
                 return
             } catch VehicleError.notPaired, VehicleError.busy, VehicleError.timeout {
                 // Not approved yet, or this poll went unanswered.
+            } catch {
+                log.error("Waiting for pairing failed: \(String(describing: error), privacy: .public)")
+                throw error
             }
-            guard clock.now + pollEvery < until else { throw VehicleError.timeout }
+            guard clock.now + pollEvery < until else {
+                log.error("Waiting for pairing timed out")
+                throw VehicleError.timeout
+            }
             try await Task.sleep(for: pollEvery)
         }
     }
@@ -125,6 +150,7 @@ public actor VehicleClient {
                 return value
             case .busy:
                 guard clock.now + busyRetryInterval < deadline else { throw VehicleError.busy }
+                log.info("Vehicle busy, retrying")
                 try await Task.sleep(for: busyRetryInterval)
             case .stale(let reply, let domain, let challenge):
                 guard !resynced, sessions[domain] != nil else {
@@ -132,6 +158,7 @@ public actor VehicleClient {
                 }
                 try sessions[domain]!.resync(response: reply, challenge: challenge, now: now())
                 resynced = true
+                log.info("Resynced \(String(describing: domain), privacy: .public) session, retrying once")
             }
         }
     }
@@ -149,8 +176,10 @@ public actor VehicleClient {
             var answersHandshake = reply.signedMessageStatus.signedMessageFault != .rrorNone
             if case .sessionInfo? = reply.payload { answersHandshake = true }
             guard answersHandshake else { continue }
-            return .done(try DomainSession(domain: domain, vin: vin, key: key, challenge: uuid,
-                                           response: reply, now: now()))
+            let session = try DomainSession(domain: domain, vin: vin, key: key, challenge: uuid,
+                                            response: reply, now: now())
+            log.info("Session established with \(String(describing: domain), privacy: .public)")
+            return .done(session)
         }
     }
 
@@ -173,14 +202,22 @@ public actor VehicleClient {
             } catch {
                 // A garbled notification, a duplicate, or a late reply to an earlier attempt:
                 // drop it and keep waiting, as Go's dispatcher does.
+                log.warning("Dropped reply that failed to decrypt: \(String(describing: error), privacy: .public)")
                 continue
             }
+            log.debug("Reply decrypted, counter OK")
 
             if domain == .vehicleSecurity {
                 switch try VCSECReply.classify(Self.vcsecMessage(in: reply)) {
-                case .done: return .done(())
-                case .pending: continue
-                case .busy: return .busy
+                case .done:
+                    log.info("VCSEC: done")
+                    return .done(())
+                case .pending:
+                    log.info("VCSEC: pending")
+                    continue
+                case .busy:
+                    log.info("VCSEC: busy")
+                    return .busy
                 }
             }
             let response: CarServer_Response
@@ -249,6 +286,21 @@ public actor VehicleClient {
         }
     }
 
+    /// Domains, payload kind and status enums only; never key material or payload bytes.
+    private static func summary(of message: UniversalMessage_RoutableMessage) -> String {
+        let kind = switch message.payload {
+        case .sessionInfoRequest?: "session info request"
+        case .sessionInfo?: "session info"
+        case .protobufMessageAsBytes?:
+            if case .signatureData? = message.subSigData { "signed message" } else { "unsigned message" }
+        case nil: "empty"
+        }
+        let to = message.toDestination.domain
+        let from = message.fromDestination.domain
+        let status = message.signedMessageStatus
+        return "\(kind) to=\(to) from=\(from) fault=\(status.signedMessageFault) status=\(status.operationStatus)"
+    }
+
     private static func randomBytes(_ count: Int) -> Data {
         var generator = SystemRandomNumberGenerator()
         return Data((0..<count).map { _ in UInt8.random(in: .min ... .max, using: &generator) })
@@ -302,6 +354,7 @@ public actor VehicleClient {
 
     private func send(_ message: UniversalMessage_RoutableMessage, before deadline: ContinuousClock.Instant) async throws {
         try await send(try message.serializedData(), before: deadline)
+        log.info("Sent \(Self.summary(of: message), privacy: .public)")
     }
 
     /// Never sends once `deadline` has passed or the caller is cancelled: the caller would
@@ -328,8 +381,14 @@ public actor VehicleClient {
 
     /// Keeps only messages addressed to us; the vehicle also answers other apps, such as Tesla's own.
     private func receive(_ bytes: Data) {
-        guard let message = try? UniversalMessage_RoutableMessage(serializedBytes: bytes),
-              message.toDestination.routingAddress == routingAddress else { return }
+        guard let message = try? UniversalMessage_RoutableMessage(serializedBytes: bytes) else {
+            log.warning("Dropped \(bytes.count, privacy: .public) bytes that are not a RoutableMessage")
+            return
+        }
+        guard message.toDestination.routingAddress == routingAddress else {
+            log.debug("Ignored message for another app")
+            return
+        }
         if let waiter {
             self.waiter = nil
             waiter.continuation.resume(returning: message)
@@ -339,6 +398,7 @@ public actor VehicleClient {
     }
 
     private func transportDidClose() {
+        log.info("Transport closed")
         transportClosed = true
         expireWaiter(lastWaiterID)
     }
@@ -352,6 +412,7 @@ public actor VehicleClient {
                 try Task.checkCancellation()
                 throw VehicleError.timeout
             }
+            log.info("Received \(Self.summary(of: reply), privacy: .public)")
             guard reply.fromDestination.domain == domain else { continue }
             if domain != .vehicleSecurity, reply.requestUuid != uuid { continue }
             return reply
