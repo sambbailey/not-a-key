@@ -281,7 +281,8 @@ public actor VehicleClient {
             } catch {
                 throw VehicleError.protocolFault(.rrorDecoding)
             }
-            guard response.actionStatus.result == .operationstatusOk else {
+            // Like Go's getCarServerResponse, only OPERATIONSTATUS_ERROR is a rejection.
+            if response.actionStatus.result == .rror {
                 let reason = response.actionStatus.resultReason.plainText
                 throw VehicleError.rejected(reason.isEmpty ? "unspecified error" : reason)
             }

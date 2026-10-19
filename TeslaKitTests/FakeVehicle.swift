@@ -26,6 +26,8 @@ final class FakeVehicle: VehicleTransport {
         case pairAfter(polls: Int)
         /// Answers infotainment actions with `OPERATIONSTATUS_ERROR` and `reason`.
         case rejectsAction(reason: String)
+        /// Answers infotainment actions with an action status this client does not know, and no data.
+        case unrecognisedActionStatus
     }
 
     struct Command: Sendable {
@@ -350,6 +352,8 @@ final class FakeVehicle: VehicleTransport {
             if case .rejectsAction(let reason) = state.script {
                 result.actionStatus.result = .rror
                 result.actionStatus.resultReason.plainText = reason
+            } else if case .unrecognisedActionStatus = state.script {
+                result.actionStatus.result = .UNRECOGNIZED(7)
             } else {
                 result.actionStatus.result = .operationstatusOk
                 if action?.vehicleAction.getVehicleData.hasGetChargeState == true {

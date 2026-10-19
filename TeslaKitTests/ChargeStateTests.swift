@@ -46,6 +46,18 @@ private func chargeState(level: Int32, range: Float, charging: Bool = false) -> 
         }
     }
 
+    /// Go's getCarServerResponse rejects only OPERATIONSTATUS_ERROR; anything else is success.
+    @Test func unrecognisedActionStatusIsNotARejection() async throws {
+        let car = FakeVehicle(script: .unrecognisedActionStatus)
+        let client = makeClient(car)
+
+        try await client.execute(.climateOn)
+        // Success without charge data is still unusable.
+        await #expect(throws: VehicleError.protocolFault(.rrorDecoding)) {
+            try await client.chargeState()
+        }
+    }
+
     @Test func missingBatteryLevelIsADecodingFault() async {
         let car = FakeVehicle()
         car.chargeState.batteryRange = 100
