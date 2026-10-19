@@ -142,10 +142,12 @@ struct DebugHomeView: View {
     }
 
     /// Cancels the charge read in flight and waits for it to let go of the car.
-    private func stopChargeRead() async {
-        guard let chargeTask else { return }
+    /// Returns whether a read was interrupted, so the caller can start it again afterwards.
+    private func stopChargeRead() async -> Bool {
+        guard let chargeTask else { return false }
         chargeTask.cancel()
         await chargeTask.value
+        return true
     }
 
     private func toggleBoot() async {
@@ -156,8 +158,12 @@ struct DebugHomeView: View {
 
     private func run(_ work: (VehicleService) async throws -> Void) async {
         isWorking = true
-        defer { isWorking = false }
-        await stopChargeRead()
+        let interruptedChargeRead = await stopChargeRead()
+        defer {
+            isWorking = false
+            // The button took the car's connection mid-read; read again now it's free.
+            if interruptedChargeRead { Task { await refreshCharge() } }
+        }
         lastResult = nil
         lastError = nil
         lastErrorDetail = nil
