@@ -196,7 +196,8 @@ extension BLETransport: CBPeripheralDelegate {
             return
         }
         writeCharacteristic = write
-        blockLength = peripheral.maximumWriteValueLength(for: .withResponse)
+        // One ATT Write Request per chunk, as Go does: the `.withResponse` limit (512) would force long writes.
+        blockLength = min(peripheral.maximumWriteValueLength(for: .withoutResponse), Framing.maxMessageLength)
         peripheral.setNotifyValue(true, for: notify)
     }
 
