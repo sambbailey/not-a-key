@@ -72,11 +72,7 @@ struct DebugHomeView: View {
 
     private func toggleBoot() async {
         await run { service in
-            lastResult = switch try await service.toggleBoot() {
-            case .opening: "Opening boot"
-            case .closing: "Closing boot"
-            case .moving: "Moving boot"
-            }
+            lastResult = IntentMessages.success(try await service.toggleBoot())
         }
     }
 
@@ -90,7 +86,7 @@ struct DebugHomeView: View {
         } catch is KeyUnavailable {
             lastError = "This phone's car key is missing or can't be read. Tap Re-pair to set it up again."
         } catch {
-            lastError = plainMessage(for: error)
+            lastError = IntentMessages.failure(error)
         }
     }
 
@@ -99,7 +95,7 @@ struct DebugHomeView: View {
             try keyStore.delete()
             store.isPaired = false
         } catch {
-            lastError = "Couldn't delete the key: \(plainMessage(for: error))"
+            lastError = "Couldn't delete this phone's car key"
         }
     }
 }

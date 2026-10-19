@@ -4,8 +4,9 @@ import Observation
 /// The car this phone is set up for, remembered across launches.
 @Observable @MainActor
 final class CarStore {
-    private static let vinKey = "sentry.vin"
-    private static let pairedKey = "sentry.paired"
+    // Read directly by the Toggle Boot intent, which runs off the main actor.
+    nonisolated static let vinKey = "sentry.vin"
+    nonisolated static let pairedKey = "sentry.paired"
 
     @ObservationIgnored private let defaults: UserDefaults
 

@@ -51,7 +51,7 @@ final class PairingModel {
         } catch VehicleError.timeout where phase == .tapCard {
             phase = .failed("The car didn't confirm the new key")
         } catch {
-            phase = .failed(plainMessage(for: error))
+            phase = .failed(IntentMessages.failure(error))
         }
     }
 

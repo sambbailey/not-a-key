@@ -46,20 +46,3 @@ struct VehicleService: Sendable {
         try await withClient { try await $0.bodyControllerState() }
     }
 }
-
-/// Plain words for an error from talking to the car.
-// Interim: Task 12's IntentMessages becomes the shared source of this copy.
-func plainMessage(for error: any Error) -> String {
-    switch error {
-    case VehicleError.bluetoothOff: "Bluetooth is off"
-    case VehicleError.bluetoothUnauthorized: "Allow Bluetooth for Sentry in Settings"
-    case VehicleError.notInRange: "Car not in range"
-    case VehicleError.notPaired: "Key not paired"
-    case VehicleError.busy: "Car busy, try again"
-    case VehicleError.timeout: "Car didn't respond"
-    case VehicleError.rejected(let reason): "The car refused: \(reason)"
-    case VehicleError.protocolFault(let fault): "The car reported an error (\(fault))"
-    case is KeyStore.Failure: "This phone's car key can't be read"
-    default: error.localizedDescription
-    }
-}
