@@ -23,6 +23,16 @@ struct VehicleServiceTests {
         #expect(fake.isClosed)
     }
 
+    @Test func toggleBootStopsAtTheCallersDeadline() async {
+        let fake = FakeVehicle(script: .silent)
+        let start = ContinuousClock.now
+
+        await #expect(throws: VehicleError.timeout) {
+            try await service(for: fake).toggleBoot(before: start + .milliseconds(200))
+        }
+        #expect(ContinuousClock.now - start < .seconds(2))
+    }
+
     @Test func toggleBootReportsNotInRange() async {
         let service = VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey,
                                      connect: { _ in throw VehicleError.notInRange })

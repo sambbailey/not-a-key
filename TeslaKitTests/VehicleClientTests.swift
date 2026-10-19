@@ -122,6 +122,19 @@ private func makeClient(_ car: FakeVehicle) -> VehicleClient {
         #expect(ContinuousClock.now - started >= deadline)
     }
 
+    @Test func cancelledCommandIsNotSent() async throws {
+        let car = FakeVehicle()
+        let cancelling = CancelAfterFirstSend(car)
+        let client = VehicleClient(vin: TestVectors.vin, key: TestVectors.clientKey, transport: cancelling,
+                                   busyRetryInterval: retryInterval)
+        let task = Task { try await client.execute(.moveTrunk) }
+        cancelling.onFirstSend = { task.cancel() }
+
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(car.sessionInfoRequests == [.vehicleSecurity])
+        #expect(car.commands.isEmpty)
+    }
+
     @Test func ignoresForeignRoutingAddress() async throws {
         let car = FakeVehicle()
         var status = VCSEC_VehicleStatus()
@@ -215,4 +228,27 @@ private func makeClient(_ car: FakeVehicle) -> VehicleClient {
             try await makeClient(car).waitForPairing(timeout: .milliseconds(100), pollEvery: .milliseconds(10))
         }
     }
+}
+
+/// Passes everything through to `car`, but once the first request has been answered and the
+/// reply is waiting in the client's mailbox, runs `onFirstSend` (the test cancels there).
+private final class CancelAfterFirstSend: VehicleTransport, @unchecked Sendable {
+    private let car: FakeVehicle
+    private var sends = 0
+    var onFirstSend: @Sendable () -> Void = {}
+
+    init(_ car: FakeVehicle) { self.car = car }
+
+    var incoming: AsyncStream<Data> { car.incoming }
+
+    func send(_ message: Data) async throws {
+        try await car.send(message)
+        sends += 1
+        guard sends == 1 else { return }
+        // Lets the client's receiver move the reply into its mailbox while the client waits here.
+        try? await Task.sleep(for: .milliseconds(50))
+        onFirstSend()
+    }
+
+    func close() { car.close() }
 }

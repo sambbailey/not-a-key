@@ -27,8 +27,9 @@ struct ToggleBootIntent: AppIntent {
               let key = try? keyStore.load()
         else { return IntentMessages.setUpFirst }
         let service = VehicleService(vin: vin, key: key, connect: connect)
+        let until = ContinuousClock.now + deadline
         do {
-            return IntentMessages.success(try await run(within: deadline) { try await service.toggleBoot() })
+            return IntentMessages.success(try await run(within: deadline) { try await service.toggleBoot(before: until) })
         } catch {
             return IntentMessages.failure(error)
         }
@@ -51,10 +52,14 @@ struct ToggleBootIntent: AppIntent {
             let task = Task {
                 do { finish(.success(try await work())) } catch { finish(.failure(error)) }
             }
-            Task {
-                try? await Task.sleep(for: limit)
+            let timer = Task {
+                guard (try? await Task.sleep(for: limit)) != nil else { return }
                 task.cancel()
                 finish(.failure(VehicleError.timeout))
+            }
+            Task {
+                await task.value
+                timer.cancel()
             }
         }
     }

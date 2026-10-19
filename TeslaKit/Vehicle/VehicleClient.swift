@@ -298,9 +298,10 @@ public actor VehicleClient {
         try await send(try message.serializedData(), before: deadline)
     }
 
-    /// Never sends once `deadline` has passed: the caller would report a timeout for a
-    /// command the vehicle then carries out.
+    /// Never sends once `deadline` has passed or the caller is cancelled: the caller would
+    /// report a failure for a command the vehicle then carries out. Every send goes through here.
     private func send(_ bytes: Data, before deadline: ContinuousClock.Instant) async throws {
+        try Task.checkCancellation()
         guard clock.now < deadline else { throw VehicleError.timeout }
         startReceiving()
         // Anything still queued answers an earlier request.
