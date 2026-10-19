@@ -24,10 +24,48 @@ struct ChargeReading: Codable, Equatable, Sendable {
     var rangeText: String { "\(Int(rangeMiles.rounded())) mi" }
 }
 
-/// The last charge reading, remembered across launches so it can be shown while out of range.
-/// `UserDefaults` is documented as thread-safe, though not marked `Sendable`.
+/// Lock and closures as last read from the car, and when.
+struct BodyReading: Codable, Equatable, Sendable {
+    enum Closure: String, Codable, Sendable {
+        case closed, open, ajar, opening, closing, unknown
+
+        init(_ state: VehicleSnapshot.ClosureState) {
+            self = switch state {
+            case .closed: .closed
+            case .open: .open
+            case .ajar: .ajar
+            case .opening: .opening
+            case .closing: .closing
+            case .unknown: .unknown
+            }
+        }
+
+        var isMoving: Bool { self == .opening || self == .closing }
+    }
+
+    var isLocked: Bool
+    var boot: Closure
+    var frunk: Closure
+    var readAt: Date
+
+    init(isLocked: Bool, boot: Closure, frunk: Closure, readAt: Date) {
+        self.isLocked = isLocked
+        self.boot = boot
+        self.frunk = frunk
+        self.readAt = readAt
+    }
+
+    init(_ snapshot: VehicleSnapshot, readAt: Date) {
+        self.init(isLocked: snapshot.isLocked, boot: Closure(snapshot.rearTrunk),
+                  frunk: Closure(snapshot.frontTrunk), readAt: readAt)
+    }
+}
+
+/// The last charge and body readings, remembered across launches so they can be shown while
+/// out of range. `UserDefaults` is documented as thread-safe, though not marked `Sendable`.
 struct ChargeStore: @unchecked Sendable {
     nonisolated static let readingKey = "sentry.charge"
+    nonisolated static let bodyKey = "sentry.body"
 
     private let defaults: UserDefaults
 
@@ -41,5 +79,13 @@ struct ChargeStore: @unchecked Sendable {
 
     func save(_ reading: ChargeReading) {
         defaults.set(try? JSONEncoder().encode(reading), forKey: Self.readingKey)
+    }
+
+    var lastBody: BodyReading? {
+        defaults.data(forKey: Self.bodyKey).flatMap { try? JSONDecoder().decode(BodyReading.self, from: $0) }
+    }
+
+    func save(_ reading: BodyReading) {
+        defaults.set(try? JSONEncoder().encode(reading), forKey: Self.bodyKey)
     }
 }

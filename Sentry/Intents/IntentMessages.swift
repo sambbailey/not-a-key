@@ -13,6 +13,22 @@ enum IntentMessages {
         }
     }
 
+    /// The banner text for a command the car accepted.
+    static func success(_ command: VehicleCommand) -> String {
+        switch command {
+        case .moveTrunk: "Moving boot"
+        case .openFrunk: "Opening frunk"
+        case .lock: "Locked"
+        case .unlock: "Unlocked"
+        case .wake: "Car awake"
+        case .climateOn: "Climate on"
+        case .climateOff: "Climate off"
+        case .setTemperature(let celsius): "Set to \(ClimateText.degrees(celsius))"
+        case .setDefrost(let on): on ? "Defrosting" : "Defrost off"
+        case .keepClimate(let on): on ? "Climate stays on while parked" : "Climate won't stay on"
+        }
+    }
+
     /// Anything the owner can't act on, including a cancelled or timed-out request, reads as
     /// the car not responding.
     static func failure(_ error: any Error) -> String {

@@ -9,4 +9,17 @@ enum VIN {
         guard vin.count == 17, vin.allSatisfy(allowed.contains) else { return nil }
         return vin
     }
+
+    /// The model named by a Tesla VIN's fourth character, e.g. "Model Y"; nil if it isn't one.
+    static func modelName(_ vin: String) -> String? {
+        guard vin.count == 17 else { return nil }
+        return switch vin[vin.index(vin.startIndex, offsetBy: 3)] {
+        case "S": "Model S"
+        case "3": "Model 3"
+        case "X": "Model X"
+        case "Y": "Model Y"
+        case "C": "Cybertruck"
+        default: nil
+        }
+    }
 }

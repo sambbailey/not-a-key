@@ -31,12 +31,14 @@ targets:
       path: Sentry/Info.plist
       properties:
         UIBackgroundModes: [bluetooth-central]
+        UIAppFonts: [Geist-Regular.ttf, Geist-Medium.ttf, Geist-SemiBold.ttf]
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "Not a Key"
         INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: "Not a Key uses Bluetooth to talk to your car."
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "6.0"
   TeslaKitTests:

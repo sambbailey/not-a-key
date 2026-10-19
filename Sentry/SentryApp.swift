@@ -7,7 +7,7 @@ struct SentryApp: App {
     var body: some Scene {
         WindowGroup {
             if store.isPaired && store.vin != nil {
-                DebugHomeView(store: store)
+                HomeView(store: store)
             } else {
                 OnboardingView(store: store)
             }

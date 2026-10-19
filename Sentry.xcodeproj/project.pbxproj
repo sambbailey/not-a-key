@@ -16,12 +16,15 @@
 		23BD63B1391B846367E9ABD0 /* ChargeSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */; };
 		2589987102A81AD3E94A75BC /* SessionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5065007EA4C6779D9864A /* SessionKeyTests.swift */; };
 		2ABBF33D88E755BD2F3D03CE /* ChargeStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1D57F359FF5FD489F9205B /* ChargeStateTests.swift */; };
-		2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC271C63F4C42D155618AB /* DebugHomeView.swift */; };
+		3513F9F5FE49E51C3664B6BC /* ClimateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959E2FC6DDF79C3CB4A9AE30 /* ClimateView.swift */; };
 		353E5571AE9BC24788410B55 /* IntentMessagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176DE572A1A6EB6216CD691D /* IntentMessagesTests.swift */; };
+		38120C7535C7A5979EFB2B63 /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF9121010B2A386686EB863 /* HomeModel.swift */; };
+		40903927ED16E49E9CDDE057 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 32F54192A939DE5F9F1252F9 /* Geist-Regular.ttf */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
 		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
 		607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */; };
+		6169A83DBD759092D106824E /* HomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CF61936136BF48E6FB065B4 /* HomeTests.swift */; };
 		65CDE58472C87223F287B59F /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
 		67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */; };
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
@@ -37,28 +40,37 @@
 		7F464878277778A80EA5FC6A /* keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFB32172182E086849420AA /* keys.pb.swift */; };
 		808F70D117710123EFCF5DBA /* SlidingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82835EA33C41FAF105924137 /* SlidingWindow.swift */; };
 		81636BAEEE27A8F4298D70CC /* MetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7D89C37B7576D55DAEDDF6 /* MetadataTests.swift */; };
+		81EF49DA00512A2FAFE046ED /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08232FC9EFE705ADC88B8A6C /* Geist-SemiBold.ttf */; };
 		8238302F989E1D8F15890BA7 /* VehicleCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */; };
 		8F770EA8048EDF465057EFF9 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523692D445578EA0DC4E44D4 /* FakeVehicle.swift */; };
 		9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B02D86A56943EFC8BD095B48 /* KeyAgreementKey.swift */; };
 		94C1A748E1E9F9B7F440C60E /* VIN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E4765ECE955E66D931494A /* VIN.swift */; };
+		A060B06BF76F49D684DE242B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD225212AA47AEC06C1A1CB /* HomeView.swift */; };
 		A28FBB30E069A94FA5537670 /* common.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */; };
 		A338BF8220E8851FDE84E75A /* PairingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D45700D952BEBC798F1A2 /* PairingModel.swift */; };
+		A5CC404150AE0695D77EDE4C /* ClimateSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85409A01301ED36B8A5C3924 /* ClimateSnapshot.swift */; };
+		A7634D34BD4225C79E24DBE5 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67C12727DB8857AED72A1F12 /* Geist-Medium.ttf */; };
 		B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */; };
+		B22379FE1846344750ECE560 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F2CAE2B14419B3CA57BF3C /* SettingsView.swift */; };
 		B28D981152289EEB2DA4954B /* IntentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642B4E368570E8515E39896 /* IntentMessages.swift */; };
 		BAF03D21FCB10C4D1296BE44 /* ChargeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA29F4428721E0245359FE7B /* ChargeStore.swift */; };
 		BD0C0AEB0D564DE8C332214A /* VehicleClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965D878EC01553C82B9F045C /* VehicleClientTests.swift */; };
 		BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523692D445578EA0DC4E44D4 /* FakeVehicle.swift */; };
 		C232FE04095E8A633C60D78B /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7480424B821C9B77994181D6 /* SessionKey.swift */; };
+		C28EB9D6BFA38087B70E5AE4 /* HomeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2ABCAE9C3226E77B3EC3D7 /* HomeText.swift */; };
 		C3A583ED19E061E06D05A6E3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6565C04D62CD831E5EFF4 /* OnboardingView.swift */; };
 		CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */; };
 		D0FBB06AB06DFC36074DA76A /* ProtoSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */; };
 		D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */; };
 		DD90F02EBE69BFBB7C8125F7 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */; };
 		E339D8880429FF6B84DD896E /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
+		E34F6E4D86515A10DEB12731 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5542C8FDE7266D8EEF303 /* Paper.swift */; };
 		E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B58790A35267E9F0F915 /* BLETransport.swift */; };
 		F2A7FF79CD10301E0694E873 /* VINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3356DC0C8A6925CA90C4E4C /* VINTests.swift */; };
 		F3978C427AC1B9138A24D5A0 /* universal_message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */; };
+		F58DD106C2CE86837F51BF97 /* Geist-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 07898E1FCF3E4CFBD7F663DB /* Geist-OFL.txt */; };
 		F66A47E6682A8BED262DE873 /* VehicleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853F96C882B9C2140333D919 /* VehicleServiceTests.swift */; };
+		F75EB7286376F24253F1F0AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF6788DB81345F9FDE6AC3D6 /* Assets.xcassets */; };
 		F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC3B28E48C5B835B7529BB0 /* Framing.swift */; };
 		F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */; };
 		F99287B9D1012D1B48E6FB9D /* VehicleLocalName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */; };
@@ -117,14 +129,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00F2CAE2B14419B3CA57BF3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		07898E1FCF3E4CFBD7F663DB /* Geist-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Geist-OFL.txt"; sourceTree = "<group>"; };
+		08232FC9EFE705ADC88B8A6C /* Geist-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-SemiBold.ttf"; sourceTree = "<group>"; };
+		08A5542C8FDE7266D8EEF303 /* Paper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paper.swift; sourceTree = "<group>"; };
 		0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.pb.swift; sourceTree = "<group>"; };
 		116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoSmokeTests.swift; sourceTree = "<group>"; };
-		14AC271C63F4C42D155618AB /* DebugHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugHomeView.swift; sourceTree = "<group>"; };
 		14BEAC9EAFAF6AC74725F969 /* ToggleBootIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleBootIntent.swift; sourceTree = "<group>"; };
 		176DE572A1A6EB6216CD691D /* IntentMessagesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentMessagesTests.swift; sourceTree = "<group>"; };
 		1E8D45700D952BEBC798F1A2 /* PairingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingModel.swift; sourceTree = "<group>"; };
 		2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoreTests.swift; sourceTree = "<group>"; };
+		32F54192A939DE5F9F1252F9 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
 		3599C40F668855094C4FCCDB /* KeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStore.swift; sourceTree = "<group>"; };
+		3BF9121010B2A386686EB863 /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		3CF61936136BF48E6FB065B4 /* HomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTests.swift; sourceTree = "<group>"; };
 		49E3B73BA8BE1228458F3E02 /* signatures.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signatures.pb.swift; sourceTree = "<group>"; };
 		4BB6565C04D62CD831E5EFF4 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4D040E428833CD69A54ADC63 /* VehicleTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTransport.swift; sourceTree = "<group>"; };
@@ -134,6 +152,7 @@
 		5B5388A7E4F4760BFFBE269D /* SentryTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SentryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		60E4765ECE955E66D931494A /* VIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIN.swift; sourceTree = "<group>"; };
 		61B5065007EA4C6779D9864A /* SessionKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKeyTests.swift; sourceTree = "<group>"; };
+		67C12727DB8857AED72A1F12 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
 		6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryApp.swift; sourceTree = "<group>"; };
 		7480424B821C9B77994181D6 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
 		7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
@@ -141,8 +160,10 @@
 		82835EA33C41FAF105924137 /* SlidingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingWindow.swift; sourceTree = "<group>"; };
 		836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClient.swift; sourceTree = "<group>"; };
 		853F96C882B9C2140333D919 /* VehicleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceTests.swift; sourceTree = "<group>"; };
+		85409A01301ED36B8A5C3924 /* ClimateSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateSnapshot.swift; sourceTree = "<group>"; };
 		908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = managed_charging.pb.swift; sourceTree = "<group>"; };
 		91348FDD2FBD2536E13ABF5D /* DomainSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSession.swift; sourceTree = "<group>"; };
+		959E2FC6DDF79C3CB4A9AE30 /* ClimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateView.swift; sourceTree = "<group>"; };
 		965D878EC01553C82B9F045C /* VehicleClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClientTests.swift; sourceTree = "<group>"; };
 		9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransportTests.swift; sourceTree = "<group>"; };
 		A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleLocalName.swift; sourceTree = "<group>"; };
@@ -155,6 +176,7 @@
 		BB7D89C37B7576D55DAEDDF6 /* MetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataTests.swift; sourceTree = "<group>"; };
 		BC0BB62A2A553C2DA65C8B7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSessionTests.swift; sourceTree = "<group>"; };
+		BFD225212AA47AEC06C1A1CB /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C17038816FB4498913897E57 /* FramingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingTests.swift; sourceTree = "<group>"; };
 		C43A29EEFA3C014421EDE000 /* CommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTests.swift; sourceTree = "<group>"; };
 		C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleCommand.swift; sourceTree = "<group>"; };
@@ -165,6 +187,8 @@
 		E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCSECResponse.swift; sourceTree = "<group>"; };
 		E1B640D44DE3C9A054940451 /* VehicleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleService.swift; sourceTree = "<group>"; };
 		EABBA0CFCA5D835A3DB7E703 /* Sentry.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sentry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE2ABCAE9C3226E77B3EC3D7 /* HomeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeText.swift; sourceTree = "<group>"; };
+		EF6788DB81345F9FDE6AC3D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F032C097D6A682347A9B2EB9 /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSnapshot.swift; sourceTree = "<group>"; };
 		F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = universal_message.pb.swift; sourceTree = "<group>"; };
@@ -207,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				D7FD9AECCEC2C142FDF21FBF /* ChargeTests.swift */,
+				3CF61936136BF48E6FB065B4 /* HomeTests.swift */,
 				176DE572A1A6EB6216CD691D /* IntentMessagesTests.swift */,
 				2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */,
 				853F96C882B9C2140333D919 /* VehicleServiceTests.swift */,
@@ -218,10 +243,12 @@
 		131001BC674D3C0736D7CFB4 /* Sentry */ = {
 			isa = PBXGroup;
 			children = (
+				EF6788DB81345F9FDE6AC3D6 /* Assets.xcassets */,
 				BC0BB62A2A553C2DA65C8B7F /* Info.plist */,
 				6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */,
 				5F731A3FFC5090074AE65A83 /* Car */,
-				54D3E80223DDF146DEEBA49F /* Debug */,
+				DB782D47F80ED82498542D7D /* Fonts */,
+				829CA85C72A860954824BF13 /* Home */,
 				9B048BD38BD459A6B3F08936 /* Intents */,
 				E48E2CD3BDD110F2C2FF66F3 /* Onboarding */,
 			);
@@ -232,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */,
+				85409A01301ED36B8A5C3924 /* ClimateSnapshot.swift */,
 				E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */,
 				836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */,
 				C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */,
@@ -277,14 +305,6 @@
 				1EC601E127377480B0A43800 /* Vehicle */,
 			);
 			path = TeslaKit;
-			sourceTree = "<group>";
-		};
-		54D3E80223DDF146DEEBA49F /* Debug */ = {
-			isa = PBXGroup;
-			children = (
-				14AC271C63F4C42D155618AB /* DebugHomeView.swift */,
-			);
-			path = Debug;
 			sourceTree = "<group>";
 		};
 		574B4316D4DB2B5A8437DC5C /* Crypto */ = {
@@ -336,6 +356,19 @@
 			path = Proto;
 			sourceTree = "<group>";
 		};
+		829CA85C72A860954824BF13 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				959E2FC6DDF79C3CB4A9AE30 /* ClimateView.swift */,
+				3BF9121010B2A386686EB863 /* HomeModel.swift */,
+				EE2ABCAE9C3226E77B3EC3D7 /* HomeText.swift */,
+				BFD225212AA47AEC06C1A1CB /* HomeView.swift */,
+				08A5542C8FDE7266D8EEF303 /* Paper.swift */,
+				00F2CAE2B14419B3CA57BF3C /* SettingsView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		9B048BD38BD459A6B3F08936 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
@@ -355,6 +388,17 @@
 				4D040E428833CD69A54ADC63 /* VehicleTransport.swift */,
 			);
 			path = Transport;
+			sourceTree = "<group>";
+		};
+		DB782D47F80ED82498542D7D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				67C12727DB8857AED72A1F12 /* Geist-Medium.ttf */,
+				07898E1FCF3E4CFBD7F663DB /* Geist-OFL.txt */,
+				32F54192A939DE5F9F1252F9 /* Geist-Regular.ttf */,
+				08232FC9EFE705ADC88B8A6C /* Geist-SemiBold.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		E48E2CD3BDD110F2C2FF66F3 /* Onboarding */ = {
@@ -385,6 +429,7 @@
 			buildConfigurationList = D5E45F6BAC356BAD09D9979D /* Build configuration list for PBXNativeTarget "Sentry" */;
 			buildPhases = (
 				4E5973D9A29F6E7C9DD77BBE /* Sources */,
+				52B9E738840CF8F41FD73149 /* Resources */,
 				D52417E300F55B5471AE7F91 /* Frameworks */,
 				79E1FF665F064B44524BD555 /* Embed Frameworks */,
 			);
@@ -499,6 +544,21 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		52B9E738840CF8F41FD73149 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F75EB7286376F24253F1F0AC /* Assets.xcassets in Resources */,
+				A7634D34BD4225C79E24DBE5 /* Geist-Medium.ttf in Resources */,
+				F58DD106C2CE86837F51BF97 /* Geist-OFL.txt in Resources */,
+				40903927ED16E49E9CDDE057 /* Geist-Regular.ttf in Resources */,
+				81EF49DA00512A2FAFE046ED /* Geist-SemiBold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2327ABF47F18A7D5DF4FF80D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -506,6 +566,7 @@
 			files = (
 				711B5AF6DEAF9A9F8DCB9AC6 /* ChargeTests.swift in Sources */,
 				BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */,
+				6169A83DBD759092D106824E /* HomeTests.swift in Sources */,
 				353E5571AE9BC24788410B55 /* IntentMessagesTests.swift in Sources */,
 				67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */,
 				65CDE58472C87223F287B59F /* TestVectors.swift in Sources */,
@@ -520,6 +581,7 @@
 			files = (
 				E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */,
 				23BD63B1391B846367E9ABD0 /* ChargeSnapshot.swift in Sources */,
+				A5CC404150AE0695D77EDE4C /* ClimateSnapshot.swift in Sources */,
 				5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */,
 				F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */,
 				9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */,
@@ -550,13 +612,18 @@
 			files = (
 				F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */,
 				BAF03D21FCB10C4D1296BE44 /* ChargeStore.swift in Sources */,
-				2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */,
+				3513F9F5FE49E51C3664B6BC /* ClimateView.swift in Sources */,
+				38120C7535C7A5979EFB2B63 /* HomeModel.swift in Sources */,
+				C28EB9D6BFA38087B70E5AE4 /* HomeText.swift in Sources */,
+				A060B06BF76F49D684DE242B /* HomeView.swift in Sources */,
 				B28D981152289EEB2DA4954B /* IntentMessages.swift in Sources */,
 				75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */,
 				C3A583ED19E061E06D05A6E3 /* OnboardingView.swift in Sources */,
 				A338BF8220E8851FDE84E75A /* PairingModel.swift in Sources */,
+				E34F6E4D86515A10DEB12731 /* Paper.swift in Sources */,
 				B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */,
 				FCFAFB1D400EC35DF76CE091 /* SentryShortcuts.swift in Sources */,
+				B22379FE1846344750ECE560 /* SettingsView.swift in Sources */,
 				7E90387FEC5D5B087CA56AF6 /* ToggleBootIntent.swift in Sources */,
 				94C1A748E1E9F9B7F440C60E /* VIN.swift in Sources */,
 				0A9CC7029493B126E54B9220 /* VehicleService.swift in Sources */,

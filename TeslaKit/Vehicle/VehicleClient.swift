@@ -100,6 +100,21 @@ public actor VehicleClient {
         }
     }
 
+    /// Reads cabin climate from infotainment, which must be awake; see `waitForInfotainment`.
+    public func climateState(deadline: Duration = .seconds(8)) async throws -> ClimateSnapshot {
+        do {
+            let response = try await signedRequest(to: .infotainment, payload: try VehicleCommand.climateStatePayload(),
+                                                   until: clock.now + deadline)
+            guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
+            let snapshot = ClimateSnapshot(response.vehicleData.climateState)
+            log.info("Climate state: on=\(snapshot.isOn, privacy: .public) inside=\(String(describing: snapshot.insideCelsius), privacy: .public)")
+            return snapshot
+        } catch {
+            log.error("Climate state failed: \(String(describing: error), privacy: .public)")
+            throw error
+        }
+    }
+
     /// Establishes the infotainment session, polling about every `pollEvery` while infotainment
     /// wakes up: a sleeping car ignores the handshake until VCSEC wakes it. Returns at once if a
     /// session already exists, and throws `.timeout` once `deadline` passes.

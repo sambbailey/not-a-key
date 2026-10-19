@@ -50,6 +50,7 @@ final class FakeVehicle: VehicleTransport {
         var script: Script
         var bodyStatus = VCSEC_VehicleStatus()
         var chargeState = CarServer_ChargeState()
+        var climateState = CarServer_ClimateState()
         var unansweredWhileAsleep = 0
         var ignoresWake = false
         var encryptedRepliesSent = 0
@@ -90,6 +91,12 @@ final class FakeVehicle: VehicleTransport {
     var bodyStatus: VCSEC_VehicleStatus {
         get { state.withLock { $0.bodyStatus } }
         set { state.withLock { $0.bodyStatus = newValue } }
+    }
+
+    /// Climate state returned to `getClimateState`.
+    var climateState: CarServer_ClimateState {
+        get { state.withLock { $0.climateState } }
+        set { state.withLock { $0.climateState = newValue } }
     }
 
     /// Charge state returned to `getChargeState`.
@@ -358,6 +365,9 @@ final class FakeVehicle: VehicleTransport {
                 result.actionStatus.result = .operationstatusOk
                 if action?.vehicleAction.getVehicleData.hasGetChargeState == true {
                     result.vehicleData.chargeState = state.chargeState
+                }
+                if action?.vehicleAction.getVehicleData.hasGetClimateState == true {
+                    result.vehicleData.climateState = state.climateState
                 }
             }
             response.protobufMessageAsBytes = try! result.serializedData()
