@@ -17,13 +17,11 @@ public struct SessionKey: Sendable {
     }
 
     /// HMAC the vehicle attaches to a session-info response, proving it holds `K`.
-    public func sessionInfoTag(vin: String, challenge: Data, encodedInfo: Data) -> Data {
+    public func sessionInfoTag(vin: String, challenge: Data, encodedInfo: Data) throws -> Data {
         var metadata = Metadata()
-        // VINs are 17 bytes and challenges are our own 16-byte request UUIDs,
-        // so neither can exceed the 255-byte TLV limit and tags are in order.
-        try! metadata.add(.signatureType, Data([UInt8(Signatures_SignatureType.hmac.rawValue)]))
-        try! metadata.add(.personalization, Data(vin.utf8))
-        try! metadata.add(.challenge, challenge)
+        try metadata.add(.signatureType, Data([UInt8(Signatures_SignatureType.hmac.rawValue)]))
+        try metadata.add(.personalization, Data(vin.utf8))
+        try metadata.add(.challenge, challenge)
         let subkey = Data(HMAC<SHA256>.authenticationCode(for: Data("session info".utf8), using: key))
         let mac = HMAC<SHA256>.authenticationCode(
             for: metadata.serialized() + encodedInfo, using: SymmetricKey(data: subkey))

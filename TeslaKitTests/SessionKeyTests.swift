@@ -9,9 +9,9 @@ import Testing
     #expect(k.keyBytes == TestVectors.sharedKeyK)
 }
 
-@Test func sessionInfoTagMatchesVector() {
+@Test func sessionInfoTagMatchesVector() throws {
     let k = SessionKey(keyBytesForTesting: TestVectors.sharedKeyK)
-    let tag = k.sessionInfoTag(vin: TestVectors.vin,
+    let tag = try k.sessionInfoTag(vin: TestVectors.vin,
         challenge: Data(hex: "1588d5a30eabc6f8fc9a951b11f6fd11"),
         encodedInfo: TestVectors.sessionInfoBytes)
     #expect(tag == Data(hex: "996c1fe38331be138f8039c194b14db2198846ed7d8251e6749284d7b32ea002"))
