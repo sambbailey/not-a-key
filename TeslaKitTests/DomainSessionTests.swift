@@ -224,10 +224,3 @@ private func resyncReply(_ info: Signatures_SessionInfo, requestUUID: Data) thro
     let results = [5, 5, 3, 3, 40, 7, 8].map { w.accept($0) }
     #expect(results == [true, false, true, false, true, false, true])
 }
-
-@Test func vehicleErrorMapsFaults() {
-    #expect(VehicleError.from(fault: .rrorUnknownKeyID) == .notPaired)
-    #expect(VehicleError.from(fault: .rrorInactiveKey) == .notPaired)
-    #expect(VehicleError.from(fault: .rrorBusy) == .busy)
-    #expect(VehicleError.from(fault: .rrorIncorrectEpoch) == .protocolFault(.rrorIncorrectEpoch))
-}

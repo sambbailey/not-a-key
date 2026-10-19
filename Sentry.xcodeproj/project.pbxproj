@@ -15,6 +15,7 @@
 		2589987102A81AD3E94A75BC /* SessionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5065007EA4C6779D9864A /* SessionKeyTests.swift */; };
 		3312AB8D6FFE143476A842E5 /* SentryAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6BE6CF56ABDB411565A /* SentryAppTests.swift */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
+		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
 		69E62D64011C89F97A40BEC1 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
@@ -24,12 +25,14 @@
 		7F464878277778A80EA5FC6A /* keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFB32172182E086849420AA /* keys.pb.swift */; };
 		808F70D117710123EFCF5DBA /* SlidingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82835EA33C41FAF105924137 /* SlidingWindow.swift */; };
 		81636BAEEE27A8F4298D70CC /* MetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7D89C37B7576D55DAEDDF6 /* MetadataTests.swift */; };
+		8238302F989E1D8F15890BA7 /* VehicleCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */; };
 		9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B02D86A56943EFC8BD095B48 /* KeyAgreementKey.swift */; };
 		A28FBB30E069A94FA5537670 /* common.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */; };
 		B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */; };
 		C232FE04095E8A633C60D78B /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7480424B821C9B77994181D6 /* SessionKey.swift */; };
 		CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */; };
 		D0FBB06AB06DFC36074DA76A /* ProtoSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */; };
+		D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */; };
 		DD90F02EBE69BFBB7C8125F7 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */; };
 		E339D8880429FF6B84DD896E /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
 		F3978C427AC1B9138A24D5A0 /* universal_message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */; };
@@ -110,9 +113,12 @@
 		BC0BB62A2A553C2DA65C8B7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSessionTests.swift; sourceTree = "<group>"; };
 		C17038816FB4498913897E57 /* FramingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingTests.swift; sourceTree = "<group>"; };
+		C43A29EEFA3C014421EDE000 /* CommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandTests.swift; sourceTree = "<group>"; };
+		C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleCommand.swift; sourceTree = "<group>"; };
 		CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicle.pb.swift; sourceTree = "<group>"; };
 		D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = errors.pb.swift; sourceTree = "<group>"; };
 		D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vcsec.pb.swift; sourceTree = "<group>"; };
+		E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCSECResponse.swift; sourceTree = "<group>"; };
 		EABBA0CFCA5D835A3DB7E703 /* Sentry.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sentry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F032C097D6A682347A9B2EB9 /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = universal_message.pb.swift; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 		1EC601E127377480B0A43800 /* Vehicle */ = {
 			isa = PBXGroup;
 			children = (
+				E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */,
+				C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */,
 				B5E710A144E3FD753F6CBEF0 /* VehicleError.swift */,
 			);
 			path = Vehicle;
@@ -177,6 +185,7 @@
 		25F6BCA2176164DEACBFE58F /* TeslaKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				C43A29EEFA3C014421EDE000 /* CommandTests.swift */,
 				BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */,
 				C17038816FB4498913897E57 /* FramingTests.swift */,
 				BB7D89C37B7576D55DAEDDF6 /* MetadataTests.swift */,
@@ -406,6 +415,8 @@
 				78C59B6C6AB6E3B413245507 /* Metadata.swift in Sources */,
 				C232FE04095E8A633C60D78B /* SessionKey.swift in Sources */,
 				808F70D117710123EFCF5DBA /* SlidingWindow.swift in Sources */,
+				D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */,
+				8238302F989E1D8F15890BA7 /* VehicleCommand.swift in Sources */,
 				19F12ACD6DD5CB93A4100565 /* VehicleError.swift in Sources */,
 				F99287B9D1012D1B48E6FB9D /* VehicleLocalName.swift in Sources */,
 				7F2CEDEF7C449D3BF4B4D971 /* car_server.pb.swift in Sources */,
@@ -432,6 +443,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */,
 				CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */,
 				6D165F8DE28CBF1ECB2A0F14 /* FramingTests.swift in Sources */,
 				81636BAEEE27A8F4298D70CC /* MetadataTests.swift in Sources */,
