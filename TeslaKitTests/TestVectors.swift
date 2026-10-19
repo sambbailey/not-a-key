@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 @testable import TeslaKit
 
@@ -6,6 +7,8 @@ enum TestVectors {
     static let vin = "5YJ30123456789ABC"
 
     static let clientPrivateKey = Data(hex: "2538CDC29A97C19C1E99A637D6CF4F8C970C118B56EDE1E6323E6D162C4B30DB")
+    static let clientKey = SoftwareKeyAgreementKey(
+        try! P256.KeyAgreement.PrivateKey(rawRepresentation: clientPrivateKey))
     static let vehiclePrivateKey = Data(hex: "344EE5B466A7CF1EEB12B6F50331DB2E5EC5834EF5F4BEFCFD8CBE55C2528D70")
 
     /// Uncompressed SEC1 point: 04 ‖ Vx ‖ Vy.
