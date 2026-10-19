@@ -115,6 +115,22 @@ public actor VehicleClient {
         }
     }
 
+    /// Reads gear, speed, power and the nav route from infotainment, which must be awake;
+    /// see `waitForInfotainment`.
+    public func driveState(deadline: Duration = .seconds(8)) async throws -> DriveSnapshot {
+        do {
+            let response = try await signedRequest(to: .infotainment, payload: try VehicleCommand.driveStatePayload(),
+                                                   until: clock.now + deadline)
+            guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
+            let snapshot = DriveSnapshot(response.vehicleData.driveState)
+            log.info("Drive state: gear=\(snapshot.gear.rawValue, privacy: .public) speed=\(String(describing: snapshot.speedMph), privacy: .public)")
+            return snapshot
+        } catch {
+            log.error("Drive state failed: \(String(describing: error), privacy: .public)")
+            throw error
+        }
+    }
+
     /// Establishes the infotainment session, polling about every `pollEvery` while infotainment
     /// wakes up: a sleeping car ignores the handshake until VCSEC wakes it. Returns at once if a
     /// session already exists, and throws `.timeout` once `deadline` passes.

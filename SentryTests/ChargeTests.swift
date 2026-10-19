@@ -43,9 +43,10 @@ struct ChargeTests {
 
         #expect(snapshot.batteryLevel == 78)
         #expect(fake.statusRequests == 1)
-        #expect(fake.commands.count == 2)
+        // Wake, then charge; climate and drive state are read after it.
+        #expect(fake.commands.count >= 2)
         #expect(fake.commands.first?.vcsec?.rkeaction == .rkeActionWakeVehicle)
-        #expect(fake.commands.last?.carServer?.vehicleAction.getVehicleData.hasGetChargeState == true)
+        #expect(fake.commands.dropFirst().first?.carServer?.vehicleAction.getVehicleData.hasGetChargeState == true)
         #expect(fake.isClosed)
     }
 

@@ -6,18 +6,26 @@ struct ChargeReading: Codable, Equatable, Sendable {
     var batteryLevel: Int
     var rangeMiles: Double
     var isCharging: Bool
+    /// The power going into the battery, in kW.
+    var chargerPowerKW: Int?
+    /// Whether the charge port door is open; nil if the car didn't say.
+    var isPortOpen: Bool?
     var readAt: Date
 
-    init(batteryLevel: Int, rangeMiles: Double, isCharging: Bool, readAt: Date) {
+    init(batteryLevel: Int, rangeMiles: Double, isCharging: Bool, chargerPowerKW: Int? = nil,
+         isPortOpen: Bool? = nil, readAt: Date) {
         self.batteryLevel = batteryLevel
         self.rangeMiles = rangeMiles
         self.isCharging = isCharging
+        self.chargerPowerKW = chargerPowerKW
+        self.isPortOpen = isPortOpen
         self.readAt = readAt
     }
 
     init(_ snapshot: ChargeSnapshot, readAt: Date) {
         self.init(batteryLevel: snapshot.batteryLevel, rangeMiles: snapshot.rangeMiles,
-                  isCharging: snapshot.isCharging, readAt: readAt)
+                  isCharging: snapshot.isCharging, chargerPowerKW: snapshot.chargerPowerKW,
+                  isPortOpen: snapshot.isPortOpen, readAt: readAt)
     }
 
     var levelText: String { "\(batteryLevel)%" }

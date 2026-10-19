@@ -1,7 +1,7 @@
 import SwiftUI
 import TeslaKit
 
-/// Cabin climate: the temperatures, the set point, defrost and keep-on, and start or stop.
+/// Cabin climate: the temperatures, the set point, defrost and the parked mode, and start or stop.
 struct ClimateView: View {
     let model: HomeModel
 
@@ -126,21 +126,48 @@ struct ClimateView: View {
             .frame(minHeight: 68)
             .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
 
-            Toggle(isOn: binding(\.keepsOn, send: VehicleCommand.keepClimate)) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Keep on while parked")
-                        .font(.geist(16, .medium))
-                    Text("Stops below 20%")
-                        .font(.geist(13))
-                        .foregroundStyle(Paper.secondary)
-                }
-            }
-            .frame(minHeight: 68)
-            .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+            keeperModes
+                .padding(.vertical, 16)
+                .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
         }
         .tint(Paper.ink)
         .disabled(!canChange)
         .overlay(alignment: .top) { Paper.rule.frame(height: 1) }
+    }
+
+    /// Off / Keep / Dog / Camp, with what the selected one does underneath.
+    private var keeperModes: some View {
+        let selected = climate?.keeperMode ?? .off
+        return VStack(alignment: .leading, spacing: 12) {
+            Text("Keep climate on")
+                .font(.geist(16, .medium))
+                .accessibilityAddTraits(.isHeader)
+            HStack(spacing: 6) {
+                ForEach(ClimateKeeperMode.allCases, id: \.self) { mode in
+                    Button(Self.label(mode)) {
+                        guard mode != selected else { return }
+                        Task { await model.send(.climateKeeper(mode), for: .climate) }
+                    }
+                    .buttonStyle(ModeButtonStyle(isSelected: mode == selected))
+                    .accessibilityAddTraits(mode == selected ? .isSelected : [])
+                }
+            }
+            Text(ClimateText.hint(for: selected))
+                .font(.geist(13))
+                .foregroundStyle(Paper.secondary)
+                .lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private static func label(_ mode: ClimateKeeperMode) -> String {
+        switch mode {
+        case .off: "Off"
+        case .keep: "Keep"
+        case .dog: "Dog"
+        case .camp: "Camp"
+        }
     }
 
     private var footer: some View {
@@ -200,5 +227,27 @@ struct ClimateView: View {
         } set: { on in
             Task { await model.send(send(on), for: .climate) }
         }
+    }
+}
+
+/// One choice in a row of pills: filled when selected, outlined otherwise.
+private struct ModeButtonStyle: ButtonStyle {
+    let isSelected: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.geist(14, .medium))
+            .foregroundStyle(isSelected ? Paper.background : isEnabled ? Paper.ink : Paper.disabledInk)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background {
+                if isSelected {
+                    Capsule().fill(isEnabled ? Paper.ink : Paper.disabledInk)
+                } else {
+                    Capsule().strokeBorder(Paper.disabledOutline, lineWidth: 1)
+                }
+            }
+            .contentShape(Capsule())
+            .opacity(configuration.isPressed ? 0.7 : 1)
     }
 }

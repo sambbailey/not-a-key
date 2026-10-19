@@ -26,12 +26,22 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     header
-                    hero
-                        .padding(.top, 48)
-                    if isAway {
+                    if model.isDriving, let drive = model.drive {
+                        DrivingPanel(drive: drive, charge: model.charge)
+                        controls.padding(.top, 20)
+                        Text("Boot, frunk, charge port and doors are off while the car is in gear.")
+                            .font(.geist(13))
+                            .foregroundStyle(Paper.secondary)
+                            .lineSpacing(3)
+                            .padding(.vertical, 14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+                    } else if isAway {
+                        hero.padding(.top, 48)
                         awayCard.padding(.top, 28)
                         controls.padding(.top, 24)
                     } else {
+                        hero.padding(.top, 48)
                         controls.padding(.top, 44)
                     }
                 }
@@ -66,6 +76,7 @@ struct HomeView: View {
             switch phase {
             case .background:
                 wasInBackground = true
+                model.stop()
             case .active where wasInBackground:
                 wasInBackground = false
                 Task { await model.refresh() }
@@ -87,7 +98,7 @@ struct HomeView: View {
                 switch model.reach {
                 case .nearby:
                     Circle().fill(Paper.nearby).frame(width: 7, height: 7)
-                    Text("Nearby")
+                    Text(model.isDriving ? "Driving" : "Nearby")
                 case .notInRange:
                     Circle().strokeBorder(Paper.staleBar, lineWidth: 1.5).frame(width: 7, height: 7)
                     Text(model.isRetrying ? "Checking" : "Not in range")
@@ -197,11 +208,12 @@ struct HomeView: View {
 
     private var controls: some View {
         VStack(spacing: 0) {
-            ForEach(HomeModel.Control.allCases, id: \.self) { control in
+            // Only climate can change while the car is in gear.
+            ForEach(model.isDriving ? [.climate] : HomeModel.Control.allCases, id: \.self) { control in
                 ControlRow(row: row(for: control), compact: isAway,
                            open: control == .climate && !isAway ? { path.append(.climate) } : nil) {
                     // Starting climate goes by its screen, to pick a temperature first.
-                    if control == .climate, model.climate?.isOn != true {
+                    if control == .climate, model.climate?.isOn != true || model.isDriving {
                         path.append(.climate)
                     } else {
                         Task { await model.perform(control) }
@@ -232,6 +244,12 @@ struct HomeView: View {
                 .buttonStyle(PaperButtonStyle(height: 52))
                 .allowsHitTesting(!model.isRetrying)
                 .accessibilityLabel(model.isRetrying ? "Checking for the car" : "Try again")
+            } else if model.isDriving, let odometer = model.drive?.odometerMiles {
+                Text("Odometer \(DriveText.miles(odometer))")
+                    .font(.geist(12))
+                    .tracking(0.24)
+                    .foregroundStyle(Paper.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             } else {
                 Text("Bluetooth key · No internet needed")
                     .font(.geist(12))
@@ -288,11 +306,16 @@ struct HomeView: View {
             return .init(icon: .frunk, title: "Frunk", state: isWorking ? "Sending…" : state,
                          showsProgress: isWorking || body?.frunk.isMoving == true,
                          action: "Open", isEnabled: canSend)
+        case .chargePort:
+            return .init(icon: .chargePort, title: "Charge port",
+                         state: isWorking ? "Sending…" : ChargePortText.state(model.charge),
+                         showsProgress: isWorking,
+                         action: ChargePortText.action(model.charge), isEnabled: canSend)
         case .climate:
             return .init(icon: .climate, title: "Climate",
                          state: isWorking ? "Sending…" : model.climate.map(ClimateText.summary),
                          showsProgress: isWorking,
-                         action: model.climate?.isOn == true ? "Stop" : "Start",
+                         action: model.climate?.isOn != true ? "Start" : model.isDriving ? "Adjust" : "Stop",
                          // Start only opens the climate screen, so it doesn't wait on a reading.
                          isEnabled: model.climate?.isOn == true ? canSend : !isAway)
         }
@@ -312,7 +335,7 @@ struct ControlRow: View {
     }
 
     let row: Model
-    /// The out-of-range layout: no icon, shorter rows.
+    /// The out-of-range layout: shorter rows.
     var compact = false
     /// Opens the control's own screen when the row is tapped outside its button.
     var open: (() -> Void)?
@@ -323,9 +346,7 @@ struct ControlRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            if !compact {
-                PaperIcon(kind: row.icon).drawn()
-            }
+            PaperIcon(kind: row.icon).drawn()
             VStack(alignment: .leading, spacing: showsProgress ? 6 : 2) {
                 Text(row.title)
                     .font(.geist(16, .medium))
@@ -415,6 +436,7 @@ private struct BannerView: View {
         case .boot?: .boot
         case .doors?: .lock
         case .frunk?: .frunk
+        case .chargePort?: .chargePort
         case .climate?: .climate
         case nil: .warning
         }

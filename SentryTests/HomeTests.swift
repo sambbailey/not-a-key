@@ -15,7 +15,7 @@ struct HomeModelTests {
 
     private func model(for fake: FakeVehicle) -> HomeModel {
         HomeModel(store: ChargeStore(defaults: defaults)) { _ in
-            VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in fake })
+            VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in fake.reconnected() })
         }
     }
 
@@ -89,6 +89,8 @@ struct HomeModelTests {
     @Test func doorsUnlockWhenLockedAndWaitForAReadingOtherwise() async {
         let fake = FakeVehicle()
         fake.bodyStatus.vehicleLockState = .vehiclelockstateLocked
+        // A read without charge fails as a whole, so the fake needs one for the lock state to land.
+        fake.chargeState = Self.chargeState(level: 82, range: 254.2)
         let model = model(for: fake)
         #expect(model.command(for: .doors) == nil)
 
@@ -170,5 +172,118 @@ struct HomeTextTests {
     ] as [(String, String?)])
     func modelName(vin: String, expected: String?) {
         #expect(VIN.modelName(vin) == expected)
+    }
+}
+
+@MainActor
+struct ChargePortClimateDriveTests {
+    private let defaults: UserDefaults
+
+    init() {
+        let suite = "com.dodimead.sentry.tests.\(UUID().uuidString)"
+        defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+    }
+
+    private func model(for fake: FakeVehicle) -> HomeModel {
+        HomeModel(store: ChargeStore(defaults: defaults)) { _ in
+            VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in fake.reconnected() })
+        }
+    }
+
+    private static func fakeCar() -> FakeVehicle {
+        let fake = FakeVehicle()
+        fake.chargeState.batteryLevel = 68
+        fake.chargeState.batteryRange = 210
+        return fake
+    }
+
+    @Test func chargePortOpensWhenClosedAndStopsWhileCharging() async {
+        let fake = Self.fakeCar()
+        fake.chargeState.chargePortDoorOpen = false
+        let model = model(for: fake)
+        await model.refresh()
+        #expect(model.command(for: .chargePort) == .openChargePort)
+        #expect(ChargePortText.state(model.charge) == "Closed")
+
+        await model.perform(.chargePort)
+        #expect(fake.commands.contains { if case .chargePortDoorOpen? = $0.carServer?.vehicleAction.vehicleActionMsg { true } else { false } })
+        #expect(model.charge?.isPortOpen == true)
+        #expect(model.command(for: .chargePort) == .closeChargePort)
+
+        fake.chargeState.chargingState.charging = CarServer_Void()
+        fake.chargeState.chargerPower = 7
+        await model.refresh()
+        #expect(ChargePortText.state(model.charge) == "Charging · 7 kW")
+        #expect(model.command(for: .chargePort) == .stopCharging)
+    }
+
+    @Test func dogModeShowsOnTheClimateRow() async {
+        let fake = Self.fakeCar()
+        let model = model(for: fake)
+        await model.refresh()
+
+        await model.send(.climateKeeper(.dog), for: .climate)
+        #expect(fake.commands.contains {
+            $0.carServer?.vehicleAction.hvacClimateKeeperAction.climateKeeperAction == .climateKeeperActionDog
+        })
+        #expect(model.climate?.keeperMode == .dog)
+        #expect(model.command(for: .climate) == .climateOff)
+        var climate = ClimateSnapshot(isOn: true, setCelsius: 21, keeperMode: .dog)
+        #expect(ClimateText.summary(climate) == "Dog mode · 21°")
+        climate.keeperMode = .off
+        #expect(ClimateText.summary(climate) == "On")
+    }
+
+    @Test func campModeReadsFromTheCarsPartyMode() {
+        var state = CarServer_ClimateState()
+        state.climateKeeperMode.party = CarServer_Void()
+        #expect(ClimateSnapshot(state).keeperMode == .camp)
+    }
+
+    @Test func drivingLocksEverythingButClimate() async {
+        let fake = Self.fakeCar()
+        fake.driveState.shiftState.d = CarServer_Void()
+        fake.driveState.speedFloat = 43
+        fake.driveState.power = -12
+        fake.driveState.odometerInHundredthsOfAMile = 1_248_100
+        let model = model(for: fake)
+        await model.refresh()
+        model.stop()
+
+        #expect(model.isDriving)
+        #expect(model.drive?.speedMph == 43)
+        #expect(model.drive?.odometerMiles == 12_481)
+        #expect(model.drive?.route == nil)
+        for control in [HomeModel.Control.boot, .doors, .frunk, .chargePort] {
+            #expect(model.command(for: control) == nil)
+        }
+        #expect(model.command(for: .climate) != nil)
+        #expect(DriveText.power(-12) == "\u{2212}12 kW")
+        #expect(DriveText.power(18) == "+18 kW")
+    }
+
+    @Test func parkedIsNotDriving() async {
+        let fake = Self.fakeCar()
+        fake.driveState.shiftState.p = CarServer_Void()
+        let model = model(for: fake)
+        await model.refresh()
+        #expect(!model.isDriving)
+        #expect(model.command(for: .boot) == .moveTrunk)
+    }
+
+    @Test func routeIsReadFromTheCarsNav() {
+        var state = CarServer_DriveState()
+        state.shiftState.d = CarServer_Void()
+        state.activeRouteDestination = "Home"
+        state.activeRouteMinutesToArrival = 18
+        state.activeRouteMilesToArrival = 12.4
+        state.activeRouteEnergyAtArrival = 64
+        let route = DriveSnapshot(state).route
+        #expect(route?.destination == "Home")
+        #expect(route?.minutesToArrival == 18)
+        #expect(route?.batteryAtArrival == 64)
+        #expect(DriveText.minutes(18) == "18 min")
+        #expect(DriveText.minutes(65) == "1 h 5 min")
     }
 }
