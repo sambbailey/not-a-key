@@ -52,6 +52,7 @@ final class FakeVehicle: VehicleTransport {
         var rebooted = false
         var foreignReplyPending = false
         var awaitingReply = false
+        var requestsReceived = 0
         var overlappingRequests = 0
     }
 
@@ -84,6 +85,8 @@ final class FakeVehicle: VehicleTransport {
     var addKeyRequests: [VCSEC_ToVCSECMessage] { state.withLock { $0.addKeyRequests } }
     var staleFaultsSent: Int { state.withLock { $0.staleFaultsSent } }
     var busyRepliesSent: Int { state.withLock { $0.busyRepliesSent } }
+    /// Every RoutableMessage received, including ones a silent car ignores.
+    var requestsReceived: Int { state.withLock { $0.requestsReceived } }
     /// Requests that arrived while an earlier one was still awaiting its final reply.
     var overlappingRequests: Int { state.withLock { $0.overlappingRequests } }
 
@@ -138,6 +141,7 @@ final class FakeVehicle: VehicleTransport {
             return []
         }
         return state.withLock { state in
+            state.requestsReceived += 1
             if case .silent = state.script { return [] }
             if state.awaitingReply { state.overlappingRequests += 1 }
             state.awaitingReply = true

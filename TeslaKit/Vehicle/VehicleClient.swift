@@ -10,6 +10,8 @@ public actor VehicleClient {
     ]
     /// How long one pairing poll waits for the vehicle before polling again.
     private static let pairingPollDeadline = Duration.seconds(5)
+    /// How long an add-key request may wait behind another request before giving up.
+    private static let addKeyQueueDeadline = Duration.seconds(5)
 
     private enum Attempt<Value> {
         case done(Value)
@@ -33,7 +35,8 @@ public actor VehicleClient {
     private var waiter: (id: UInt64, continuation: CheckedContinuation<UniversalMessage_RoutableMessage?, Never>)?
     private var lastWaiterID: UInt64 = 0
     private var requestInFlight = false
-    private var queuedRequests: [CheckedContinuation<Void, Never>] = []
+    private var lastQueueID: UInt64 = 0
+    private var queuedRequests: [(id: UInt64, continuation: CheckedContinuation<Bool, Never>)] = []
 
     public init(vin: String, key: KeyAgreementKey, transport: VehicleTransport,
                 now: @escaping @Sendable () -> Date = Date.init, busyRetryInterval: Duration = .seconds(1)) {
@@ -54,7 +57,7 @@ public actor VehicleClient {
     public func bodyControllerState(deadline: Duration = .seconds(5)) async throws -> VehicleSnapshot {
         let until = clock.now + deadline
         let payload = try VehicleCommand.bodyControllerStatePayload()
-        return try await exclusively {
+        return try await exclusively(until: until) {
             try await retrying(until: until) { try await statusAttempt(payload: payload, until: until) }
         }
     }
@@ -63,7 +66,7 @@ public actor VehicleClient {
         let until = clock.now + deadline
         let domain = command.domain
         let payload = try command.payload()
-        try await exclusively {
+        try await exclusively(until: until) {
             do {
                 if sessions[domain] == nil {
                     sessions[domain] = try await retrying(until: until) {
@@ -84,7 +87,8 @@ public actor VehicleClient {
     /// key card, so this does not wait for an answer; use `waitForPairing` to detect success.
     public func sendAddKeyRequest(publicKeyX963: Data) async throws {
         let envelope = try VehicleCommand.addKeyEnvelope(publicKeyX963: publicKeyX963)
-        try await exclusively { try await send(envelope) }
+        let until = clock.now + Self.addKeyQueueDeadline
+        try await exclusively(until: until) { try await send(envelope, before: until) }
     }
 
     /// Polls the infotainment handshake until the vehicle reports our key as enrolled.
@@ -93,7 +97,7 @@ public actor VehicleClient {
         while true {
             let pollDeadline = min(until, clock.now + Self.pairingPollDeadline)
             do {
-                let session = try await exclusively {
+                let session = try await exclusively(until: pollDeadline) {
                     try await retrying(until: pollDeadline) {
                         try await handshakeAttempt(domain: .infotainment, until: pollDeadline)
                     }
@@ -136,7 +140,8 @@ public actor VehicleClient {
                                   until deadline: ContinuousClock.Instant) async throws -> Attempt<DomainSession> {
         let uuid = Self.randomBytes(16)
         try await send(DomainSession.handshakeRequest(domain: domain, publicKeyX963: key.publicKeyX963,
-                                                      routingAddress: routingAddress, uuid: uuid))
+                                                      routingAddress: routingAddress, uuid: uuid),
+                       before: deadline)
         while true {
             let reply = try await nextReply(from: domain, uuid: uuid, until: deadline)
             if Self.isBusy(reply) { return .busy }
@@ -154,7 +159,7 @@ public actor VehicleClient {
         let uuid = Self.randomBytes(16)
         var message = request(to: domain, payload: payload, uuid: uuid)
         let requestHash = try sessions[domain]!.encrypt(&message, now: now())
-        try await send(message)
+        try await send(message, before: deadline)
         while true {
             var reply = try await nextReply(from: domain, uuid: uuid, until: deadline)
             let fault = reply.signedMessageStatus.signedMessageFault
@@ -190,7 +195,7 @@ public actor VehicleClient {
     private func statusAttempt(payload: Data,
                                until deadline: ContinuousClock.Instant) async throws -> Attempt<VehicleSnapshot> {
         let uuid = Self.randomBytes(16)
-        try await send(request(to: .vehicleSecurity, payload: payload, uuid: uuid))
+        try await send(request(to: .vehicleSecurity, payload: payload, uuid: uuid), before: deadline)
         let reply = try await nextReply(from: .vehicleSecurity, uuid: uuid, until: deadline)
         if Self.isBusy(reply) { return .busy }
         let fault = reply.signedMessageStatus.signedMessageFault
@@ -245,30 +250,58 @@ public actor VehicleClient {
 
     // MARK: One request at a time
 
-    /// VCSEC cannot handle concurrent requests, so each request waits for the previous one.
-    private func exclusively<Value>(_ body: () async throws -> Value) async throws -> Value {
+    /// VCSEC cannot handle concurrent requests, so each request waits for the previous one,
+    /// throwing `.timeout` if `deadline` passes first.
+    private func exclusively<Value>(until deadline: ContinuousClock.Instant,
+                                    _ body: () async throws -> Value) async throws -> Value {
         if requestInFlight {
-            await withCheckedContinuation { queuedRequests.append($0) }
+            lastQueueID += 1
+            let id = lastQueueID
+            let timer = Task { [weak self] in
+                try? await Task.sleep(until: deadline, clock: .continuous)
+                await self?.dropQueuedRequest(id)
+            }
+            let acquired = await withTaskCancellationHandler {
+                await withCheckedContinuation { queuedRequests.append((id, $0)) }
+            } onCancel: {
+                Task { [weak self] in await self?.dropQueuedRequest(id) }
+            }
+            timer.cancel()
+            guard acquired else {
+                try Task.checkCancellation()
+                throw VehicleError.timeout
+            }
         } else {
             requestInFlight = true
         }
-        defer {
-            if queuedRequests.isEmpty {
-                requestInFlight = false
-            } else {
-                queuedRequests.removeFirst().resume()
-            }
-        }
+        defer { handOffRequestSlot() }
+        guard clock.now < deadline else { throw VehicleError.timeout }
         return try await body()
+    }
+
+    private func handOffRequestSlot() {
+        if queuedRequests.isEmpty {
+            requestInFlight = false
+        } else {
+            queuedRequests.removeFirst().continuation.resume(returning: true)
+        }
+    }
+
+    private func dropQueuedRequest(_ id: UInt64) {
+        guard let index = queuedRequests.firstIndex(where: { $0.id == id }) else { return }
+        queuedRequests.remove(at: index).continuation.resume(returning: false)
     }
 
     // MARK: Transport
 
-    private func send(_ message: UniversalMessage_RoutableMessage) async throws {
-        try await send(try message.serializedData())
+    private func send(_ message: UniversalMessage_RoutableMessage, before deadline: ContinuousClock.Instant) async throws {
+        try await send(try message.serializedData(), before: deadline)
     }
 
-    private func send(_ bytes: Data) async throws {
+    /// Never sends once `deadline` has passed: the caller would report a timeout for a
+    /// command the vehicle then carries out.
+    private func send(_ bytes: Data, before deadline: ContinuousClock.Instant) async throws {
+        guard clock.now < deadline else { throw VehicleError.timeout }
         startReceiving()
         // Anything still queued answers an earlier request.
         mailbox.removeAll()

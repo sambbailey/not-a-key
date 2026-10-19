@@ -147,6 +147,46 @@ private func makeClient(_ car: FakeVehicle) -> VehicleClient {
         #expect(car.commands.count == 2)
     }
 
+    @Test func queuedRequestTimesOutWithoutSending() async throws {
+        let car = FakeVehicle(replyDelay: .milliseconds(100))
+        let client = makeClient(car)
+        async let first: Void = client.execute(.lock)
+        try await Task.sleep(for: .milliseconds(20))
+        await #expect(throws: VehicleError.timeout) {
+            try await client.execute(.unlock, deadline: .milliseconds(50))
+        }
+        try await first
+
+        #expect(car.commands.count == 1)
+        #expect(car.commands.first?.vcsec?.rkeaction == .rkeActionLock)
+    }
+
+    @Test func queuedRequestDoesNotWaitOutAHungRequest() async throws {
+        let car = FakeVehicle(script: .silent)
+        let client = makeClient(car)
+        let first = Task { try await client.execute(.lock, deadline: .milliseconds(500)) }
+        try await Task.sleep(for: .milliseconds(20))
+        let started = ContinuousClock.now
+        await #expect(throws: VehicleError.timeout) {
+            try await client.bodyControllerState(deadline: .milliseconds(50))
+        }
+        #expect(ContinuousClock.now - started < .milliseconds(300))
+        #expect(car.requestsReceived == 1)
+        await #expect(throws: VehicleError.timeout) { try await first.value }
+    }
+
+    @Test func busyRetryIsNotSentPastDeadline() async throws {
+        let car = FakeVehicle(script: .busy(times: 100))
+        let client = VehicleClient(vin: TestVectors.vin, key: TestVectors.clientKey, transport: car,
+                                   busyRetryInterval: .milliseconds(200))
+        let started = ContinuousClock.now
+        await #expect(throws: VehicleError.busy) {
+            try await client.execute(.moveTrunk, deadline: .milliseconds(100))
+        }
+        #expect(ContinuousClock.now - started < .milliseconds(200))
+        #expect(car.commands.count == 1)
+    }
+
     @Test func sendAddKeyRequestSendsRawEnvelope() async throws {
         let car = FakeVehicle(script: .silent)
         let newKey = TestVectors.clientKey.publicKeyX963
