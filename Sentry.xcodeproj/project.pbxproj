@@ -13,15 +13,16 @@
 		1D4214979AF6C23318015E6D /* managed_charging.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */; };
 		2170768139886BEB3E8274C6 /* TeslaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2589987102A81AD3E94A75BC /* SessionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5065007EA4C6779D9864A /* SessionKeyTests.swift */; };
-		3312AB8D6FFE143476A842E5 /* SentryAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6BE6CF56ABDB411565A /* SentryAppTests.swift */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
 		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
 		607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */; };
+		67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */; };
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
 		69E62D64011C89F97A40BEC1 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
 		6D165F8DE28CBF1ECB2A0F14 /* FramingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17038816FB4498913897E57 /* FramingTests.swift */; };
 		755A56D01582DD3B55F301A6 /* VehicleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */; };
+		75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3599C40F668855094C4FCCDB /* KeyStore.swift */; };
 		78306EEA75494363D7D0BE77 /* VehicleTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D040E428833CD69A54ADC63 /* VehicleTransport.swift */; };
 		78C59B6C6AB6E3B413245507 /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = F032C097D6A682347A9B2EB9 /* Metadata.swift */; };
 		7F2CEDEF7C449D3BF4B4D971 /* car_server.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB90006A07706CC475AF4AB4 /* car_server.pb.swift */; };
@@ -100,6 +101,8 @@
 /* Begin PBXFileReference section */
 		0E0D73E5DA3E5A875B9F6C71 /* common.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.pb.swift; sourceTree = "<group>"; };
 		116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoSmokeTests.swift; sourceTree = "<group>"; };
+		2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoreTests.swift; sourceTree = "<group>"; };
+		3599C40F668855094C4FCCDB /* KeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStore.swift; sourceTree = "<group>"; };
 		49E3B73BA8BE1228458F3E02 /* signatures.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signatures.pb.swift; sourceTree = "<group>"; };
 		4D040E428833CD69A54ADC63 /* VehicleTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTransport.swift; sourceTree = "<group>"; };
 		51B2B58790A35267E9F0F915 /* BLETransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransport.swift; sourceTree = "<group>"; };
@@ -110,7 +113,6 @@
 		7480424B821C9B77994181D6 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
 		82835EA33C41FAF105924137 /* SlidingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingWindow.swift; sourceTree = "<group>"; };
 		836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClient.swift; sourceTree = "<group>"; };
-		8880D6BE6CF56ABDB411565A /* SentryAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryAppTests.swift; sourceTree = "<group>"; };
 		908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = managed_charging.pb.swift; sourceTree = "<group>"; };
 		91348FDD2FBD2536E13ABF5D /* DomainSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSession.swift; sourceTree = "<group>"; };
 		965D878EC01553C82B9F045C /* VehicleClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClientTests.swift; sourceTree = "<group>"; };
@@ -170,7 +172,7 @@
 		12B0681B9D15B8ED7DE0F80F /* SentryTests */ = {
 			isa = PBXGroup;
 			children = (
-				8880D6BE6CF56ABDB411565A /* SentryAppTests.swift */,
+				2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */,
 			);
 			path = SentryTests;
 			sourceTree = "<group>";
@@ -180,6 +182,7 @@
 			children = (
 				BC0BB62A2A553C2DA65C8B7F /* Info.plist */,
 				6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */,
+				5F731A3FFC5090074AE65A83 /* Car */,
 			);
 			path = Sentry;
 			sourceTree = "<group>";
@@ -241,6 +244,14 @@
 				7480424B821C9B77994181D6 /* SessionKey.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		5F731A3FFC5090074AE65A83 /* Car */ = {
+			isa = PBXGroup;
+			children = (
+				3599C40F668855094C4FCCDB /* KeyStore.swift */,
+			);
+			path = Car;
 			sourceTree = "<group>";
 		};
 		6290F1F4A9097D455D700B7B = {
@@ -419,7 +430,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3312AB8D6FFE143476A842E5 /* SentryAppTests.swift in Sources */,
+				67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +467,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */,
 				B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
