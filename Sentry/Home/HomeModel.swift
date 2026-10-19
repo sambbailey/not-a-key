@@ -49,11 +49,15 @@ final class HomeModel {
     static let scanLimit: Duration = .seconds(10)
     static let retryLimit: Duration = .seconds(5)
 
-    /// How often the car is read again while it's being driven.
-    static let drivingRefresh: Duration = .seconds(3)
+    /// How often drive state is read while the car is driven, over one held connection.
+    static let drivingRefresh: Duration = .milliseconds(250)
+    /// Charge and climate are read again on every this many drive reads, about every 10 seconds.
+    static let drivingStatusEvery = 40
 
-    /// The next read while driving, waiting out `drivingRefresh`.
-    private var drivingPoll: Task<Void, Never>?
+    /// The live reads while driving. They hold the car's connection; commands stop them first.
+    private var driveWatch: Task<Void, Never>?
+    private let drivingRefresh: Duration
+
 
     /// The read in flight. It runs alongside the controls; they cancel it before connecting.
     private var readTask: Task<Void, Never>?
@@ -66,9 +70,11 @@ final class HomeModel {
     private let now: @Sendable () -> Date
 
     init(store: ChargeStore = ChargeStore(), now: @escaping @Sendable () -> Date = Date.init,
+         drivingRefresh: Duration = HomeModel.drivingRefresh,
          makeService: @escaping (_ scanLimit: Duration) throws -> VehicleService) {
         self.store = store
         self.now = now
+        self.drivingRefresh = drivingRefresh
         self.makeService = makeService
         charge = store.last
         body = store.lastBody
@@ -93,8 +99,8 @@ final class HomeModel {
     /// when the app goes to the background.
     func stop() {
         readTask?.cancel()
-        drivingPoll?.cancel()
-        drivingPoll = nil
+        driveWatch?.cancel()
+        driveWatch = nil
     }
 
     /// The command a tap on `control` sends now, or nil if it can't do anything from this state.
@@ -118,7 +124,7 @@ final class HomeModel {
     }
 
     /// Wakes the car if needed and reads lock, closures and charge, or waits for the read in flight.
-    /// Skipped while a command runs.
+    /// Skipped while a command runs, and while driving, when the car is already read live.
     func refresh() async {
         await refresh(scanLimit: Self.scanLimit)
     }
@@ -137,7 +143,7 @@ final class HomeModel {
     }
 
     private func refresh(scanLimit: Duration) async {
-        if readTask == nil, working == nil {
+        if readTask == nil, working == nil, driveWatch == nil {
             readIsFull = true
             readTask = Task {
                 defer { readTask = nil }
@@ -159,6 +165,7 @@ final class HomeModel {
         guard working == nil else { return }
         working = control
         let interruptedFullRead = await stopRead()
+        let interruptedWatch = await stopDriveWatch()
         do {
             let result = try await makeService(Self.scanLimit).send(command)
             reach = .nearby
@@ -175,7 +182,7 @@ final class HomeModel {
         }
         working = nil
         // The command took the car's connection mid-read; read again now it's free.
-        if interruptedFullRead {
+        if interruptedFullRead || interruptedWatch {
             Task { await refresh() }
         } else {
             watchMovingClosures()
@@ -191,7 +198,7 @@ final class HomeModel {
             drive = status.drive
             reach = .nearby
             keyIsMissing = false
-            if isDriving { scheduleDrivingRead() }
+            if isDriving { watchDrive() }
         } catch {
             // Cancelled to make way for a command; that command reports its own outcome.
             guard !Task.isCancelled else { return }
@@ -224,15 +231,44 @@ final class HomeModel {
         }
     }
 
-    /// Reads the car again shortly, to keep speed and power current while it's driven.
-    private func scheduleDrivingRead() {
-        drivingPoll?.cancel()
-        drivingPoll = Task {
-            try? await Task.sleep(for: Self.drivingRefresh)
+    /// Keeps speed, power and gear live while the car is driven. Once it's out of gear or the
+    /// connection drops, reads the car in full again, which shows the parked car or the error.
+    private func watchDrive() {
+        guard driveWatch == nil else { return }
+        driveWatch = Task {
+            do {
+                try await makeService(Self.scanLimit).watchDrive(every: drivingRefresh,
+                                                                 statusEvery: Self.drivingStatusEvery) { [weak self] update in
+                    await self?.apply(update)
+                }
+            } catch {
+                log.error("Live drive reads stopped: \(String(describing: error), privacy: .public)")
+            }
             guard !Task.isCancelled else { return }
-            drivingPoll = nil
+            driveWatch = nil
             await refresh()
         }
+    }
+
+    /// Cancels the live reads and waits for them to let go of the car.
+    /// Returns whether they were running, so they can be started again afterwards.
+    private func stopDriveWatch() async -> Bool {
+        guard let driveWatch else { return false }
+        driveWatch.cancel()
+        self.driveWatch = nil
+        await driveWatch.value
+        return true
+    }
+
+    private func apply(_ update: VehicleService.DriveUpdate) {
+        guard driveWatch != nil else { return }
+        drive = update.drive
+        if let snapshot = update.charge {
+            let reading = ChargeReading(snapshot, readAt: now())
+            charge = reading
+            store.save(reading)
+        }
+        if let climate = update.climate { self.climate = climate }
     }
 
     /// Shows the charge port a successful `command` leads to, until the next read confirms it.

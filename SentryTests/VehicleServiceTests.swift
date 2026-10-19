@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import Testing
 @testable import Sentry
 @testable import TeslaKit
@@ -20,6 +21,33 @@ struct VehicleServiceTests {
         #expect(try await service(for: fake).toggleBoot() == expected)
         #expect(fake.commands.count == 1)
         #expect(fake.commands.first?.vcsec?.closureMoveRequest.rearTrunk == .closureMoveTypeMove)
+        #expect(fake.isClosed)
+    }
+
+    @Test func watchDriveReadsOverOneConnectionUntilTheCarIsOutOfGear() async throws {
+        let fake = FakeVehicle()
+        fake.driveState.shiftState.d = CarServer_Void()
+        fake.driveState.speedFloat = 30
+        fake.chargeState.batteryLevel = 68
+        fake.chargeState.batteryRange = 210
+        let connections = Mutex(0)
+        let service = VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in
+            connections.withLock { $0 += 1 }
+            return fake.reconnected()
+        })
+        let updates = Mutex<[VehicleService.DriveUpdate]>([])
+
+        try await service.watchDrive(every: .zero, statusEvery: 2) { update in
+            let count = updates.withLock { $0.append(update); return $0.count }
+            if count == 3 { fake.driveState.speedFloat = 31 }
+            if count == 4 { fake.driveState.shiftState.p = CarServer_Void() }
+        }
+
+        let seen = updates.withLock { $0 }
+        #expect(seen.map(\.drive.speedMph) == [30, 30, 30, 31, 31])
+        #expect(seen.last?.drive.gear == .park)
+        #expect(seen.map { $0.charge != nil } == [false, true, false, true, false])
+        #expect(connections.withLock { $0 } == 1)
         #expect(fake.isClosed)
     }
 
