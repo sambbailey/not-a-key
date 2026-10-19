@@ -1,0 +1,9 @@
+The .proto files in this directory are unmodified copies from Tesla's
+vehicle-command repository.
+
+Source:  https://github.com/teslamotors/vehicle-command
+Path:    pkg/protocol/protobuf/*.proto
+Commit:  a4b43c1eff0e09d77deb9f2dce97031141fe8c8a
+
+Copyright Tesla, Inc. Licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0

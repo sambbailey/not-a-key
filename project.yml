@@ -1,0 +1,73 @@
+name: Sentry
+options:
+  bundleIdPrefix: com.dodimead
+  deploymentTarget:
+    iOS: "18.0"
+packages:
+  SwiftProtobuf:
+    url: https://github.com/apple/swift-protobuf
+    from: 1.39.0
+targets:
+  TeslaKit:
+    type: framework
+    platform: iOS
+    sources: [TeslaKit]
+    dependencies:
+      - package: SwiftProtobuf
+        product: SwiftProtobuf
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "6.0"
+  Sentry:
+    type: application
+    platform: iOS
+    sources: [Sentry]
+    dependencies:
+      - target: TeslaKit
+        embed: true
+    info:
+      path: Sentry/Info.plist
+      properties:
+        UIBackgroundModes: [bluetooth-central]
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: "Sentry uses Bluetooth to talk to your car."
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_VERSION: "6.0"
+  TeslaKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [TeslaKitTests]
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+    dependencies:
+      - target: TeslaKit
+  SentryTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - SentryTests
+      # Shared with TeslaKitTests so app-level tests drive the same in-process car.
+      - TeslaKitTests/FakeVehicle.swift
+      - TeslaKitTests/TestVectors.swift
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+    dependencies:
+      - target: Sentry
+schemes:
+  Sentry:
+    build:
+      targets:
+        Sentry: all
+        TeslaKitTests: [test]
+        SentryTests: [test]
+    test:
+      targets: [TeslaKitTests, SentryTests]
