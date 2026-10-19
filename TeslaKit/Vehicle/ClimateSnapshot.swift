@@ -1,7 +1,7 @@
 import Foundation
 
 /// Cabin climate as infotainment reports it. Temperatures are in Celsius; nil when not reported.
-public struct ClimateSnapshot: Sendable, Equatable {
+public struct ClimateSnapshot: Codable, Sendable, Equatable {
     public var isOn: Bool
     public var insideCelsius: Double?
     public var outsideCelsius: Double?

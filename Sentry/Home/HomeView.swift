@@ -99,6 +99,18 @@ struct HomeView: View {
             .font(.geist(13))
             .foregroundStyle(Paper.secondary)
             .accessibilityElement(children: .combine)
+            NavigationLink(value: Route.settings) {
+                Image("Gear")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundStyle(Paper.ink)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Settings")
+            // A full-size tap target that still lines the icon up with the screen's margin.
+            .padding(.leading, 2)
+            .padding(.trailing, -12)
         }
     }
 
@@ -221,15 +233,11 @@ struct HomeView: View {
                 .allowsHitTesting(!model.isRetrying)
                 .accessibilityLabel(model.isRetrying ? "Checking for the car" : "Try again")
             } else {
-                HStack {
-                    Text("Bluetooth key · No internet needed")
-                        .foregroundStyle(Paper.secondary)
-                    Spacer()
-                    NavigationLink("Settings", value: Route.settings)
-                        .underline()
-                }
-                .font(.geist(12))
-                .tracking(0.24)
+                Text("Bluetooth key · No internet needed")
+                    .font(.geist(12))
+                    .tracking(0.24)
+                    .foregroundStyle(Paper.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(.horizontal, 24)
@@ -304,45 +312,39 @@ struct ControlRow: View {
     }
 
     let row: Model
-    /// The out-of-range layout: no icon, state beside the button.
+    /// The out-of-range layout: no icon, shorter rows.
     var compact = false
     /// Opens the control's own screen when the row is tapped outside its button.
     var open: (() -> Void)?
     let perform: () -> Void
 
+    /// Nothing moves while the car is out of range, so the bar only shows in range.
+    private var showsProgress: Bool { row.showsProgress && !compact }
+
     var body: some View {
         HStack(spacing: 14) {
-            if compact {
+            if !compact {
+                PaperIcon(kind: row.icon).drawn()
+            }
+            VStack(alignment: .leading, spacing: showsProgress ? 6 : 2) {
                 Text(row.title)
                     .font(.geist(16, .medium))
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 if let state = row.state {
-                    Text(state)
-                        .font(.geist(13))
-                        .foregroundStyle(Paper.secondary)
-                }
-            } else {
-                PaperIcon(kind: row.icon).drawn()
-                VStack(alignment: .leading, spacing: row.showsProgress ? 6 : 2) {
-                    Text(row.title)
-                        .font(.geist(16, .medium))
-                    if let state = row.state {
-                        HStack(spacing: 8) {
-                            Text(state)
-                                .font(.geist(13))
-                                .foregroundStyle(row.showsProgress ? Paper.ink : Paper.secondary)
-                            if row.showsProgress {
-                                ProgressBar()
-                            }
+                    HStack(spacing: 8) {
+                        Text(state)
+                            .font(.geist(13))
+                            .foregroundStyle(showsProgress ? Paper.ink : Paper.secondary)
+                        if showsProgress {
+                            ProgressBar()
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-                .onTapGesture { open?() }
-                .accessibilityAddTraits(open == nil ? [] : .isButton)
-                .accessibilityAction { open?() }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture { open?() }
+            .accessibilityAddTraits(open == nil ? [] : .isButton)
+            .accessibilityAction { open?() }
             Button(row.action, action: perform)
                 .buttonStyle(PaperButtonStyle(filled: row.isPrimary && !compact))
                 .disabled(!row.isEnabled)

@@ -32,8 +32,10 @@ final class HomeModel {
     private(set) var charge: ChargeReading?
     private(set) var body: BodyReading?
     private(set) var reach = Reach.unknown
-    /// Cabin climate from the last read, updated as this app changes it. Not kept across launches.
-    private(set) var climate: ClimateSnapshot?
+    /// Cabin climate from the last read, updated as this app changes it.
+    private(set) var climate: ClimateSnapshot? {
+        didSet { if let climate { store.save(climate) } }
+    }
     /// The control whose command is in flight. Only one runs at a time; the car takes one connection.
     private(set) var working: Control?
     private(set) var keyIsMissing = false
@@ -62,6 +64,7 @@ final class HomeModel {
         self.makeService = makeService
         charge = store.last
         body = store.lastBody
+        climate = store.lastClimate
     }
 
     convenience init(car: CarStore, keyStore: KeyStore = KeyStore()) {

@@ -36,7 +36,7 @@ button{font:inherit;cursor:pointer}
     </div>
   </div>
 
-  <div style="margin-top: 56px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+  <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 8px">
     <span style="font-size: 13px; color: #55554F">Set to</span>
     <div style="display: flex; align-items: center; gap: 28px">
       <button aria-label="Cooler" style="width: 56px; height: 56px; border-radius: 28px; border: 1px solid #111111; background: transparent; color: #111111; display: flex; align-items: center; justify-content: center">
@@ -49,18 +49,21 @@ button{font:inherit;cursor:pointer}
     </div>
   </div>
 
-  <div style="margin-top: 56px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+  <div style="margin-top: 40px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
     <label style="display: flex; align-items: center; gap: 14px; height: 68px; border-bottom: 1px solid #DCDCD7">
       <span style="flex-grow: 1; font-size: 16px; font-weight: 500">Defrost</span>
       <input type="checkbox" style="width: 22px; height: 22px; accent-color: #111111">
     </label>
-    <label style="display: flex; align-items: center; gap: 14px; height: 68px; border-bottom: 1px solid #DCDCD7">
-      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
-        <span style="font-size: 16px; font-weight: 500">Keep on while parked</span>
-        <span style="font-size: 13px; color: #55554F">Stops below 20%</span>
-      </span>
-      <input type="checkbox" checked style="width: 22px; height: 22px; accent-color: #111111">
-    </label>
+    <div style="padding: 16px 0; border-bottom: 1px solid #DCDCD7; display: flex; flex-direction: column; gap: 12px">
+      <span id="keep-label" style="font-size: 16px; font-weight: 500">Keep climate on</span>
+      <div role="group" aria-labelledby="keep-label" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+        <button aria-pressed="false" style="height: 44px; border-radius: 22px; border: 1px solid #C9C9C3; background: transparent; color: #111111; font-size: 14px; font-weight: 500">Off</button>
+        <button aria-pressed="false" style="height: 44px; border-radius: 22px; border: 1px solid #C9C9C3; background: transparent; color: #111111; font-size: 14px; font-weight: 500">Keep</button>
+        <button aria-pressed="true" style="height: 44px; border-radius: 22px; border: 0; background: #111111; color: #F3F3F1; font-size: 14px; font-weight: 500">Dog</button>
+        <button aria-pressed="false" style="height: 44px; border-radius: 22px; border: 1px solid #C9C9C3; background: transparent; color: #111111; font-size: 14px; font-weight: 500">Camp</button>
+      </div>
+      <span style="font-size: 13px; line-height: 1.4; color: #55554F">The car's screen shows the cabin temperature so passers-by know your pet is fine. Stops below 20%.</span>
+    </div>
   </div>
 
   <div style="flex-grow: 1"></div>

@@ -61,11 +61,12 @@ struct BodyReading: Codable, Equatable, Sendable {
     }
 }
 
-/// The last charge and body readings, remembered across launches so they can be shown while
+/// The last charge, body and climate readings, remembered across launches so they can be shown while
 /// out of range. `UserDefaults` is documented as thread-safe, though not marked `Sendable`.
 struct ChargeStore: @unchecked Sendable {
     nonisolated static let readingKey = "sentry.charge"
     nonisolated static let bodyKey = "sentry.body"
+    nonisolated static let climateKey = "sentry.climate"
 
     private let defaults: UserDefaults
 
@@ -87,5 +88,13 @@ struct ChargeStore: @unchecked Sendable {
 
     func save(_ reading: BodyReading) {
         defaults.set(try? JSONEncoder().encode(reading), forKey: Self.bodyKey)
+    }
+
+    var lastClimate: ClimateSnapshot? {
+        defaults.data(forKey: Self.climateKey).flatMap { try? JSONDecoder().decode(ClimateSnapshot.self, from: $0) }
+    }
+
+    func save(_ climate: ClimateSnapshot) {
+        defaults.set(try? JSONEncoder().encode(climate), forKey: Self.climateKey)
     }
 }
