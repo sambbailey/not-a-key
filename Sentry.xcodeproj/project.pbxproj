@@ -13,7 +13,9 @@
 		19F12ACD6DD5CB93A4100565 /* VehicleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E710A144E3FD753F6CBEF0 /* VehicleError.swift */; };
 		1D4214979AF6C23318015E6D /* managed_charging.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */; };
 		2170768139886BEB3E8274C6 /* TeslaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		23BD63B1391B846367E9ABD0 /* ChargeSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */; };
 		2589987102A81AD3E94A75BC /* SessionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5065007EA4C6779D9864A /* SessionKeyTests.swift */; };
+		2ABBF33D88E755BD2F3D03CE /* ChargeStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1D57F359FF5FD489F9205B /* ChargeStateTests.swift */; };
 		2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC271C63F4C42D155618AB /* DebugHomeView.swift */; };
 		353E5571AE9BC24788410B55 /* IntentMessagesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176DE572A1A6EB6216CD691D /* IntentMessagesTests.swift */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
@@ -25,6 +27,7 @@
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
 		69E62D64011C89F97A40BEC1 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
 		6D165F8DE28CBF1ECB2A0F14 /* FramingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17038816FB4498913897E57 /* FramingTests.swift */; };
+		711B5AF6DEAF9A9F8DCB9AC6 /* ChargeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FD9AECCEC2C142FDF21FBF /* ChargeTests.swift */; };
 		755A56D01582DD3B55F301A6 /* VehicleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */; };
 		75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3599C40F668855094C4FCCDB /* KeyStore.swift */; };
 		78306EEA75494363D7D0BE77 /* VehicleTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D040E428833CD69A54ADC63 /* VehicleTransport.swift */; };
@@ -42,6 +45,7 @@
 		A338BF8220E8851FDE84E75A /* PairingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D45700D952BEBC798F1A2 /* PairingModel.swift */; };
 		B0BF6D4415F5A1C143AFFE1B /* SentryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */; };
 		B28D981152289EEB2DA4954B /* IntentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5642B4E368570E8515E39896 /* IntentMessages.swift */; };
+		BAF03D21FCB10C4D1296BE44 /* ChargeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA29F4428721E0245359FE7B /* ChargeStore.swift */; };
 		BD0C0AEB0D564DE8C332214A /* VehicleClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965D878EC01553C82B9F045C /* VehicleClientTests.swift */; };
 		BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523692D445578EA0DC4E44D4 /* FakeVehicle.swift */; };
 		C232FE04095E8A633C60D78B /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7480424B821C9B77994181D6 /* SessionKey.swift */; };
@@ -133,6 +137,7 @@
 		6B7FCA1BFDD4AED7ED862D16 /* SentryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryApp.swift; sourceTree = "<group>"; };
 		7480424B821C9B77994181D6 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
 		7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
+		7F1D57F359FF5FD489F9205B /* ChargeStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeStateTests.swift; sourceTree = "<group>"; };
 		82835EA33C41FAF105924137 /* SlidingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingWindow.swift; sourceTree = "<group>"; };
 		836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClient.swift; sourceTree = "<group>"; };
 		853F96C882B9C2140333D919 /* VehicleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceTests.swift; sourceTree = "<group>"; };
@@ -156,12 +161,15 @@
 		CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicle.pb.swift; sourceTree = "<group>"; };
 		D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = errors.pb.swift; sourceTree = "<group>"; };
 		D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vcsec.pb.swift; sourceTree = "<group>"; };
+		D7FD9AECCEC2C142FDF21FBF /* ChargeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeTests.swift; sourceTree = "<group>"; };
 		E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCSECResponse.swift; sourceTree = "<group>"; };
 		E1B640D44DE3C9A054940451 /* VehicleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleService.swift; sourceTree = "<group>"; };
 		EABBA0CFCA5D835A3DB7E703 /* Sentry.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Sentry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F032C097D6A682347A9B2EB9 /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
+		F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSnapshot.swift; sourceTree = "<group>"; };
 		F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = universal_message.pb.swift; sourceTree = "<group>"; };
 		F462F4A3A6140241A1CEAE2C /* TestVectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVectors.swift; sourceTree = "<group>"; };
+		FA29F4428721E0245359FE7B /* ChargeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeStore.swift; sourceTree = "<group>"; };
 		FB90006A07706CC475AF4AB4 /* car_server.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = car_server.pb.swift; sourceTree = "<group>"; };
 		FBAC18F4781A0A83445186C6 /* SentryShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryShortcuts.swift; sourceTree = "<group>"; };
 		FDFB32172182E086849420AA /* keys.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keys.pb.swift; sourceTree = "<group>"; };
@@ -198,6 +206,7 @@
 		12B0681B9D15B8ED7DE0F80F /* SentryTests */ = {
 			isa = PBXGroup;
 			children = (
+				D7FD9AECCEC2C142FDF21FBF /* ChargeTests.swift */,
 				176DE572A1A6EB6216CD691D /* IntentMessagesTests.swift */,
 				2D260EACD0D21375B6B3DDB8 /* KeyStoreTests.swift */,
 				853F96C882B9C2140333D919 /* VehicleServiceTests.swift */,
@@ -222,6 +231,7 @@
 		1EC601E127377480B0A43800 /* Vehicle */ = {
 			isa = PBXGroup;
 			children = (
+				F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */,
 				E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */,
 				836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */,
 				C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */,
@@ -234,6 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */,
+				7F1D57F359FF5FD489F9205B /* ChargeStateTests.swift */,
 				C43A29EEFA3C014421EDE000 /* CommandTests.swift */,
 				BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */,
 				523692D445578EA0DC4E44D4 /* FakeVehicle.swift */,
@@ -290,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				7DDCC897BE5F9AA86EA7AD4D /* CarStore.swift */,
+				FA29F4428721E0245359FE7B /* ChargeStore.swift */,
 				3599C40F668855094C4FCCDB /* KeyStore.swift */,
 				E1B640D44DE3C9A054940451 /* VehicleService.swift */,
 				60E4765ECE955E66D931494A /* VIN.swift */,
@@ -492,6 +504,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				711B5AF6DEAF9A9F8DCB9AC6 /* ChargeTests.swift in Sources */,
 				BDB0EE64465C573E77CDEFA5 /* FakeVehicle.swift in Sources */,
 				353E5571AE9BC24788410B55 /* IntentMessagesTests.swift in Sources */,
 				67D1F477A12685F7A209F668 /* KeyStoreTests.swift in Sources */,
@@ -506,6 +519,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */,
+				23BD63B1391B846367E9ABD0 /* ChargeSnapshot.swift in Sources */,
 				5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */,
 				F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */,
 				9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */,
@@ -535,6 +549,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */,
+				BAF03D21FCB10C4D1296BE44 /* ChargeStore.swift in Sources */,
 				2AECFCB7B65036A30B10F648 /* DebugHomeView.swift in Sources */,
 				B28D981152289EEB2DA4954B /* IntentMessages.swift in Sources */,
 				75A2597F605F35992E8D7F8C /* KeyStore.swift in Sources */,
@@ -553,6 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */,
+				2ABBF33D88E755BD2F3D03CE /* ChargeStateTests.swift in Sources */,
 				47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */,
 				CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */,
 				8F770EA8048EDF465057EFF9 /* FakeVehicle.swift in Sources */,
