@@ -2,3 +2,4 @@
 .worktrees/
 Sentry.xcodeproj/xcuserdata/
 DerivedData/
+build/

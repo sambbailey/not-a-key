@@ -28,6 +28,9 @@ struct SettingsView: View {
                     row("VIN", value: store.vin ?? "–")
                     row("Role", value: "Driver")
                 }
+                settingsSection("About") {
+                    row("Version", value: Self.version)
+                }
             }
             .padding(.horizontal, 24)
         }
@@ -82,6 +85,14 @@ struct SettingsView: View {
         .frame(minHeight: height)
         .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
         .accessibilityElement(children: .combine)
+    }
+
+    /// The app's version and build, e.g. "1.0 (1)".
+    static var version: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "–"
+        guard let build = info?["CFBundleVersion"] as? String else { return version }
+        return "\(version) (\(build))"
     }
 
     private func removeKey() {

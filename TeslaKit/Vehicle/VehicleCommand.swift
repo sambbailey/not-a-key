@@ -7,13 +7,15 @@ public enum VehicleCommand: Sendable, Equatable {
     case setTemperature(celsius: Double)
     /// Turns defrost (maximum preconditioning) on or off.
     case setDefrost(Bool)
-    /// Turns "Keep" climate mode on or off, which holds the cabin while parked.
-    case keepClimate(Bool)
+    /// Sets what climate does once the car is parked: off, Keep, Dog or Camp.
+    case climateKeeper(ClimateKeeperMode)
+    case openChargePort, closeChargePort, stopCharging
 
     public var domain: UniversalMessage_Domain {
         switch self {
         case .moveTrunk, .openFrunk, .lock, .unlock, .wake: .vehicleSecurity
-        case .climateOn, .climateOff, .setTemperature, .setDefrost, .keepClimate: .infotainment
+        case .climateOn, .climateOff, .setTemperature, .setDefrost, .climateKeeper,
+             .openChargePort, .closeChargePort, .stopCharging: .infotainment
         }
     }
 
@@ -42,10 +44,27 @@ public enum VehicleCommand: Sendable, Equatable {
             var action = CarServer_Action()
             action.vehicleAction.hvacSetPreconditioningMaxAction.on = on
             return try action.serializedData()
-        case .keepClimate(let on):
+        case .climateKeeper(let mode):
             var action = CarServer_Action()
-            action.vehicleAction.hvacClimateKeeperAction.climateKeeperAction = on ? .climateKeeperActionOn : .climateKeeperActionOff
+            action.vehicleAction.hvacClimateKeeperAction.climateKeeperAction = switch mode {
+            case .off: .climateKeeperActionOff
+            case .keep: .climateKeeperActionOn
+            case .dog: .climateKeeperActionDog
+            case .camp: .climateKeeperActionCamp
+            }
             action.vehicleAction.hvacClimateKeeperAction.manualOverride = true
+            return try action.serializedData()
+        case .openChargePort:
+            var action = CarServer_Action()
+            action.vehicleAction.chargePortDoorOpen = CarServer_ChargePortDoorOpen()
+            return try action.serializedData()
+        case .closeChargePort:
+            var action = CarServer_Action()
+            action.vehicleAction.chargePortDoorClose = CarServer_ChargePortDoorClose()
+            return try action.serializedData()
+        case .stopCharging:
+            var action = CarServer_Action()
+            action.vehicleAction.chargingStartStopAction.stop = CarServer_Void()
             return try action.serializedData()
         }
     }
@@ -68,6 +87,13 @@ public enum VehicleCommand: Sendable, Equatable {
     public static func chargeStatePayload() throws -> Data {
         var action = CarServer_Action()
         action.vehicleAction.getVehicleData.getChargeState = CarServer_GetChargeState()
+        return try action.serializedData()
+    }
+
+    /// Asks infotainment for drive state; the reply's `vehicleData.driveState` carries it.
+    public static func driveStatePayload() throws -> Data {
+        var action = CarServer_Action()
+        action.vehicleAction.getVehicleData.getDriveState = CarServer_GetDriveState()
         return try action.serializedData()
     }
 

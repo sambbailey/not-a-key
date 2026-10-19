@@ -21,6 +21,7 @@
 		38120C7535C7A5979EFB2B63 /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF9121010B2A386686EB863 /* HomeModel.swift */; };
 		40903927ED16E49E9CDDE057 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 32F54192A939DE5F9F1252F9 /* Geist-Regular.ttf */; };
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
+		4598EE929B58036BABA58162 /* DriveSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A26737AAFB1E6B85061E7A7 /* DriveSnapshot.swift */; };
 		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
 		607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */; };
@@ -63,6 +64,7 @@
 		D0FBB06AB06DFC36074DA76A /* ProtoSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */; };
 		D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */; };
 		DD90F02EBE69BFBB7C8125F7 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */; };
+		DE6B94E0B52807AC20E31225 /* DrivingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939DEEC7A7D6A835C21262A9 /* DrivingView.swift */; };
 		E339D8880429FF6B84DD896E /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
 		E34F6E4D86515A10DEB12731 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5542C8FDE7266D8EEF303 /* Paper.swift */; };
 		E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B58790A35267E9F0F915 /* BLETransport.swift */; };
@@ -149,6 +151,7 @@
 		51B2B58790A35267E9F0F915 /* BLETransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransport.swift; sourceTree = "<group>"; };
 		523692D445578EA0DC4E44D4 /* FakeVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeVehicle.swift; sourceTree = "<group>"; };
 		5642B4E368570E8515E39896 /* IntentMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentMessages.swift; sourceTree = "<group>"; };
+		5A26737AAFB1E6B85061E7A7 /* DriveSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveSnapshot.swift; sourceTree = "<group>"; };
 		5B5388A7E4F4760BFFBE269D /* SentryTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SentryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		60E4765ECE955E66D931494A /* VIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIN.swift; sourceTree = "<group>"; };
 		61B5065007EA4C6779D9864A /* SessionKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKeyTests.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 		85409A01301ED36B8A5C3924 /* ClimateSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateSnapshot.swift; sourceTree = "<group>"; };
 		908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = managed_charging.pb.swift; sourceTree = "<group>"; };
 		91348FDD2FBD2536E13ABF5D /* DomainSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSession.swift; sourceTree = "<group>"; };
+		939DEEC7A7D6A835C21262A9 /* DrivingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingView.swift; sourceTree = "<group>"; };
 		959E2FC6DDF79C3CB4A9AE30 /* ClimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateView.swift; sourceTree = "<group>"; };
 		965D878EC01553C82B9F045C /* VehicleClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClientTests.swift; sourceTree = "<group>"; };
 		9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransportTests.swift; sourceTree = "<group>"; };
@@ -260,6 +264,7 @@
 			children = (
 				F2A0124960B8CF9E8823419B /* ChargeSnapshot.swift */,
 				85409A01301ED36B8A5C3924 /* ClimateSnapshot.swift */,
+				5A26737AAFB1E6B85061E7A7 /* DriveSnapshot.swift */,
 				E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */,
 				836FC1EF0E40B85D41B0F5C7 /* VehicleClient.swift */,
 				C796C3F4146BC967188E9DC2 /* VehicleCommand.swift */,
@@ -360,6 +365,7 @@
 			isa = PBXGroup;
 			children = (
 				959E2FC6DDF79C3CB4A9AE30 /* ClimateView.swift */,
+				939DEEC7A7D6A835C21262A9 /* DrivingView.swift */,
 				3BF9121010B2A386686EB863 /* HomeModel.swift */,
 				EE2ABCAE9C3226E77B3EC3D7 /* HomeText.swift */,
 				BFD225212AA47AEC06C1A1CB /* HomeView.swift */,
@@ -583,6 +589,7 @@
 				23BD63B1391B846367E9ABD0 /* ChargeSnapshot.swift in Sources */,
 				A5CC404150AE0695D77EDE4C /* ClimateSnapshot.swift in Sources */,
 				5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */,
+				4598EE929B58036BABA58162 /* DriveSnapshot.swift in Sources */,
 				F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */,
 				9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */,
 				78C59B6C6AB6E3B413245507 /* Metadata.swift in Sources */,
@@ -613,6 +620,7 @@
 				F9583317C2AB446584D7EF4E /* CarStore.swift in Sources */,
 				BAF03D21FCB10C4D1296BE44 /* ChargeStore.swift in Sources */,
 				3513F9F5FE49E51C3664B6BC /* ClimateView.swift in Sources */,
+				DE6B94E0B52807AC20E31225 /* DrivingView.swift in Sources */,
 				38120C7535C7A5979EFB2B63 /* HomeModel.swift in Sources */,
 				C28EB9D6BFA38087B70E5AE4 /* HomeText.swift in Sources */,
 				A060B06BF76F49D684DE242B /* HomeView.swift in Sources */,
@@ -855,6 +863,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sentry/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Not a Key";
@@ -864,6 +873,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dodimead.Sentry;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
@@ -894,6 +904,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sentry/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Not a Key";
@@ -903,6 +914,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dodimead.Sentry;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;

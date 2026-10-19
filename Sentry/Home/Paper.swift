@@ -77,7 +77,7 @@ struct PaperButtonStyle: ButtonStyle {
 /// The design's line icons, drawn on a 24-point grid.
 struct PaperIcon: Shape {
     enum Kind {
-        case boot, lock, frunk, climate, bluetooth, warning
+        case boot, lock, frunk, chargePort, climate, bluetooth, warning
     }
 
     var kind: Kind
@@ -101,6 +101,16 @@ struct PaperIcon: Shape {
             path.closeSubpath()
             path.addLines([CGPoint(x: 12, y: 3), CGPoint(x: 12, y: 8)])
             path.addLines([CGPoint(x: 9.5, y: 5.5), CGPoint(x: 12, y: 3), CGPoint(x: 14.5, y: 5.5)])
+        case .chargePort:
+            path.addLines([CGPoint(x: 9, y: 2), CGPoint(x: 9, y: 7)])
+            path.addLines([CGPoint(x: 15, y: 2), CGPoint(x: 15, y: 7)])
+            // The plug: square shoulders, then a round bottom down to the cable.
+            path.move(to: CGPoint(x: 6, y: 7))
+            path.addLine(to: CGPoint(x: 18, y: 7))
+            path.addLine(to: CGPoint(x: 18, y: 11))
+            path.addArc(center: CGPoint(x: 12, y: 11), radius: 6, startAngle: .degrees(0), endAngle: .degrees(180), clockwise: false)
+            path.closeSubpath()
+            path.addLines([CGPoint(x: 12, y: 17), CGPoint(x: 12, y: 22)])
         case .climate:
             path.addEllipse(in: CGRect(x: 10, y: 10, width: 4, height: 4))
             // Four fan blades, each a pair of curves out from the hub and back.

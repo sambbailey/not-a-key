@@ -5,11 +5,18 @@ public struct ChargeSnapshot: Sendable, Equatable {
     public var batteryLevel: Int
     public var rangeMiles: Double
     public var isCharging: Bool
+    /// The power going into the battery, in kW; nil when not reported.
+    public var chargerPowerKW: Int?
+    /// Whether the charge port door is open; nil when not reported.
+    public var isPortOpen: Bool?
 
-    public init(batteryLevel: Int, rangeMiles: Double, isCharging: Bool) {
+    public init(batteryLevel: Int, rangeMiles: Double, isCharging: Bool,
+                chargerPowerKW: Int? = nil, isPortOpen: Bool? = nil) {
         self.batteryLevel = batteryLevel
         self.rangeMiles = rangeMiles
         self.isCharging = isCharging
+        self.chargerPowerKW = chargerPowerKW
+        self.isPortOpen = isPortOpen
     }
 }
 
@@ -28,5 +35,7 @@ extension ChargeSnapshot {
         } else {
             isCharging = false
         }
+        if case .chargerPower(let power)? = state.optionalChargerPower { chargerPowerKW = Int(power) }
+        if case .chargePortDoorOpen(let open)? = state.optionalChargePortDoorOpen { isPortOpen = open }
     }
 }

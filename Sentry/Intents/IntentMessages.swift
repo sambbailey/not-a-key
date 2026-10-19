@@ -25,7 +25,15 @@ enum IntentMessages {
         case .climateOff: "Climate off"
         case .setTemperature(let celsius): "Set to \(ClimateText.degrees(celsius))"
         case .setDefrost(let on): on ? "Defrosting" : "Defrost off"
-        case .keepClimate(let on): on ? "Climate stays on while parked" : "Climate won't stay on"
+        case .climateKeeper(let mode): switch mode {
+            case .off: "Climate won't stay on"
+            case .keep: "Climate stays on while parked"
+            case .dog: "Dog mode on"
+            case .camp: "Camp mode on"
+            }
+        case .openChargePort: "Opening charge port"
+        case .closeChargePort: "Closing charge port"
+        case .stopCharging: "Charging stopped"
         }
     }
 

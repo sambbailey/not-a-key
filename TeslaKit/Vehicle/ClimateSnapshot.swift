@@ -1,24 +1,30 @@
 import Foundation
 
+/// What climate does once the car is parked. Keep holds the cabin; Dog also shows the cabin
+/// temperature on the car's screen; Camp keeps power, climate and the screen on for sleeping in the car.
+public enum ClimateKeeperMode: String, Codable, Sendable, CaseIterable {
+    case off, keep, dog, camp
+}
+
 /// Cabin climate as infotainment reports it. Temperatures are in Celsius; nil when not reported.
-public struct ClimateSnapshot: Sendable, Equatable {
+public struct ClimateSnapshot: Codable, Sendable, Equatable {
     public var isOn: Bool
     public var insideCelsius: Double?
     public var outsideCelsius: Double?
     /// The temperature the driver's side is set to.
     public var setCelsius: Double?
     public var isDefrosting: Bool
-    /// Whether "Keep" climate mode holds the cabin while parked.
-    public var keepsOn: Bool
+    /// What climate does once the car is parked.
+    public var keeperMode: ClimateKeeperMode
 
     public init(isOn: Bool, insideCelsius: Double? = nil, outsideCelsius: Double? = nil, setCelsius: Double? = nil,
-                isDefrosting: Bool = false, keepsOn: Bool = false) {
+                isDefrosting: Bool = false, keeperMode: ClimateKeeperMode = .off) {
         self.isOn = isOn
         self.insideCelsius = insideCelsius
         self.outsideCelsius = outsideCelsius
         self.setCelsius = setCelsius
         self.isDefrosting = isDefrosting
-        self.keepsOn = keepsOn
+        self.keeperMode = keeperMode
     }
 }
 
@@ -36,10 +42,12 @@ extension ClimateSnapshot {
         } else {
             isDefrosting = state.isFrontDefrosterOn
         }
-        if case .on? = state.climateKeeperMode.type {
-            keepsOn = true
-        } else {
-            keepsOn = false
+        keeperMode = switch state.climateKeeperMode.type {
+        case .on?: .keep
+        case .dog?: .dog
+        // The car reports Camp mode as "Party".
+        case .party?: .camp
+        default: .off
         }
     }
 

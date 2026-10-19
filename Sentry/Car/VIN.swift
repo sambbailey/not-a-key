@@ -10,9 +10,12 @@ enum VIN {
         return vin
     }
 
-    /// The model named by a Tesla VIN's fourth character, e.g. "Model Y"; nil if it isn't one.
+    /// Tesla's world manufacturer identifiers: Fremont, Austin, Berlin, Shanghai.
+    private static let teslaMakers: Set<String> = ["5YJ", "7SA", "7G2", "XP7", "LRW"]
+
+    /// The model named by a Tesla VIN's fourth character, e.g. "Model Y"; nil if it isn't a Tesla VIN.
     static func modelName(_ vin: String) -> String? {
-        guard vin.count == 17 else { return nil }
+        guard vin.count == 17, teslaMakers.contains(String(vin.prefix(3))) else { return nil }
         return switch vin[vin.index(vin.startIndex, offsetBy: 3)] {
         case "S": "Model S"
         case "3": "Model 3"

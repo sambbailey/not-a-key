@@ -51,6 +51,7 @@ final class FakeVehicle: VehicleTransport {
         var bodyStatus = VCSEC_VehicleStatus()
         var chargeState = CarServer_ChargeState()
         var climateState = CarServer_ClimateState()
+        var driveState = CarServer_DriveState()
         var unansweredWhileAsleep = 0
         var ignoresWake = false
         var encryptedRepliesSent = 0
@@ -75,15 +76,30 @@ final class FakeVehicle: VehicleTransport {
     private let privateKey: P256.KeyAgreement.PrivateKey
     private let replyDelay: Duration
     private let state: Mutex<State>
-    private let continuation: AsyncStream<Data>.Continuation
-    let incoming: AsyncStream<Data>
+    /// The current connection's stream; `reconnected()` starts a new one.
+    private let link: Mutex<(stream: AsyncStream<Data>, continuation: AsyncStream<Data>.Continuation)>
+    private var continuation: AsyncStream<Data>.Continuation { link.withLock { $0.continuation } }
+    var incoming: AsyncStream<Data> { link.withLock { $0.stream } }
 
     init(script: Script = .success, vin: String = TestVectors.vin, replyDelay: Duration = .zero) {
         self.vin = vin
         self.replyDelay = replyDelay
         privateKey = try! P256.KeyAgreement.PrivateKey(rawRepresentation: TestVectors.vehiclePrivateKey)
         state = Mutex(State(script: script))
-        (incoming, continuation) = AsyncStream.makeStream()
+        let (stream, continuation) = AsyncStream<Data>.makeStream()
+        link = Mutex((stream, continuation))
+    }
+
+    /// This car as a new connection, for tests that connect more than once: a closed fake gets a
+    /// fresh stream and keeps its state, so each `VehicleService` call can connect again.
+    func reconnected() -> FakeVehicle {
+        state.withLock { state in
+            guard state.isClosed else { return }
+            state.isClosed = false
+            state.awaitingReply = false
+            link.withLock { $0 = AsyncStream<Data>.makeStream() }
+        }
+        return self
     }
 
     // MARK: Test configuration and observations
@@ -97,6 +113,12 @@ final class FakeVehicle: VehicleTransport {
     var climateState: CarServer_ClimateState {
         get { state.withLock { $0.climateState } }
         set { state.withLock { $0.climateState = newValue } }
+    }
+
+    /// Drive state returned to `getDriveState`.
+    var driveState: CarServer_DriveState {
+        get { state.withLock { $0.driveState } }
+        set { state.withLock { $0.driveState = newValue } }
     }
 
     /// Charge state returned to `getChargeState`.
@@ -368,6 +390,9 @@ final class FakeVehicle: VehicleTransport {
                 }
                 if action?.vehicleAction.getVehicleData.hasGetClimateState == true {
                     result.vehicleData.climateState = state.climateState
+                }
+                if action?.vehicleAction.getVehicleData.hasGetDriveState == true {
+                    result.vehicleData.driveState = state.driveState
                 }
             }
             response.protobufMessageAsBytes = try! result.serializedData()

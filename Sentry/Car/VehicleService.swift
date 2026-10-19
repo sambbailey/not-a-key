@@ -54,11 +54,11 @@ struct VehicleService: Sendable {
         try await status(before: deadline).charge
     }
 
-    /// Reads lock and closures, then charge and climate, over one connection, waking the car
-    /// first if it is asleep. Gives up at `deadline`, or after 20 seconds without one. Climate is
-    /// nil if only it couldn't be read.
+    /// Reads lock and closures, then charge, climate and drive state, over one connection, waking
+    /// the car first if it is asleep. Gives up at `deadline`, or after 20 seconds without one.
+    /// Climate and drive state are nil if only they couldn't be read.
     func status(before deadline: ContinuousClock.Instant? = nil) async throws
-        -> (body: VehicleSnapshot, charge: ChargeSnapshot, climate: ClimateSnapshot?) {
+        -> (body: VehicleSnapshot, charge: ChargeSnapshot, climate: ClimateSnapshot?, drive: DriveSnapshot?) {
         let deadline = deadline ?? .now + .seconds(20)
         return try await withClient { client in
             let body = try await client.bodyControllerState(deadline: Self.limit(.seconds(5), to: deadline))
@@ -67,7 +67,8 @@ struct VehicleService: Sendable {
             }
             let charge = try await client.chargeState(deadline: Self.limit(.seconds(8), to: deadline))
             let climate = try? await client.climateState(deadline: Self.limit(.seconds(5), to: deadline))
-            return (body, charge, climate)
+            let drive = try? await client.driveState(deadline: Self.limit(.seconds(5), to: deadline))
+            return (body, charge, climate, drive)
         }
     }
 
@@ -104,14 +105,14 @@ struct VehicleService: Sendable {
     /// its last readings.
     func refreshStatus(into store: ChargeStore, now: @Sendable () -> Date = Date.init,
                        before deadline: ContinuousClock.Instant? = nil) async throws
-        -> (body: BodyReading, charge: ChargeReading, climate: ClimateSnapshot?) {
+        -> (body: BodyReading, charge: ChargeReading, climate: ClimateSnapshot?, drive: DriveSnapshot?) {
         let status = try await status(before: deadline)
         let readAt = now()
         let body = BodyReading(status.body, readAt: readAt)
         let charge = ChargeReading(status.charge, readAt: readAt)
         store.save(body)
         store.save(charge)
-        return (body, charge, status.climate)
+        return (body, charge, status.climate, status.drive)
     }
 
     func snapshot() async throws -> VehicleSnapshot {

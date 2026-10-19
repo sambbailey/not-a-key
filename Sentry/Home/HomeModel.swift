@@ -14,7 +14,7 @@ final class HomeModel {
     }
 
     enum Control: Hashable, CaseIterable {
-        case boot, doors, frunk, climate
+        case boot, doors, frunk, chargePort, climate
     }
 
     struct Banner: Equatable, Identifiable {
@@ -32,8 +32,12 @@ final class HomeModel {
     private(set) var charge: ChargeReading?
     private(set) var body: BodyReading?
     private(set) var reach = Reach.unknown
-    /// Cabin climate from the last read, updated as this app changes it. Not kept across launches.
-    private(set) var climate: ClimateSnapshot?
+    /// Cabin climate from the last read, updated as this app changes it.
+    private(set) var climate: ClimateSnapshot? {
+        didSet { if let climate { store.save(climate) } }
+    }
+    /// Gear, speed and route from the last read. Not kept across launches, so an old drive never shows.
+    private(set) var drive: DriveSnapshot?
     /// The control whose command is in flight. Only one runs at a time; the car takes one connection.
     private(set) var working: Control?
     private(set) var keyIsMissing = false
@@ -44,6 +48,12 @@ final class HomeModel {
     /// How long a normal read looks for the car, and how long "Try again" does.
     static let scanLimit: Duration = .seconds(10)
     static let retryLimit: Duration = .seconds(5)
+
+    /// How often the car is read again while it's being driven.
+    static let drivingRefresh: Duration = .seconds(3)
+
+    /// The next read while driving, waiting out `drivingRefresh`.
+    private var drivingPoll: Task<Void, Never>?
 
     /// The read in flight. It runs alongside the controls; they cancel it before connecting.
     private var readTask: Task<Void, Never>?
@@ -62,6 +72,7 @@ final class HomeModel {
         self.makeService = makeService
         charge = store.last
         body = store.lastBody
+        climate = store.lastClimate
     }
 
     convenience init(car: CarStore, keyStore: KeyStore = KeyStore()) {
@@ -75,18 +86,33 @@ final class HomeModel {
 
     var isReading: Bool { readTask != nil && readIsFull }
 
-    /// Stops any read in flight, e.g. before the key is removed.
+    /// In Drive or Reverse at the last read, with the car still in range.
+    var isDriving: Bool { reach == .nearby && drive?.isDriving == true }
+
+    /// Stops any read in flight and the reads while driving, e.g. before the key is removed or
+    /// when the app goes to the background.
     func stop() {
         readTask?.cancel()
+        drivingPoll?.cancel()
+        drivingPoll = nil
     }
 
     /// The command a tap on `control` sends now, or nil if it can't do anything from this state.
     func command(for control: Control) -> VehicleCommand? {
-        switch control {
+        // Only climate can change while the car is in gear.
+        if isDriving, control != .climate { return nil }
+        return switch control {
         case .boot: .moveTrunk
         case .doors: body.map { $0.isLocked ? .unlock : .lock }
         // Tesla has no frunk-close command; an open frunk is shut by hand.
         case .frunk: body?.frunk == .closed ? .openFrunk : nil
+        case .chargePort:
+            switch charge {
+            case nil: nil
+            case let charge? where charge.isCharging: .stopCharging
+            case let charge? where charge.isPortOpen == true: .closeChargePort
+            case _?: .openChargePort
+            }
         case .climate: climate?.isOn == true ? .climateOff : .climateOn
         }
     }
@@ -139,6 +165,7 @@ final class HomeModel {
             keyIsMissing = false
             apply(BodyReading(result.after, readAt: now()))
             applyClimate(after: command)
+            applyCharge(after: command)
             let message = command == .moveTrunk
                 ? IntentMessages.success(BootToggleOutcome(bootBefore: result.before.rearTrunk))
                 : IntentMessages.success(command)
@@ -161,8 +188,10 @@ final class HomeModel {
             charge = status.charge
             body = status.body
             if let climate = status.climate { self.climate = climate }
+            drive = status.drive
             reach = .nearby
             keyIsMissing = false
+            if isDriving { scheduleDrivingRead() }
         } catch {
             // Cancelled to make way for a command; that command reports its own outcome.
             guard !Task.isCancelled else { return }
@@ -195,18 +224,49 @@ final class HomeModel {
         }
     }
 
+    /// Reads the car again shortly, to keep speed and power current while it's driven.
+    private func scheduleDrivingRead() {
+        drivingPoll?.cancel()
+        drivingPoll = Task {
+            try? await Task.sleep(for: Self.drivingRefresh)
+            guard !Task.isCancelled else { return }
+            drivingPoll = nil
+            await refresh()
+        }
+    }
+
+    /// Shows the charge port a successful `command` leads to, until the next read confirms it.
+    private func applyCharge(after command: VehicleCommand) {
+        guard var charge else { return }
+        switch command {
+        case .openChargePort: charge.isPortOpen = true
+        case .closeChargePort: charge.isPortOpen = false
+        case .stopCharging:
+            charge.isCharging = false
+            charge.chargerPowerKW = nil
+        default: return
+        }
+        self.charge = charge
+        store.save(charge)
+    }
+
     /// Shows the climate a successful `command` leads to, until the next read confirms it.
     private func applyClimate(after command: VehicleCommand) {
         var climate = climate ?? ClimateSnapshot(isOn: false)
         switch command {
         case .climateOn: climate.isOn = true
-        case .climateOff: climate.isOn = false
+        case .climateOff:
+            climate.isOn = false
+            climate.keeperMode = .off
         case .setTemperature(let celsius): climate.setCelsius = celsius
         case .setDefrost(let on):
             climate.isDefrosting = on
             // Defrost runs the climate at full power, so it switches climate on too.
             if on { climate.isOn = true }
-        case .keepClimate(let on): climate.keepsOn = on
+        case .climateKeeper(let mode):
+            climate.keeperMode = mode
+            // Keep, Dog and Camp all run the climate.
+            if mode != .off { climate.isOn = true }
         default: return
         }
         self.climate = climate
