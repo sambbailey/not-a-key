@@ -156,12 +156,28 @@ public struct DomainSession: Sendable {
         message.subSigData = nil
     }
 
-    /// Applies session info the vehicle attached to a fault, per protocol.md
-    /// "Recovering from synchronization errors". The caller must have
-    /// authenticated `info`. Info for a different vehicle key, or older than
-    /// what was last applied in the same epoch, is ignored; the counter only
-    /// moves backwards when the epoch changes.
-    public mutating func resync(from info: Signatures_SessionInfo, now: Date) {
+    /// Applies the session info the vehicle attached to a fault, after verifying
+    /// its HMAC. `challenge` is the UUID of the request that faulted. Throws
+    /// without changing state if the tag or encoding is invalid.
+    public mutating func resync(response: UniversalMessage_RoutableMessage, challenge: Data, now: Date) throws {
+        let expectedTag = try sessionKey.sessionInfoTag(vin: vin, challenge: challenge, encodedInfo: response.sessionInfo)
+        guard constantTimeEqual(expectedTag, response.signatureData.sessionInfoTag.tag) else {
+            throw VehicleError.protocolFault(.rrorInvalidSignature)
+        }
+        let info: Signatures_SessionInfo
+        do {
+            info = try Signatures_SessionInfo(serializedBytes: response.sessionInfo)
+        } catch {
+            throw VehicleError.protocolFault(.rrorDecoding)
+        }
+        resync(from: info, now: now)
+    }
+
+    /// Applies already-authenticated session info, per protocol.md "Recovering
+    /// from synchronization errors". Info for a different vehicle key, or older
+    /// than what was last applied in the same epoch, is ignored; the counter
+    /// only moves backwards when the epoch changes.
+    mutating func resync(from info: Signatures_SessionInfo, now: Date) {
         guard info.publicKey == vehiclePublicKey else { return }
         if info.epoch != epoch {
             counter = info.counter

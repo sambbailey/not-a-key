@@ -172,6 +172,52 @@ private func encryptedReply(_ plaintext: Data, counter: UInt32, requestHash: Dat
     #expect(s.timeZero == handshakeTime.addingTimeInterval(-2650))
 }
 
+/// A fault reply carrying fresh session info, tagged with K for `requestUUID`.
+private func resyncReply(_ info: Signatures_SessionInfo, requestUUID: Data) throws -> UniversalMessage_RoutableMessage {
+    var reply = UniversalMessage_RoutableMessage()
+    reply.fromDestination.domain = .infotainment
+    reply.requestUuid = requestUUID
+    reply.signedMessageStatus.signedMessageFault = .rrorInvalidTokenOrCounter
+    reply.sessionInfo = try info.serializedData()
+    reply.signatureData.sessionInfoTag.tag = try SessionKey(keyBytesForTesting: TestVectors.sharedKeyK)
+        .sessionInfoTag(vin: TestVectors.vin, challenge: requestUUID, encodedInfo: reply.sessionInfo)
+    return reply
+}
+
+@Test func authenticatedResyncAppliesValidInfo() throws {
+    var s = try vectorSession()
+    var info = try Signatures_SessionInfo(serializedBytes: TestVectors.sessionInfoBytes)
+    info.epoch = Data(repeating: 0xCD, count: 16)
+    info.counter = 2
+    info.clockTime = 9
+    let uuid = Data(repeating: 0x42, count: 16)
+    try s.resync(response: resyncReply(info, requestUUID: uuid), challenge: uuid, now: handshakeTime)
+    #expect(s.counter == 2)
+    #expect(s.epoch == Data(repeating: 0xCD, count: 16))
+    #expect(s.timeZero == handshakeTime.addingTimeInterval(-9))
+}
+
+@Test func authenticatedResyncRejectsTamperedTag() throws {
+    var s = try vectorSession()
+    var info = try Signatures_SessionInfo(serializedBytes: TestVectors.sessionInfoBytes)
+    info.epoch = Data(repeating: 0xCD, count: 16)
+    info.counter = 2
+    let uuid = Data(repeating: 0x42, count: 16)
+    var reply = try resyncReply(info, requestUUID: uuid)
+    reply.signatureData.sessionInfoTag.tag[0] ^= 0x01
+    #expect(throws: VehicleError.protocolFault(.rrorInvalidSignature)) {
+        try s.resync(response: reply, challenge: uuid, now: handshakeTime.addingTimeInterval(60))
+    }
+    // A valid tag for a different challenge is rejected too.
+    let otherChallenge = try resyncReply(info, requestUUID: Data(repeating: 0x43, count: 16))
+    #expect(throws: VehicleError.protocolFault(.rrorInvalidSignature)) {
+        try s.resync(response: otherChallenge, challenge: uuid, now: handshakeTime.addingTimeInterval(60))
+    }
+    #expect(s.counter == 6)
+    #expect(s.epoch == vectorEpoch)
+    #expect(s.timeZero == handshakeTime.addingTimeInterval(-2650))
+}
+
 @Test func slidingWindowRejectsReplays() {
     var w = SlidingWindow()
     // 7 is 33 behind 40, older than the 32-entry window; 8 is exactly 32 behind and still tracked.
