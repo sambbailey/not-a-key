@@ -15,6 +15,8 @@ final class FakeVehicle: VehicleTransport {
         case nominalError
         /// Reboots (new epoch) before the first command, so it faults with fresh session info.
         case staleSessionOnce
+        /// Reboots before every command, so every command faults with fresh session info.
+        case staleSessionAlways
         /// Faults every session-info request with `ERROR_UNKNOWN_KEY_ID`.
         case unknownKey
         /// Never replies.
@@ -51,6 +53,7 @@ final class FakeVehicle: VehicleTransport {
         var busyRepliesSent = 0
         var rebooted = false
         var foreignReplyPending = false
+        var corruptReplyPending = false
         var awaitingReply = false
         var requestsReceived = 0
         var overlappingRequests = 0
@@ -97,6 +100,12 @@ final class FakeVehicle: VehicleTransport {
     /// routing address, carrying a body status that differs from `bodyStatus`.
     func injectForeignReplyBeforeNext() {
         state.withLock { $0.foreignReplyPending = true }
+    }
+
+    /// Before answering the next verified command, sends a reply addressed to us whose
+    /// AES-GCM response tag does not verify, like a garbled or stale notification.
+    func injectCorruptReplyBeforeNextCommand() {
+        state.withLock { $0.corruptReplyPending = true }
     }
 
     // MARK: VehicleTransport
@@ -167,7 +176,12 @@ final class FakeVehicle: VehicleTransport {
                 replies.append(contentsOf: handshake(request, publicKey: hello.publicKey, state: &state))
             case .protobufMessageAsBytes?:
                 if case .signatureData? = request.subSigData {
-                    replies.append(contentsOf: command(request, state: &state))
+                    let answers = command(request, state: &state)
+                    if state.corruptReplyPending, answers.first?.message.signedMessageStatus.signedMessageFault == .rrorNone {
+                        state.corruptReplyPending = false
+                        replies.append(Reply(message: corruptReply(to: request), isFinal: false))
+                    }
+                    replies.append(contentsOf: answers)
                 } else {
                     replies.append(contentsOf: statusRequest(request, state: &state))
                 }
@@ -213,7 +227,12 @@ final class FakeVehicle: VehicleTransport {
             response.signedMessageStatus.signedMessageFault = .rrorUnknownKeyID
             return [Reply(message: response)]
         }
-        if case .staleSessionOnce = state.script, !state.rebooted {
+        let reboots = switch state.script {
+        case .staleSessionOnce: !state.rebooted
+        case .staleSessionAlways: true
+        default: false
+        }
+        if reboots {
             // The car rebooted: new epoch, counter and clock.
             state.rebooted = true
             domainState.epoch = Data((0..<16).map { _ in UInt8.random(in: 0...255) })
@@ -301,6 +320,16 @@ final class FakeVehicle: VehicleTransport {
         response.fromDestination.domain = domain
         response.requestUuid = request.uuid
         return response
+    }
+
+    /// An encrypted-looking reply to `request` whose tag cannot verify.
+    private func corruptReply(to request: UniversalMessage_RoutableMessage) -> UniversalMessage_RoutableMessage {
+        var corrupt = reply(to: request, domain: request.toDestination.domain)
+        corrupt.protobufMessageAsBytes = Data(repeating: 0xAB, count: 8)
+        corrupt.signatureData.aesGcmResponseData.nonce = Data(repeating: 0x01, count: 12)
+        corrupt.signatureData.aesGcmResponseData.counter = 1
+        corrupt.signatureData.aesGcmResponseData.tag = Data(repeating: 0x02, count: 16)
+        return corrupt
     }
 
     private func attachSessionInfo(to response: inout UniversalMessage_RoutableMessage, domain: DomainState,

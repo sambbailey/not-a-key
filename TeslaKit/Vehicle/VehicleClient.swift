@@ -168,7 +168,13 @@ public actor VehicleClient {
             }
             if Self.isBusy(reply) { return .busy }
             guard fault == .rrorNone else { throw VehicleError.from(fault: fault) }
-            try sessions[domain]!.decryptResponse(&reply, requestHash: requestHash)
+            do {
+                try sessions[domain]!.decryptResponse(&reply, requestHash: requestHash)
+            } catch {
+                // A garbled notification, a duplicate, or a late reply to an earlier attempt:
+                // drop it and keep waiting, as Go's dispatcher does.
+                continue
+            }
 
             if domain == .vehicleSecurity {
                 switch try VCSECReply.classify(Self.vcsecMessage(in: reply)) {

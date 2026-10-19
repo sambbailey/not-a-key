@@ -88,6 +88,24 @@ private func makeClient(_ car: FakeVehicle) -> VehicleClient {
         #expect(car.sessionInfoRequests == [.vehicleSecurity])
     }
 
+    @Test func secondStaleFaultThrows() async throws {
+        let car = FakeVehicle(script: .staleSessionAlways)
+        await #expect(throws: VehicleError.protocolFault(.rrorIncorrectEpoch)) {
+            try await makeClient(car).execute(.moveTrunk)
+        }
+        #expect(car.staleFaultsSent == 2)
+        #expect(car.commands.isEmpty)
+    }
+
+    @Test(arguments: [VehicleCommand.moveTrunk, .climateOn])
+    func dropsReplyThatFailsToDecrypt(command: VehicleCommand) async throws {
+        let car = FakeVehicle()
+        car.injectCorruptReplyBeforeNextCommand()
+        try await makeClient(car).execute(command)
+
+        #expect(car.commands.count == 1)
+    }
+
     @Test func unknownKeyThrowsNotPaired() async throws {
         let car = FakeVehicle(script: .unknownKey)
         await #expect(throws: VehicleError.notPaired) {

@@ -11,7 +11,7 @@ struct VehicleServiceTests {
     @Test("toggleBootWording", arguments: [
         (VCSEC_ClosureState_E.closurestateClosed, BootToggleOutcome.opening),
         (.closurestateOpen, .closing), (.closurestateAjar, .closing),
-        (.closurestateOpening, .moving), (.closurestateUnknown, .moving),
+        (.closurestateOpening, .moving), (.closurestateClosing, .moving), (.closurestateUnknown, .moving),
     ])
     func toggleBootWording(state: VCSEC_ClosureState_E, expected: BootToggleOutcome) async throws {
         let fake = FakeVehicle()
