@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import Testing
 @testable import Sentry
 @testable import TeslaKit
@@ -261,6 +262,60 @@ struct ChargePortClimateDriveTests {
         #expect(model.command(for: .climate) != nil)
         #expect(DriveText.power(-12) == "\u{2212}12 kW")
         #expect(DriveText.power(18) == "+18 kW")
+    }
+
+    @Test func drivingReadsLiveOverOneConnectionAndStopsOnPark() async throws {
+        let fake = Self.fakeCar()
+        fake.driveState.shiftState.d = CarServer_Void()
+        fake.driveState.speedFloat = 30
+        let connections = Mutex(0)
+        let model = HomeModel(store: ChargeStore(defaults: defaults), drivingRefresh: .milliseconds(10)) { _ in
+            VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in
+                connections.withLock { $0 += 1 }
+                return fake.reconnected()
+            })
+        }
+        await model.refresh()
+        #expect(model.isDriving)
+
+        fake.driveState.speedFloat = 52
+        try await Self.waitUntil { model.drive?.speedMph == 52 }
+        // The first full read, then one held connection for the live reads.
+        #expect(connections.withLock { $0 } == 2)
+
+        fake.driveState.shiftState.p = CarServer_Void()
+        try await Self.waitUntil { !model.isDriving && !model.isReading }
+        #expect(model.command(for: .boot) == .moveTrunk)
+        model.stop()
+    }
+
+    @Test func climateWhileDrivingPausesTheLiveReadsAndResumesThem() async throws {
+        let fake = Self.fakeCar()
+        fake.driveState.shiftState.d = CarServer_Void()
+        fake.driveState.speedFloat = 30
+        let model = HomeModel(store: ChargeStore(defaults: defaults), drivingRefresh: .milliseconds(10)) { _ in
+            VehicleService(vin: TestVectors.vin, key: TestVectors.clientKey, connect: { _ in fake.reconnected() })
+        }
+        await model.refresh()
+
+        await model.perform(.climate)
+        #expect(model.banner?.isError == false)
+        #expect(fake.overlappingRequests == 0)
+
+        fake.driveState.speedFloat = 41
+        try await Self.waitUntil { model.drive?.speedMph == 41 }
+        model.stop()
+    }
+
+    private static func waitUntil(_ condition: @MainActor () -> Bool) async throws {
+        let deadline = ContinuousClock.now + .seconds(5)
+        while !condition() {
+            guard ContinuousClock.now < deadline else {
+                Issue.record("Timed out waiting")
+                return
+            }
+            try await Task.sleep(for: .milliseconds(10))
+        }
     }
 
     @Test func parkedIsNotDriving() async {

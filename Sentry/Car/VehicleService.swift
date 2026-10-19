@@ -88,6 +88,38 @@ struct VehicleService: Sendable {
         }
     }
 
+    /// One live read while driving. Charge and climate are only read on some of them.
+    struct DriveUpdate: Sendable {
+        var drive: DriveSnapshot
+        var charge: ChargeSnapshot?
+        var climate: ClimateSnapshot?
+    }
+
+    /// Reads drive state about every `interval` over one held connection, adding charge and
+    /// climate to every `statusEvery`th read, and passes each read to `update`. Returns after
+    /// the first read out of Drive and Reverse; throws if a read fails. Cancel to stop.
+    /// The car must already be awake, as it is while driven.
+    func watchDrive(every interval: Duration, statusEvery: Int,
+                    update: @Sendable (DriveUpdate) async -> Void) async throws {
+        try await withClient { client in
+            var reads = 0
+            while true {
+                try Task.checkCancellation()
+                let started = ContinuousClock.now
+                reads += 1
+                var reading = DriveUpdate(drive: try await client.driveState(deadline: .seconds(3)))
+                if reads.isMultiple(of: statusEvery) {
+                    reading.charge = try await client.chargeState(deadline: .seconds(3))
+                    reading.climate = try? await client.climateState(deadline: .seconds(3))
+                }
+                try Task.checkCancellation()
+                await update(reading)
+                guard reading.drive.isDriving else { return }
+                try await Task.sleep(until: started + interval)
+            }
+        }
+    }
+
     private static func wake(_ client: VehicleClient, before deadline: ContinuousClock.Instant) async throws {
         try await client.execute(.wake, deadline: limit(.seconds(8), to: deadline))
         try await client.waitForInfotainment(deadline: limit(.seconds(15), to: deadline))

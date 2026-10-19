@@ -27,6 +27,9 @@ struct DrivingPanel: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .padding(.vertical, -14)
+                // Live reads land a few times a second; roll the digits rather than jump.
+                .contentTransition(.numericText(value: drive.speedMph ?? 0))
+                .animation(.snappy, value: drive.speedMph)
                 .accessibilityLabel(drive.speedMph.map { "\(Int($0.rounded())) miles per hour" } ?? "Speed not read")
             Spacer()
             GearStrip(gear: drive.gear).padding(.bottom, 4)
@@ -165,12 +168,14 @@ private struct PowerMeter: View {
                 Text(kW.map(DriveText.power) ?? "–")
                     .foregroundStyle(Paper.ink)
                     .fontWeight(.medium)
+                    .contentTransition(.numericText(value: Double(kW ?? 0)))
                 Spacer()
                 Text("Power")
             }
             .font(.geist(13))
             .foregroundStyle(Paper.secondary)
         }
+        .animation(.snappy, value: kW)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(kW.map { $0 < 0 ? "Regenerating \(-$0) kilowatts" : "Using \($0) kilowatts" } ?? "Power not read")
     }
