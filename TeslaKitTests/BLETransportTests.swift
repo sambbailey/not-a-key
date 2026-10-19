@@ -11,3 +11,8 @@ import Testing
     #expect(!BLETransport.matches(advertisement: theirs, vin: vin))
     #expect(!BLETransport.matches(advertisement: [:], vin: vin))
 }
+
+/// Vehicles don't advertise the vehicle service UUID; a filtered scan never finds the car.
+@Test func scanIsNotFilteredByService() {
+    #expect(BLETransport.scanServices == nil)
+}
