@@ -45,7 +45,7 @@ struct OnboardingView: View {
                     }
                 }
             }
-            .navigationTitle("Set up Sentry")
+            .navigationTitle("Set up Not a Key")
         }
     }
 }

@@ -15,7 +15,7 @@ struct IntentMessagesTests {
 
     @Test("messageForEveryError", arguments: [
         (VehicleError.bluetoothOff, "Bluetooth is off"),
-        (.bluetoothUnauthorized, "Allow Bluetooth for Sentry in Settings"),
+        (.bluetoothUnauthorized, "Allow Bluetooth for Not a Key in Settings"),
         (.notInRange, "Car not in range"),
         (.notPaired, "Key not paired"),
         (.busy, "Car busy, try again"),
@@ -30,7 +30,7 @@ struct IntentMessagesTests {
     @Test func messageForOtherErrors() {
         #expect(IntentMessages.failure(CancellationError()) == "Car didn't respond")
         #expect(IntentMessages.failure(URLError(.unknown)) == "Car didn't respond")
-        #expect(IntentMessages.failure(KeyStore.Failure.unreadableItem) == "Set up Sentry first")
+        #expect(IntentMessages.failure(KeyStore.Failure.unreadableItem) == "Set up Not a Key first")
     }
 }
 
@@ -65,7 +65,7 @@ struct ToggleBootIntentTests {
         try setUp(vin: vin, paired: paired, key: key)
         let fake = FakeVehicle()
 
-        #expect(await message { _ in fake } == "Set up Sentry first")
+        #expect(await message { _ in fake } == "Set up Not a Key first")
         #expect(fake.requestsReceived == 0)
     }
 

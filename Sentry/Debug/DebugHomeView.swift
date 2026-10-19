@@ -56,7 +56,7 @@ struct DebugHomeView: View {
                         .disabled(isWorking)
                 }
             }
-            .navigationTitle("Sentry")
+            .navigationTitle("Not a Key")
             .confirmationDialog("Re-pair this phone?", isPresented: $confirmingRepair, titleVisibility: .visible) {
                 Button("Delete key and re-pair", role: .destructive, action: repair)
             } message: {

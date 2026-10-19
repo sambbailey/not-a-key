@@ -774,7 +774,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sentry/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Sentry uses Bluetooth to talk to your car.";
+				INFOPLIST_KEY_CFBundleDisplayName = "Not a Key";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Not a Key uses Bluetooth to talk to your car.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -812,7 +813,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sentry/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Sentry uses Bluetooth to talk to your car.";
+				INFOPLIST_KEY_CFBundleDisplayName = "Not a Key";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Not a Key uses Bluetooth to talk to your car.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

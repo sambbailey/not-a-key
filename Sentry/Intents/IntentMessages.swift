@@ -3,7 +3,7 @@ import TeslaKit
 
 /// The words Sentry shows for the result of a car command, in the intent banner and in the app.
 enum IntentMessages {
-    static let setUpFirst = "Set up Sentry first"
+    static let setUpFirst = "Set up Not a Key first"
 
     static func success(_ outcome: BootToggleOutcome) -> String {
         switch outcome {
@@ -18,7 +18,7 @@ enum IntentMessages {
     static func failure(_ error: any Error) -> String {
         switch error {
         case VehicleError.bluetoothOff: "Bluetooth is off"
-        case VehicleError.bluetoothUnauthorized: "Allow Bluetooth for Sentry in Settings"
+        case VehicleError.bluetoothUnauthorized: "Allow Bluetooth for Not a Key in Settings"
         case VehicleError.notInRange: "Car not in range"
         case VehicleError.notPaired: "Key not paired"
         case VehicleError.busy: "Car busy, try again"
