@@ -17,6 +17,7 @@
 		438BA077D00234AFC6CE33E3 /* errors.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FD59C5BF14AE7CCEDB59EE /* errors.pb.swift */; };
 		47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43A29EEFA3C014421EDE000 /* CommandTests.swift */; };
 		5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91348FDD2FBD2536E13ABF5D /* DomainSession.swift */; };
+		607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */; };
 		6958D744310D0147E91D5D18 /* vcsec.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CDB475C6EC8D11D6968C4C /* vcsec.pb.swift */; };
 		69E62D64011C89F97A40BEC1 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B15483B4FD848C4109C5E3A3 /* TeslaKit.framework */; };
 		6D165F8DE28CBF1ECB2A0F14 /* FramingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17038816FB4498913897E57 /* FramingTests.swift */; };
@@ -39,6 +40,7 @@
 		D36AE88C54C97AF279CAE3A4 /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1507B7FE29461DC5C5DA50E /* VCSECResponse.swift */; };
 		DD90F02EBE69BFBB7C8125F7 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3548F1D5EC3EA78D7594F4 /* vehicle.pb.swift */; };
 		E339D8880429FF6B84DD896E /* TestVectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F462F4A3A6140241A1CEAE2C /* TestVectors.swift */; };
+		E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B2B58790A35267E9F0F915 /* BLETransport.swift */; };
 		F3978C427AC1B9138A24D5A0 /* universal_message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36362DB54C9E6AF6C078FA0 /* universal_message.pb.swift */; };
 		F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC3B28E48C5B835B7529BB0 /* Framing.swift */; };
 		F99287B9D1012D1B48E6FB9D /* VehicleLocalName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */; };
@@ -100,6 +102,7 @@
 		116A9B0ED6A007452A198EF3 /* ProtoSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoSmokeTests.swift; sourceTree = "<group>"; };
 		49E3B73BA8BE1228458F3E02 /* signatures.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signatures.pb.swift; sourceTree = "<group>"; };
 		4D040E428833CD69A54ADC63 /* VehicleTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTransport.swift; sourceTree = "<group>"; };
+		51B2B58790A35267E9F0F915 /* BLETransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransport.swift; sourceTree = "<group>"; };
 		523692D445578EA0DC4E44D4 /* FakeVehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeVehicle.swift; sourceTree = "<group>"; };
 		5B5388A7E4F4760BFFBE269D /* SentryTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SentryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B5065007EA4C6779D9864A /* SessionKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKeyTests.swift; sourceTree = "<group>"; };
@@ -111,6 +114,7 @@
 		908E832CBF6DE2FE22715541 /* managed_charging.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = managed_charging.pb.swift; sourceTree = "<group>"; };
 		91348FDD2FBD2536E13ABF5D /* DomainSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSession.swift; sourceTree = "<group>"; };
 		965D878EC01553C82B9F045C /* VehicleClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleClientTests.swift; sourceTree = "<group>"; };
+		9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETransportTests.swift; sourceTree = "<group>"; };
 		A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleLocalName.swift; sourceTree = "<group>"; };
 		AF6CBD86D946C63F9C6624DB /* TeslaKitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TeslaKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B02D86A56943EFC8BD095B48 /* KeyAgreementKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyAgreementKey.swift; sourceTree = "<group>"; };
@@ -194,6 +198,7 @@
 		25F6BCA2176164DEACBFE58F /* TeslaKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				9D14ADF434BB74094BF733D3 /* BLETransportTests.swift */,
 				C43A29EEFA3C014421EDE000 /* CommandTests.swift */,
 				BC3F9E84D0B3C6266E61A2AA /* DomainSessionTests.swift */,
 				523692D445578EA0DC4E44D4 /* FakeVehicle.swift */,
@@ -268,6 +273,7 @@
 		D977E64524208B328C2A859E /* Transport */ = {
 			isa = PBXGroup;
 			children = (
+				51B2B58790A35267E9F0F915 /* BLETransport.swift */,
 				BAC3B28E48C5B835B7529BB0 /* Framing.swift */,
 				A206DF5154FC3F0F5EE5A0FD /* VehicleLocalName.swift */,
 				4D040E428833CD69A54ADC63 /* VehicleTransport.swift */,
@@ -421,6 +427,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E46289B4AE86C7F8E0D8F754 /* BLETransport.swift in Sources */,
 				5D70B5441DB73ACEA9CE7CC1 /* DomainSession.swift in Sources */,
 				F7C928D0BA6ED61CDA68AB8D /* Framing.swift in Sources */,
 				9139F8A5F257192069CC97B0 /* KeyAgreementKey.swift in Sources */,
@@ -457,6 +464,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				607B58D8E7467DFB94759610 /* BLETransportTests.swift in Sources */,
 				47C02B374ECE0C56956614FF /* CommandTests.swift in Sources */,
 				CCCA32B9FF2E71EACE94D54C /* DomainSessionTests.swift in Sources */,
 				8F770EA8048EDF465057EFF9 /* FakeVehicle.swift in Sources */,
