@@ -87,7 +87,13 @@ struct HomeView: View {
             .scrollBounceBehavior(.basedOnSize)
             .refreshable { await model.refresh() }
             .safeAreaInset(edge: .bottom) { footer }
-            .background(Paper.background)
+            .background {
+                ZStack {
+                    Paper.background
+                    Snowfall()
+                }
+                .ignoresSafeArea()
+            }
             .foregroundStyle(Paper.ink)
             .animation(.default, value: model.reach)
             .toolbar(.hidden, for: .navigationBar)

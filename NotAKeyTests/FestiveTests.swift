@@ -79,3 +79,33 @@ struct FestiveTests {
         #expect(festive.isInSeason)
     }
 }
+
+struct SnowfallTests {
+    @Test func thirtyFlakesWithinSpec() {
+        #expect(Snowfall.flakes.count == 30)
+        for flake in Snowfall.flakes {
+            #expect((2...4).contains(flake.size))
+            #expect((8...14).contains(flake.period))
+            #expect((0...1).contains(flake.x))
+            #expect((0...1).contains(flake.phase))
+            #expect(abs(flake.drift) <= 12)
+        }
+    }
+
+    @Test func flakeStaysOnScreenAndWraps() {
+        let size = CGSize(width: 400, height: 800)
+        let flake = Snowfall.Flake(x: 0.5, size: 3, period: 10, phase: 0, drift: 10)
+        for time in stride(from: 0.0, through: 30, by: 0.5) {
+            let point = Snowfall.position(of: flake, at: time, in: size)
+            #expect((-flake.size...size.height + flake.size).contains(point.y))
+            #expect((0...size.width).contains(point.x))
+        }
+        #expect(Snowfall.position(of: flake, at: 0, in: size).y == Snowfall.position(of: flake, at: 10, in: size).y)
+    }
+
+    @Test func flakeFallsDownward() {
+        let size = CGSize(width: 400, height: 800)
+        let flake = Snowfall.Flake(x: 0.5, size: 3, period: 10, phase: 0, drift: 0)
+        #expect(Snowfall.position(of: flake, at: 2, in: size).y > Snowfall.position(of: flake, at: 1, in: size).y)
+    }
+}

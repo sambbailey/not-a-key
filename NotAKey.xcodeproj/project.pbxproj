@@ -64,6 +64,7 @@
 		A0C5F2D9F22EE3F798023A1B /* KeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD01D26ACE3512805C6DB6B5 /* KeyStore.swift */; };
 		A94D046D37AEBB2E81D023DA /* ChargeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA633EB8BED5D4054A4678 /* ChargeBar.swift */; };
 		AA19459F447E84F835AEE383 /* ClimateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0530DF4E036713228ED731DB /* ClimateView.swift */; };
+		AB1B9C6EA49317DDB71D242D /* Snowfall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1014FAA2585F033588BAA084 /* Snowfall.swift */; };
 		B0B64D173B3B4637C059B309 /* FakeVehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8855C29D306D9922B9C8264C /* FakeVehicle.swift */; };
 		B61E66393967E481B7A60FFE /* BLETransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F34C0EB28187EBF5F1DF0D /* BLETransportTests.swift */; };
 		BA554F763267F61526D36423 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECC6E7CF1EB819D1E21011 /* vehicle.pb.swift */; };
@@ -146,6 +147,7 @@
 		0623F2BAB08F6BF3F5F0754A /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		0D8AACCD7A2B6373E2BA78B2 /* DrivingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingView.swift; sourceTree = "<group>"; };
 		0E703EDED8182ED909DA8483 /* Festive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Festive.swift; sourceTree = "<group>"; };
+		1014FAA2585F033588BAA084 /* Snowfall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snowfall.swift; sourceTree = "<group>"; };
 		109C477FE1AA5527CE82D91D /* FestiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestiveTests.swift; sourceTree = "<group>"; };
 		12BC1D2AF8D972A8C74B33A7 /* ChargeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSnapshot.swift; sourceTree = "<group>"; };
 		1841022B8D0F3553E5991DEC /* TestVectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVectors.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				CFBA04E4A89E81CAF2785964 /* HomeView.swift */,
 				CB09C3AC0894F9B30BCA6CC8 /* Paper.swift */,
 				756ADA512E1EF308F2D6E5CA /* SettingsView.swift */,
+				1014FAA2585F033588BAA084 /* Snowfall.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 				1121A20500E1DD4B077B9F02 /* PairingModel.swift in Sources */,
 				1BDCA3A9DCD4CDBA2E5ADDD9 /* Paper.swift in Sources */,
 				687BDBE736D59788F974E187 /* SettingsView.swift in Sources */,
+				AB1B9C6EA49317DDB71D242D /* Snowfall.swift in Sources */,
 				50193BFAD67B9B9EA7F827B5 /* ToggleBootIntent.swift in Sources */,
 				1ADA2185475810A5B99C52A9 /* VIN.swift in Sources */,
 				74FEFE282DACACFFDBE43F53 /* VehicleService.swift in Sources */,
