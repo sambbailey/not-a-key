@@ -9,13 +9,20 @@ public enum VehicleCommand: Sendable, Equatable {
     case setDefrost(Bool)
     /// Sets what climate does once the car is parked: off, Keep, Dog or Camp.
     case climateKeeper(ClimateKeeperMode)
-    case openChargePort, closeChargePort, stopCharging
+    /// Opening the port while a cable is plugged in unlatches the cable.
+    case openChargePort, closeChargePort, startCharging, stopCharging
+    /// Sets the level charging stops at, in percent.
+    case setChargeLimit(percent: Int)
+    /// Sets the current the car asks the charger for, in amps.
+    case setChargingAmps(Int)
+    case setSentryMode(Bool)
 
     public var domain: UniversalMessage_Domain {
         switch self {
         case .moveTrunk, .openFrunk, .lock, .unlock, .wake: .vehicleSecurity
         case .climateOn, .climateOff, .setTemperature, .setDefrost, .climateKeeper,
-             .openChargePort, .closeChargePort, .stopCharging: .infotainment
+             .openChargePort, .closeChargePort, .startCharging, .stopCharging, .setChargeLimit,
+             .setChargingAmps, .setSentryMode: .infotainment
         }
     }
 
@@ -62,9 +69,25 @@ public enum VehicleCommand: Sendable, Equatable {
             var action = CarServer_Action()
             action.vehicleAction.chargePortDoorClose = CarServer_ChargePortDoorClose()
             return try action.serializedData()
+        case .startCharging:
+            var action = CarServer_Action()
+            action.vehicleAction.chargingStartStopAction.start = CarServer_Void()
+            return try action.serializedData()
         case .stopCharging:
             var action = CarServer_Action()
             action.vehicleAction.chargingStartStopAction.stop = CarServer_Void()
+            return try action.serializedData()
+        case .setChargeLimit(let percent):
+            var action = CarServer_Action()
+            action.vehicleAction.chargingSetLimitAction.percent = Int32(percent)
+            return try action.serializedData()
+        case .setChargingAmps(let amps):
+            var action = CarServer_Action()
+            action.vehicleAction.setChargingAmpsAction.chargingAmps = Int32(amps)
+            return try action.serializedData()
+        case .setSentryMode(let on):
+            var action = CarServer_Action()
+            action.vehicleAction.vehicleControlSetSentryModeAction.on = on
             return try action.serializedData()
         }
     }
@@ -87,6 +110,14 @@ public enum VehicleCommand: Sendable, Equatable {
     public static func chargeStatePayload() throws -> Data {
         var action = CarServer_Action()
         action.vehicleAction.getVehicleData.getChargeState = CarServer_GetChargeState()
+        return try action.serializedData()
+    }
+
+    /// Asks infotainment for closures state, which carries Sentry Mode; the reply's
+    /// `vehicleData.closuresState` carries it.
+    public static func closuresStatePayload() throws -> Data {
+        var action = CarServer_Action()
+        action.vehicleAction.getVehicleData.getClosuresState = CarServer_GetClosuresState()
         return try action.serializedData()
     }
 

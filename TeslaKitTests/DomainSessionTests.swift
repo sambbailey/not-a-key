@@ -89,7 +89,7 @@ private func encryptedReply(_ plaintext: Data, counter: UInt32, requestHash: Dat
     #expect(gcm.epoch == vectorEpoch)
     #expect(msg.flags == 2)
     #expect(msg.signatureData.signerIdentity.publicKey == TestVectors.clientKey.publicKeyX963)
-    #expect(s.commandMetadata(for: msg, counter: 7, expiresAt: 2655) == TestVectors.hvacOnMetadata)
+    #expect(try s.commandMetadata(for: msg, counter: 7, expiresAt: 2655) == TestVectors.hvacOnMetadata)
     #expect(requestHash == Data([5]) + gcm.tag)
 
     // The ciphertext authenticates against the protocol.md metadata exactly.

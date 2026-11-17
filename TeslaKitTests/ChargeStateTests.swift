@@ -25,7 +25,8 @@ private func chargeState(level: Int32, range: Float, charging: Bool = false) -> 
 
         let snapshot = try await makeClient(car).chargeState()
 
-        #expect(snapshot == ChargeSnapshot(batteryLevel: 78, rangeMiles: 245.4, isCharging: false))
+        #expect(snapshot == ChargeSnapshot(batteryLevel: 78, rangeMiles: 245.4, isCharging: false,
+                                           chargingState: .disconnected))
         #expect(car.sessionInfoRequests == [.infotainment])
         #expect(car.commands.first?.carServer?.vehicleAction.getVehicleData.hasGetChargeState == true)
         #expect(car.encryptedRepliesSent == 1)
@@ -36,6 +37,60 @@ private func chargeState(level: Int32, range: Float, charging: Bool = false) -> 
         car.chargeState = chargeState(level: 50, range: 150, charging: true)
 
         #expect(try await makeClient(car).chargeState().isCharging)
+    }
+
+    @Test func readsChargingDetails() async throws {
+        let car = FakeVehicle()
+        var state = chargeState(level: 62, range: 191)
+        state.chargingState.type = .starting(CarServer_Void())
+        state.chargeLimitSoc = 80
+        state.chargeLimitSocMin = 50
+        state.chargeLimitSocMax = 100
+        state.scheduledChargingPending = true
+        state.scheduledChargingStartTime = 1_792_535_400_000
+        state.minutesToChargeLimit = 80
+        state.chargeRateMph = 28
+        state.fastChargerPresent = false
+        state.chargeEnergyAdded = 14.2
+        state.chargeMilesAddedRated = 52.3
+        state.chargerActualCurrent = 32
+        state.chargerVoltage = 230
+        car.chargeState = state
+
+        let snapshot = try await makeClient(car).chargeState()
+
+        #expect(snapshot.chargingState == .starting)
+        #expect(!snapshot.isCharging)
+        #expect(snapshot.chargeLimit == 80)
+        #expect(snapshot.chargeLimitRange == 50...100)
+        #expect(snapshot.isScheduled == true)
+        #expect(snapshot.scheduledStart == Date(timeIntervalSince1970: 1_792_535_400))
+        #expect(snapshot.minutesToLimit == 80)
+        #expect(snapshot.chargeRateMph == 28)
+        #expect(snapshot.isFastCharger == false)
+        #expect(snapshot.energyAddedKWh == 14.2)
+        #expect(snapshot.milesAdded == 52.3)
+        #expect(snapshot.chargerAmps == 32)
+        #expect(snapshot.chargerVolts == 230)
+    }
+
+    /// As read from a Model Y: the usable level is what Tesla's app shows.
+    @Test func showsTheUsableLevel() async throws {
+        let car = FakeVehicle()
+        var state = chargeState(level: 28, range: 95.4)
+        state.usableBatteryLevel = 27
+        car.chargeState = state
+
+        #expect(try await makeClient(car).chargeState().batteryLevel == 27)
+    }
+
+    @Test func noScheduledStartWhenTheCarSendsZero() async throws {
+        let car = FakeVehicle()
+        var state = chargeState(level: 62, range: 191)
+        state.scheduledChargingStartTime = 0
+        car.chargeState = state
+
+        #expect(try await makeClient(car).chargeState().scheduledStart == nil)
     }
 
     @Test func rejectsNonOKActionStatus() async {

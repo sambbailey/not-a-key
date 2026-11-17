@@ -8,7 +8,7 @@ Car: 2026 Model Y LR AWD. Phone: iPhone 17 Pro Max. Official Tesla app installed
 | Refresh / Toggle Boot from debug screen | ✅ works |
 | Action Button "Toggle Boot", phone locked | ✅ works |
 | Out of range → "Car not in range" | ✅ works |
-| Asleep car (15+ min) | ⏳ pending |
+| Asleep car (15+ min) | ✅ works |
 | Latency per toggle | not recorded |
 | Haptic on intent result | not recorded |
 

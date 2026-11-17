@@ -1,7 +1,7 @@
 import Foundation
 import os
 
-private let log = Logger(subsystem: "com.dodimead.sentry", category: "vehicle")
+private let log = Logger(subsystem: "com.nevelen.notakey", category: "vehicle")
 
 /// Talks to one vehicle over a `VehicleTransport`: establishes a session per domain on
 /// first use, sends signed commands and reads replies until a terminal one arrives,
@@ -64,7 +64,7 @@ public actor VehicleClient {
             let snapshot = try await exclusively(until: until) {
                 try await retrying(until: until) { try await statusAttempt(payload: payload, until: until) }
             }
-            log.info("Body controller state: \(String(describing: snapshot), privacy: .public)")
+            log.info("Body controller state: \(String(describing: snapshot), privacy: .private)")
             return snapshot
         } catch {
             log.error("Body controller state failed: \(String(describing: error), privacy: .public)")
@@ -73,13 +73,13 @@ public actor VehicleClient {
     }
 
     public func execute(_ command: VehicleCommand, deadline: Duration = .seconds(8)) async throws {
-        log.info("Execute \(String(describing: command), privacy: .public)")
+        log.info("Execute \(String(describing: command), privacy: .private)")
         do {
             _ = try await signedRequest(to: command.domain, payload: try command.payload(),
                                         until: clock.now + deadline)
-            log.info("Execute \(String(describing: command), privacy: .public) succeeded")
+            log.info("Execute \(String(describing: command), privacy: .private) succeeded")
         } catch {
-            log.error("Execute \(String(describing: command), privacy: .public) failed: \(String(describing: error), privacy: .public)")
+            log.error("Execute \(String(describing: command), privacy: .private) failed: \(String(describing: error), privacy: .public)")
             throw error
         }
     }
@@ -92,7 +92,7 @@ public actor VehicleClient {
                                                    until: clock.now + deadline)
             guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
             let snapshot = try ChargeSnapshot(response.vehicleData.chargeState)
-            log.info("Charge state: \(snapshot.batteryLevel, privacy: .public)% \(snapshot.rangeMiles, privacy: .public) mi charging=\(snapshot.isCharging, privacy: .public)")
+            log.info("Charge state: \(snapshot.batteryLevel, privacy: .private)% \(snapshot.rangeMiles, privacy: .private) mi charging=\(snapshot.isCharging, privacy: .private)")
             return snapshot
         } catch {
             log.error("Charge state failed: \(String(describing: error), privacy: .public)")
@@ -107,10 +107,25 @@ public actor VehicleClient {
                                                    until: clock.now + deadline)
             guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
             let snapshot = ClimateSnapshot(response.vehicleData.climateState)
-            log.info("Climate state: on=\(snapshot.isOn, privacy: .public) inside=\(String(describing: snapshot.insideCelsius), privacy: .public)")
+            log.info("Climate state: on=\(snapshot.isOn, privacy: .private) inside=\(String(describing: snapshot.insideCelsius), privacy: .private)")
             return snapshot
         } catch {
             log.error("Climate state failed: \(String(describing: error), privacy: .public)")
+            throw error
+        }
+    }
+
+    /// Reads Sentry Mode from infotainment, which must be awake; see `waitForInfotainment`.
+    public func sentryState(deadline: Duration = .seconds(8)) async throws -> SentrySnapshot {
+        do {
+            let response = try await signedRequest(to: .infotainment, payload: try VehicleCommand.closuresStatePayload(),
+                                                   until: clock.now + deadline)
+            guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
+            let snapshot = SentrySnapshot(response.vehicleData.closuresState)
+            log.info("Sentry state: \(String(describing: snapshot.state), privacy: .private) available=\(String(describing: snapshot.isAvailable), privacy: .private)")
+            return snapshot
+        } catch {
+            log.error("Sentry state failed: \(String(describing: error), privacy: .public)")
             throw error
         }
     }
@@ -123,7 +138,7 @@ public actor VehicleClient {
                                                    until: clock.now + deadline)
             guard let response else { throw VehicleError.protocolFault(.rrorDecoding) }
             let snapshot = DriveSnapshot(response.vehicleData.driveState)
-            log.info("Drive state: gear=\(snapshot.gear.rawValue, privacy: .public) speed=\(String(describing: snapshot.speedMph), privacy: .public)")
+            log.info("Drive state: gear=\(snapshot.gear.rawValue, privacy: .private) speed=\(String(describing: snapshot.speedMph), privacy: .private)")
             return snapshot
         } catch {
             log.error("Drive state failed: \(String(describing: error), privacy: .public)")
