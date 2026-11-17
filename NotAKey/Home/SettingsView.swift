@@ -56,26 +56,29 @@ struct SettingsView: View {
                     row("Car", value: store.vin.flatMap(VIN.modelName) ?? "Tesla")
                     row("VIN", value: store.vin ?? "–")
                     row("Role", value: "Driver")
+                    Button(role: .destructive) { confirmingRemove = true } label: {
+                        Text("Remove key from this phone")
+                            .font(.geist(16))
+                            .foregroundStyle(Paper.danger)
+                            .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+                    if let removeError {
+                        Text(removeError)
+                            .font(.geist(13))
+                            .foregroundStyle(Paper.danger)
+                            .padding(.vertical, 14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 settingsSection("About") {
                     row("Version", value: Self.version)
                 }
             }
             .padding(.horizontal, 24)
-        }
-        .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 8) {
-                if let removeError {
-                    Text(removeError)
-                        .font(.geist(13))
-                        .foregroundStyle(Paper.danger)
-                }
-                Button("Remove key from this phone", role: .destructive) { confirmingRemove = true }
-                    .buttonStyle(RemoveButtonStyle())
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 12)
-            .background(Paper.background)
+            .padding(.bottom, 32)
         }
         .background(Paper.background)
         .foregroundStyle(Paper.ink)
@@ -180,17 +183,5 @@ private struct CheckboxToggleStyle: ToggleStyle {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isToggle)
         .accessibilityValue(configuration.isOn ? "On" : "Off")
-    }
-}
-
-private struct RemoveButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.geist(15, .medium))
-            .frame(maxWidth: .infinity, minHeight: 52)
-            .foregroundStyle(Paper.danger)
-            .overlay { Capsule().strokeBorder(Paper.danger, lineWidth: 1) }
-            .contentShape(Capsule())
-            .opacity(configuration.isPressed ? 0.6 : 1)
     }
 }
