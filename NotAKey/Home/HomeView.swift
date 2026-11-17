@@ -13,6 +13,8 @@ struct HomeView: View {
     @State private var path: [Route] = []
     @Environment(\.scenePhase) private var scenePhase
     @State private var wasInBackground = false
+    /// How far the banner has been dragged; up past a little way clears it.
+    @State private var bannerDrag: CGFloat = 0
 
     init(store: CarStore) {
         self.store = store
@@ -395,9 +397,25 @@ struct HomeView: View {
             BannerView(banner: banner)
                 .padding(.horizontal, 16)
                 .padding(.top, 4)
+                .offset(y: bannerDrag < 0 ? bannerDrag : bannerDrag / 4)
                 .transition(.move(edge: .top).combined(with: .opacity))
                 .onTapGesture { model.banner = nil }
+                // Swipe up to clear, like a system notification.
+                .gesture(
+                    DragGesture(minimumDistance: 8)
+                        .onChanged { bannerDrag = $0.translation.height }
+                        .onEnded { drag in
+                            if drag.translation.height < -30 || drag.predictedEndTranslation.height < -80 {
+                                model.banner = nil
+                                bannerDrag = 0
+                            } else {
+                                withAnimation(.snappy) { bannerDrag = 0 }
+                            }
+                        }
+                )
                 .task(id: banner.id) {
+                    // A banner that timed out mid-drag mustn't leave the next one offset.
+                    bannerDrag = 0
                     try? await Task.sleep(for: banner.isError ? .seconds(8) : .seconds(4))
                     if model.banner?.id == banner.id { model.banner = nil }
                 }
