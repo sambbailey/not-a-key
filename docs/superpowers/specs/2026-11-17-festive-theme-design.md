@@ -35,8 +35,8 @@ A seasonal Christmas touch for NotAKey that fits the restrained "Paper" look. Sa
 **Setting:** new "Appearance" section in `SettingsView` with a "Festive theme" checkbox (existing `CheckboxToggleStyle`), subtitle "On by itself from 1 December to Twelfth Night". Always shown. *Changed 2026-11-17 at Sam's request ("I want to be able to turn it on now"): originally season-only.*
 
 - Untouched: follows the season window.
-- Unticked: stays off.
-- Ticked early (or during the season): on immediately, until that season ends (after 6 January), then back to following the season. *Claude's call: so an early "on" can't leave the app festive all year.*
+- Ticked or unticked: takes effect immediately and lasts until the next season boundary (1 December or 7 January, whichever comes first), then the look follows the season again. *Claude's call, revised after final review: so neither an "on" nor an "off" sticks for good — unticking in November doesn't cancel December.*
+- The season is always judged on the Gregorian calendar in the phone's time zone, whatever calendar the phone displays.
 
 Stored in `UserDefaults`: `notakey.festiveTheme` (Bool, absent = follow season) and `notakey.festiveThemeChosenAt` (Date).
 

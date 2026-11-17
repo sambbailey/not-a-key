@@ -53,6 +53,32 @@ struct FestiveTests {
         #expect(Festive(defaults: defaults, now: { date(2027, 12, 1) }).isActive)
     }
 
+    @Test func untickingBeforeSeasonStillTurnsOnInDecember() {
+        let festive = Festive(defaults: defaults, now: { date(2026, 11, 17) })
+        festive.isEnabled = true
+        festive.isEnabled = false
+        #expect(!Festive(defaults: defaults, now: { date(2026, 11, 30) }).isActive)
+        #expect(Festive(defaults: defaults, now: { date(2026, 12, 1) }).isActive)
+    }
+
+    @Test func untickingInSeasonLastsUntilSeasonEndsOnly() {
+        Festive(defaults: defaults, now: { date(2026, 12, 10) }).isEnabled = false
+        #expect(!Festive(defaults: defaults, now: { date(2027, 1, 6) }).isActive)
+        #expect(Festive(defaults: defaults, now: { date(2027, 12, 1) }).isActive)
+    }
+
+    @Test func choiceInEarlyJanuaryEndsOnTheSeventh() {
+        Festive(defaults: defaults, now: { date(2027, 1, 3) }).isEnabled = false
+        #expect(!Festive(defaults: defaults, now: { date(2027, 1, 6) }).isActive)
+        #expect(Festive(defaults: defaults, now: { date(2027, 12, 1) }).isActive)
+    }
+
+    @Test func tickingInFebruaryLastsUntilDecemberThenFollowsSeason() {
+        Festive(defaults: defaults, now: { date(2027, 2, 10) }).isEnabled = true
+        #expect(Festive(defaults: defaults, now: { date(2027, 11, 30) }).isActive)
+        #expect(!Festive(defaults: defaults, now: { date(2028, 1, 7) }).isActive)
+    }
+
     @Test func earlyOnExpiresWhileAppStaysOpen() {
         nonisolated(unsafe) var today = date(2026, 11, 17)
         let festive = Festive(defaults: defaults, now: { today })
