@@ -7,6 +7,7 @@ struct SettingsView: View {
 
     @State private var confirmingRemove = false
     @State private var removeError: String?
+    @Bindable private var festive = Festive.shared
 
     private let keyStore = KeyStore()
 
@@ -19,6 +20,20 @@ struct SettingsView: View {
                             Text("Require Face ID to unlock")
                                 .font(.geist(16, .medium))
                             Text("Boot and lock still work from the Action Button")
+                                .font(.geist(13))
+                                .foregroundStyle(Paper.secondary)
+                        }
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+                    .frame(minHeight: 72)
+                    .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+                }
+                settingsSection("Appearance") {
+                    Toggle(isOn: $festive.isEnabled) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Festive theme")
+                                .font(.geist(16, .medium))
+                            Text("On by itself from 1 December to Twelfth Night")
                                 .font(.geist(13))
                                 .foregroundStyle(Paper.secondary)
                         }
