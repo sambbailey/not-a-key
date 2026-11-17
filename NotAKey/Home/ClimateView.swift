@@ -76,12 +76,13 @@ struct ClimateView: View {
                 stepButton(label: "Cooler", by: -Self.step)
                     .disabled(setPoint <= Self.range.lowerBound)
                 HStack(alignment: .top, spacing: 0) {
-                    Text(number)
+                    // Tight between digits only: tracking after the last digit clips its right edge.
+                    (Text(number.dropLast()).tracking(-7.2) + Text(number.suffix(1)))
                         .font(.geist(120, .medium, relativeTo: nil))
-                        .tracking(-7.2)
                     Text("°")
                         .font(.geist(40, relativeTo: nil))
                         .padding(.top, 14)
+                        .padding(.leading, -7.2)
                 }
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
