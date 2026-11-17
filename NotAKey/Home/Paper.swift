@@ -3,15 +3,16 @@ import UIKit
 
 /// The "Paper" look: warm off-white in light mode, near-black in dark, ink in one weight.
 enum Paper {
-    static let background = Color(light: 0xF3F3F1, dark: 0x121211)
+    /// Cream paper and pine night over Christmas; see `Festive`.
+    @MainActor static var background: Color { Festive.shared.isActive ? festiveBackground : plainBackground }
     static let ink = Color(light: 0x111111, dark: 0xEDEDEA)
     static let secondary = Color(light: 0x55554F, dark: 0xA3A39C)
-    static let rule = Color(light: 0xDCDCD7, dark: 0x2A2A27)
+    @MainActor static var rule: Color { Festive.shared.isActive ? festiveRule : plainRule }
     static let nearby = Color(light: 0x15803D, dark: 0x4ADE80)
     /// Text on a `nearby` green button.
     static let onNearby = Color(light: 0xFFFFFF, dark: 0x0C1A10)
     static let outline = Color(light: 0x111111, dark: 0x5A5A55)
-    static let card = Color(light: 0xE8E8E4, dark: 0x1E1E1C)
+    @MainActor static var card: Color { Festive.shared.isActive ? festiveCard : plainCard }
     static let disabledOutline = Color(light: 0xC9C9C3, dark: 0x3A3A36)
     static let disabledInk = Color(light: 0x7A7A74, dark: 0x6E6E68)
     /// Numbers read while the car was last in range.
@@ -29,6 +30,13 @@ enum Paper {
     static let warningCard = Color(light: 0xFDF3E1, dark: 0x241C0E)
     static let warningBorder = Color(light: 0xF0D29A, dark: 0x5C3F0B)
     static let warningSecondary = Color(light: 0x55554F, dark: 0xC9C9C2)
+
+    private static let plainBackground = Color(light: 0xF3F3F1, dark: 0x121211)
+    private static let plainRule = Color(light: 0xDCDCD7, dark: 0x2A2A27)
+    private static let plainCard = Color(light: 0xE8E8E4, dark: 0x1E1E1C)
+    private static let festiveBackground = Color(light: 0xF6F1E7, dark: 0x0F1A14)
+    private static let festiveRule = Color(light: 0xE3D9C6, dark: 0x1F2E25)
+    private static let festiveCard = Color(light: 0xECE4D4, dark: 0x17241C)
 }
 
 extension Font {

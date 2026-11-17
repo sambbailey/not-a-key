@@ -7,6 +7,7 @@ struct SettingsView: View {
 
     @State private var confirmingRemove = false
     @State private var removeError: String?
+    @Bindable private var festive = Festive.shared
 
     private let keyStore = KeyStore()
 
@@ -19,6 +20,20 @@ struct SettingsView: View {
                             Text("Require Face ID to unlock")
                                 .font(.geist(16, .medium))
                             Text("Boot and lock still work from the Action Button")
+                                .font(.geist(13))
+                                .foregroundStyle(Paper.secondary)
+                        }
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+                    .frame(minHeight: 72)
+                    .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+                }
+                settingsSection("Appearance") {
+                    Toggle(isOn: $festive.isEnabled) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Festive theme")
+                                .font(.geist(16, .medium))
+                            Text("On by itself from 1 December to Twelfth Night")
                                 .font(.geist(13))
                                 .foregroundStyle(Paper.secondary)
                         }
@@ -41,26 +56,29 @@ struct SettingsView: View {
                     row("Car", value: store.vin.flatMap(VIN.modelName) ?? "Tesla")
                     row("VIN", value: store.vin ?? "–")
                     row("Role", value: "Driver")
+                    Button(role: .destructive) { confirmingRemove = true } label: {
+                        Text("Remove key from this phone")
+                            .font(.geist(16))
+                            .foregroundStyle(Paper.danger)
+                            .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
+                    if let removeError {
+                        Text(removeError)
+                            .font(.geist(13))
+                            .foregroundStyle(Paper.danger)
+                            .padding(.vertical, 14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 settingsSection("About") {
                     row("Version", value: Self.version)
                 }
             }
             .padding(.horizontal, 24)
-        }
-        .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 8) {
-                if let removeError {
-                    Text(removeError)
-                        .font(.geist(13))
-                        .foregroundStyle(Paper.danger)
-                }
-                Button("Remove key from this phone", role: .destructive) { confirmingRemove = true }
-                    .buttonStyle(RemoveButtonStyle())
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 12)
-            .background(Paper.background)
+            .padding(.bottom, 32)
         }
         .background(Paper.background)
         .foregroundStyle(Paper.ink)
@@ -165,17 +183,5 @@ private struct CheckboxToggleStyle: ToggleStyle {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isToggle)
         .accessibilityValue(configuration.isOn ? "On" : "Off")
-    }
-}
-
-private struct RemoveButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.geist(15, .medium))
-            .frame(maxWidth: .infinity, minHeight: 52)
-            .foregroundStyle(Paper.danger)
-            .overlay { Capsule().strokeBorder(Paper.danger, lineWidth: 1) }
-            .contentShape(Capsule())
-            .opacity(configuration.isPressed ? 0.6 : 1)
     }
 }
