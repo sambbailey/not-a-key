@@ -24,6 +24,7 @@
 		23EE23B9356FD72A483E5BC9 /* KeyAgreementKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1C0F52D401516B4DF28F8B /* KeyAgreementKey.swift */; };
 		25AC4A47B51FA62CB1BF8364 /* SlidingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62373045E9370769964084A6 /* SlidingWindow.swift */; };
 		2B3291F4569E637AD00204CF /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83658F02412C4605E50D001 /* CarStore.swift */; };
+		2BF2B998B7DA315E8FD929FB /* Festive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E703EDED8182ED909DA8483 /* Festive.swift */; };
 		2DE50310FFC670AB98C82B84 /* HomeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5852C27B5A497B3725352247 /* HomeText.swift */; };
 		2FE6FF6BFC2033BC66F8E606 /* DriveSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBBDBEC1C101A64A0AC47AF /* DriveSnapshot.swift */; };
 		317B56E654C4FAECF91C02E3 /* DomainSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE59D05F0B16990742D2D85 /* DomainSessionTests.swift */; };
@@ -33,6 +34,7 @@
 		3CBF9D5C731D46570B4692A7 /* ChargeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690D1ED9FA789B2537342667 /* ChargeStore.swift */; };
 		3D8B51F3BCBC1ADF1E6F4BF7 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4849D514782BA8BFEBD7D377 /* TeslaKit.framework */; };
 		41B562EC8EA106E89134C103 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69446A10BF0909ACED05DC73 /* Geist-Regular.ttf */; };
+		427BFFF796012D629A0F881A /* FestiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109C477FE1AA5527CE82D91D /* FestiveTests.swift */; };
 		453483CA107709476F58A5AB /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA521BAF743ED9D330BF1F4E /* Geist-SemiBold.ttf */; };
 		49C17943361752CD8DDE3FB1 /* KeyStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59DCA68AFAA77D9A99C2111 /* KeyStoreTests.swift */; };
 		4F25196666E6CD113A4E35A6 /* TeslaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4849D514782BA8BFEBD7D377 /* TeslaKit.framework */; };
@@ -143,6 +145,8 @@
 		0530DF4E036713228ED731DB /* ClimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateView.swift; sourceTree = "<group>"; };
 		0623F2BAB08F6BF3F5F0754A /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		0D8AACCD7A2B6373E2BA78B2 /* DrivingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingView.swift; sourceTree = "<group>"; };
+		0E703EDED8182ED909DA8483 /* Festive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Festive.swift; sourceTree = "<group>"; };
+		109C477FE1AA5527CE82D91D /* FestiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestiveTests.swift; sourceTree = "<group>"; };
 		12BC1D2AF8D972A8C74B33A7 /* ChargeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSnapshot.swift; sourceTree = "<group>"; };
 		1841022B8D0F3553E5991DEC /* TestVectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVectors.swift; sourceTree = "<group>"; };
 		20878D116F0D8E16183DFA00 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
@@ -262,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				D8F7F4F76CAD84A175086194 /* ChargeTests.swift */,
+				109C477FE1AA5527CE82D91D /* FestiveTests.swift */,
 				82CBFAC63F21C80D3B8D50A9 /* HomeTests.swift */,
 				682AAA8422A66008F7098990 /* IntentMessagesTests.swift */,
 				A59DCA68AFAA77D9A99C2111 /* KeyStoreTests.swift */,
@@ -376,6 +381,7 @@
 				D9146404DD8DBC8F9465FF20 /* ChargingView.swift */,
 				0530DF4E036713228ED731DB /* ClimateView.swift */,
 				0D8AACCD7A2B6373E2BA78B2 /* DrivingView.swift */,
+				0E703EDED8182ED909DA8483 /* Festive.swift */,
 				C64B0AC62483C1DD2127BC4B /* HomeModel.swift */,
 				5852C27B5A497B3725352247 /* HomeText.swift */,
 				CFBA04E4A89E81CAF2785964 /* HomeView.swift */,
@@ -616,6 +622,7 @@
 				AA19459F447E84F835AEE383 /* ClimateView.swift in Sources */,
 				1E205A70F621EB2AC7610ED7 /* DemoScreen.swift in Sources */,
 				6D9E5EA2801428B5ECFCA14D /* DrivingView.swift in Sources */,
+				2BF2B998B7DA315E8FD929FB /* Festive.swift in Sources */,
 				3337385117ECBFFE6D2DCC1B /* HomeModel.swift in Sources */,
 				2DE50310FFC670AB98C82B84 /* HomeText.swift in Sources */,
 				16BDD2FAE1A96B56EC40CB04 /* HomeView.swift in Sources */,
@@ -691,6 +698,7 @@
 			files = (
 				FA75959D4606E59A7F2B8E3F /* ChargeTests.swift in Sources */,
 				9F25178E425286B8F3B4F22F /* FakeVehicle.swift in Sources */,
+				427BFFF796012D629A0F881A /* FestiveTests.swift in Sources */,
 				5DA57685FAD5FCBAE4A46FFE /* HomeTests.swift in Sources */,
 				17ECEF3CD42FAFDBB0E2D6F7 /* IntentMessagesTests.swift in Sources */,
 				49C17943361752CD8DDE3FB1 /* KeyStoreTests.swift in Sources */,

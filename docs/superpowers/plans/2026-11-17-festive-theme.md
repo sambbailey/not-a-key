@@ -15,7 +15,7 @@
 - XcodeGen-managed: never hand-edit `NotAKey.xcodeproj`; run `xcodegen generate` after adding files.
 - Test command: `xcodebuild test -project NotAKey.xcodeproj -scheme NotAKey -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' -collect-test-diagnostics never -quiet`
 - Season window: 1 December – 6 January inclusive, local calendar, spans New Year.
-- Setting default: on. `UserDefaults` key `notakey.festiveTheme`.
+- Setting: absent = follow season; explicit on lasts until the season it falls in/before ends (after 6 Jan); explicit off persists. Keys `notakey.festiveTheme`, `notakey.festiveThemeChosenAt`. (Revised 2026-11-17, see spec.)
 - Festive palette (light / dark): `background` `F6F1E7` / `0F1A14`; `card` `ECE4D4` / `17241C`; `rule` `E3D9C6` / `1F2E25`.
 - No other `Paper` token changes. Snow on the home screen only.
 
@@ -110,8 +110,8 @@ git commit -m "feat: seasonal festive palette for paper background, cards and ru
 **Interfaces:**
 - Consumes: `Festive.shared.isEnabled`, `Festive.shared.isInSeason`.
 
-- [ ] **Step 1: Add the section**, shown only when `Festive.shared.isInSeason`:
-  - `settingsSection("Appearance")` containing a `Toggle` bound to `Festive.shared.isEnabled` (use `@Bindable var festive = Festive.shared` inside `body`, or a `Binding(get:set:)` — implementer's choice), styled exactly like the Face ID row: title `"Festive theme"` (`.geist(16, .medium)`), subtitle `"December to Twelfth Night"` (`.geist(13)`, `Paper.secondary`), `CheckboxToggleStyle()`, `minHeight: 72`, bottom `Paper.rule` overlay.
+- [ ] **Step 1: Add the section**, always shown (revised — see spec):
+  - `settingsSection("Appearance")` containing a `Toggle` bound to `Festive.shared.isEnabled` (use `@Bindable var festive = Festive.shared` inside `body`, or a `Binding(get:set:)` — implementer's choice), styled exactly like the Face ID row: title `"Festive theme"` (`.geist(16, .medium)`), subtitle `"On by itself from 1 December to Twelfth Night"` (`.geist(13)`, `Paper.secondary`), `CheckboxToggleStyle()`, `minHeight: 72`, bottom `Paper.rule` overlay.
 
 - [ ] **Step 2: Build and run the test command.** Expected: PASS.
 

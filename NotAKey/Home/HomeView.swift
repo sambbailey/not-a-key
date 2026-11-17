@@ -108,6 +108,7 @@ struct HomeView: View {
         .tint(Paper.ink)
         .task { await model.refresh() }
         .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Festive.shared.refreshSeason() }
             // Only a real return to the foreground reads again, not Control Centre or a Face ID sheet.
             switch phase {
             case .background:

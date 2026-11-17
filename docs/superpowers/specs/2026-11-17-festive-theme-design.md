@@ -10,7 +10,7 @@ A seasonal Christmas touch for NotAKey that fits the restrained "Paper" look. Sa
 
 - Neutral colours shift to a warm, wintry palette over the festive season, automatically.
 - Light, sparse snowfall on the home screen.
-- Users can turn it off.
+- Users can turn it off, or on early.
 
 ## Non-goals
 
@@ -32,9 +32,15 @@ A seasonal Christmas touch for NotAKey that fits the restrained "Paper" look. Sa
 
 **Season window:** 1 December to 6 January inclusive, local calendar, any year (it spans New Year).
 
-**Setting:** new "Appearance" section in `SettingsView` with a "Festive theme" checkbox (existing `CheckboxToggleStyle`), subtitle "December to Twelfth Night". Stored in `UserDefaults`, default on. Section shown only during the season window. *Claude's call: hiding it out of season avoids a setting that does nothing for 11 months.*
+**Setting:** new "Appearance" section in `SettingsView` with a "Festive theme" checkbox (existing `CheckboxToggleStyle`), subtitle "On by itself from 1 December to Twelfth Night". Always shown. *Changed 2026-11-17 at Sam's request ("I want to be able to turn it on now"): originally season-only.*
 
-**Active** = in season AND setting on.
+- Untouched: follows the season window.
+- Unticked: stays off.
+- Ticked early (or during the season): on immediately, until that season ends (after 6 January), then back to following the season. *Claude's call: so an early "on" can't leave the app festive all year.*
+
+Stored in `UserDefaults`: `notakey.festiveTheme` (Bool, absent = follow season) and `notakey.festiveThemeChosenAt` (Date).
+
+**Active** = the checkbox's value.
 
 **Palette when active** (only these four tokens change):
 
