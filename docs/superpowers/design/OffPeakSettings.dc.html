@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Off-peak · Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111111}a:hover{color:#000}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 1180px; box-sizing: border-box; background: #F3F3F1; color: #111111; font-family: 'Geist', sans-serif; padding: 56px 24px 36px; display: flex; flex-direction: column">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a href="Paper.dc.html" aria-label="Back to home" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <div style="font-size: 17px; font-weight: 600">Settings</div>
+    <div style="width: 44px"></div>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 13px; color: #55554F">Security</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <label style="display: flex; align-items: center; gap: 14px; min-height: 72px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px; font-weight: 500">Require Face ID to unlock</span>
+        <span style="font-size: 13px; color: #55554F">Boot and lock still work from the Action Button</span>
+      </span>
+      <input type="checkbox" checked style="width: 22px; height: 22px; accent-color: #111111">
+    </label>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 13px; color: #55554F">Off-peak</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <label style="display: flex; align-items: center; gap: 14px; min-height: 72px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px; font-weight: 500">Plan automatically when I plug in at home</span>
+        <span style="font-size: 13px; color: #55554F">Works out tonight's start and sends it to the car</span>
+      </span>
+      <input type="checkbox" checked style="width: 22px; height: 22px; accent-color: #111111">
+    </label>
+    <button style="display: flex; align-items: center; gap: 10px; height: 56px; padding: 0; border: 0; border-bottom: 1px solid #DCDCD7; background: transparent; color: #111111; text-align: left">
+      <span style="flex-grow: 1; font-size: 16px">Cheap rate starts</span>
+      <span style="font-size: 15px; color: #55554F">23:30</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55554F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+    <button style="display: flex; align-items: center; gap: 10px; height: 56px; padding: 0; border: 0; border-bottom: 1px solid #DCDCD7; background: transparent; color: #111111; text-align: left">
+      <span style="flex-grow: 1; font-size: 16px">Cheap rate ends</span>
+      <span style="font-size: 15px; color: #55554F">05:30</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55554F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+    <button style="display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 0; border: 0; border-bottom: 1px solid #DCDCD7; background: transparent; color: #111111; text-align: left">
+      <span style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px">Ready before it ends</span>
+        <span style="font-size: 13px; color: #55554F">So the car is done at 05:00</span>
+      </span>
+      <span style="font-size: 15px; color: #55554F">30 min</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55554F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+    <button style="display: flex; align-items: center; gap: 10px; height: 56px; padding: 0; border: 0; border-bottom: 1px solid #DCDCD7; background: transparent; color: #111111; text-align: left">
+      <span style="flex-grow: 1; font-size: 16px">Home charger</span>
+      <span style="font-size: 15px; color: #55554F">7 kW</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#55554F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+    <div style="padding: 14px 0; font-size: 13px; line-height: 1.5; color: #55554F; border-bottom: 1px solid #DCDCD7">Set for Octopus Intelligent Go. If charging has to start before 23:30, the app tells you how long is at the peak rate.</div>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 13px; color: #55554F">Action Button</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <div style="display: flex; align-items: center; gap: 14px; height: 64px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; font-size: 16px; font-weight: 500">Shortcut</span>
+      <span style="font-size: 15px; color: #55554F">Toggle Boot</span>
+    </div>
+    <div style="padding: 14px 0; font-size: 13px; line-height: 1.5; color: #55554F; border-bottom: 1px solid #DCDCD7">Set it in iPhone Settings › Action Button › Shortcut.</div>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 13px; color: #55554F">Key</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <div style="display: flex; align-items: center; gap: 14px; height: 56px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; font-size: 16px">Car</span>
+      <span style="font-size: 15px; color: #55554F">Model Y · Long Range</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; height: 56px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; font-size: 16px">Role</span>
+      <span style="font-size: 15px; color: #55554F">Driver</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; height: 56px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; font-size: 16px">Stored in</span>
+      <span style="font-size: 15px; color: #55554F">Secure Enclave</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px; font-size: 13px; color: #55554F">About</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <div style="display: flex; align-items: center; gap: 14px; height: 56px; border-bottom: 1px solid #DCDCD7">
+      <span style="flex-grow: 1; font-size: 16px">Version</span>
+      <span style="font-size: 15px; color: #55554F">1.0 (1)</span>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1"></div>
+  <button style="height: 52px; border-radius: 26px; border: 1px solid #B42318; background: transparent; color: #B42318; font-size: 15px; font-weight: 500">Remove key from this phone</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1180}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

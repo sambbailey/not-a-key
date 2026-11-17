@@ -83,7 +83,7 @@ public struct DomainSession: Sendable {
         message.toDestination.domain = domain
         message.flags = 1 << UInt32(UniversalMessage_Flags.flagEncryptResponse.rawValue)
 
-        let metadata = commandMetadata(for: message, counter: counter, expiresAt: expiresAt)
+        let metadata = try commandMetadata(for: message, counter: counter, expiresAt: expiresAt)
         let sealed = try sessionKey.seal(plaintext, aad: Data(SHA256.hash(data: metadata)))
         message.protobufMessageAsBytes = sealed.ciphertext
 
@@ -102,18 +102,18 @@ public struct DomainSession: Sendable {
     }
 
     /// Serialized metadata authenticated as AES-GCM associated data for a command.
-    func commandMetadata(for message: UniversalMessage_RoutableMessage, counter: UInt32, expiresAt: UInt32) -> Data {
+    func commandMetadata(for message: UniversalMessage_RoutableMessage, counter: UInt32, expiresAt: UInt32) throws -> Data {
         var meta = Metadata()
         // Tags are added in order; the VIN (17 bytes) and epoch (16 bytes) fit the TLV limit.
-        try! meta.add(.signatureType, Data([UInt8(Signatures_SignatureType.aesGcmPersonalized.rawValue)]))
-        try! meta.add(.domain, Data([UInt8(domain.rawValue)]))
-        try! meta.add(.personalization, Data(vin.utf8))
-        try! meta.add(.epoch, epoch)
-        try! meta.add(.expiresAt, uint32: expiresAt)
-        try! meta.add(.counter, uint32: counter)
+        try meta.add(.signatureType, Data([UInt8(Signatures_SignatureType.aesGcmPersonalized.rawValue)]))
+        try meta.add(.domain, Data([UInt8(domain.rawValue)]))
+        try meta.add(.personalization, Data(vin.utf8))
+        try meta.add(.epoch, epoch)
+        try meta.add(.expiresAt, uint32: expiresAt)
+        try meta.add(.counter, uint32: counter)
         // Flags are only authenticated when set, for compatibility with older vehicles.
         if message.flags != 0 {
-            try! meta.add(.flags, uint32: message.flags)
+            try meta.add(.flags, uint32: message.flags)
         }
         return meta.serialized()
     }

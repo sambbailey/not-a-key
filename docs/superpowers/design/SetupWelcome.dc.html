@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Setup · Welcome</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#000}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F3F1; color: #111111; font-family: 'Geist', sans-serif; padding: 88px 24px 36px; display: flex; flex-direction: column">
+  <svg width="64" height="64" viewBox="0 0 260 260" fill="none" aria-hidden="true" style="border-radius: 14px; background: #FAFAF8; box-shadow: 0 0 0 1px #DCDCD7">
+    <rect x="56" y="118" width="148" height="24" rx="12" fill="#DCDCD7"></rect>
+    <rect x="56" y="118" width="121" height="24" rx="12" fill="#111111"></rect>
+  </svg>
+  <h1 style="margin: 28px 0 0; font-size: 44px; font-weight: 500; line-height: 1.02; letter-spacing: -0.045em">Make this phone a key for your car</h1>
+  <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.5; color: #55554F">Not a Key talks to your car over Bluetooth. No Tesla login, no internet needed.</p>
+
+  <div style="margin-top: 40px; font-size: 13px; color: #55554F">You'll need</div>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; border-top: 1px solid #DCDCD7">
+    <div style="display: flex; align-items: center; gap: 14px; min-height: 64px; border-bottom: 1px solid #DCDCD7">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M7 14h4"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px; font-weight: 500">Your key card</span>
+        <span style="font-size: 13px; color: #55554F">The one that came with the car</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; min-height: 64px; border-bottom: 1px solid #DCDCD7">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 18v-5a7 7 0 0 1 14 0v5"></path><path d="M3 18h18"></path><path d="M9 13h6"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px; font-weight: 500">To sit in the driver's seat</span>
+        <span style="font-size: 13px; color: #55554F">The car confirms the key on its screen</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; min-height: 64px; border-bottom: 1px solid #DCDCD7">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10-5 5V2l5 5L7 17"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 16px; font-weight: 500">Bluetooth on</span>
+        <span style="font-size: 13px; color: #55554F">You'll be asked to allow it next</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1"></div>
+  <a href="SetupVIN.dc.html" style="height: 56px; border-radius: 28px; background: #111111; color: #F3F3F1; font-size: 16px; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center">Get started</a>
+  <div style="margin-top: 12px; text-align: center; font-size: 12px; color: #55554F">Takes about two minutes</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

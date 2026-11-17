@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Setup · Enter VIN</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Geist+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#000}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F3F1; color: #111111; font-family: 'Geist', sans-serif; padding: 56px 24px 36px; display: flex; flex-direction: column">
+  <a href="SetupWelcome.dc.html" aria-label="Back" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+  </a>
+
+  <div style="margin-top: 16px; font-size: 13px; color: #55554F">Step 1 of 3</div>
+  <h1 style="margin: 8px 0 0; font-size: 40px; font-weight: 500; line-height: 1.05; letter-spacing: -0.04em">Enter your car's VIN</h1>
+  <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.5; color: #55554F">Find it on the car's screen under Controls › Software.</p>
+
+  <div style="margin-top: 24px; border-radius: 14px; background: #E8E8E4; padding: 16px; display: flex; flex-direction: column; gap: 10px" aria-hidden="true">
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #55554F">
+      <span>Controls</span><span>›</span><span style="color: #111111; font-weight: 500">Software</span>
+    </div>
+    <div style="height: 1px; background: #D4D4CF"></div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 13px">
+      <span style="color: #55554F">VIN</span>
+      <span style="font-family: 'Geist Mono', monospace; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 4px; background: #111111; color: #F3F3F1">7SAY••••••••••••</span>
+    </div>
+  </div>
+  <div style="margin-top: 8px; font-size: 12px; color: #55554F">It's also on your V5C logbook.</div>
+
+  <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 6px">
+    <label for="vin" style="font-size: 13px; color: #55554F">VIN</label>
+    <input id="vin" placeholder="17 letters and numbers" autocapitalize="characters" style="height: 52px; border: 1px solid #111111; border-radius: 12px; background: #FAFAF8; padding: 0 14px; font-family: 'Geist Mono', monospace; font-size: 15px; letter-spacing: 0.06em; color: #111111">
+    <span style="font-size: 13px; line-height: 1.4; color: #55554F">A VIN is 17 letters and numbers, and never contains I, O or Q.</span>
+  </div>
+
+  <div style="flex-grow: 1"></div>
+  <a href="PaperPair.dc.html" style="height: 56px; border-radius: 28px; background: #111111; color: #F3F3F1; font-size: 16px; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center">Pair</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Off-peak · Shortcut result</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111111}a:hover{color:#000}
+</style>
+</helmet>
+<div style="width: 780px; height: 320px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: 'Geist', sans-serif">
+  <div style="background: #DADAD5; padding: 0 24px; display: flex; align-items: center">
+    <div role="status" style="width: 100%; box-sizing: border-box; border-radius: 22px; background: #F3F3F1; color: #111111; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <svg width="22" height="22" viewBox="0 0 260 260" fill="none" aria-hidden="true" style="border-radius: 5px; background: #FAFAF8; box-shadow: 0 0 0 1px #DCDCD7"><rect x="56" y="118" width="148" height="24" rx="12" fill="#DCDCD7"></rect><rect x="56" y="118" width="121" height="24" rx="12" fill="#111111"></rect></svg>
+        <span style="flex-grow: 1; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: #55554F">NOT A KEY</span>
+        <span style="font-size: 12px; color: #55554F">now</span>
+      </div>
+      <span style="font-size: 15px; font-weight: 600">Tonight's charge set</span>
+      <span style="font-size: 15px; line-height: 1.4">Starts 22:00, ready 05:00.</span>
+      <span style="font-size: 13px; font-weight: 500; color: #B45309">1 h 30 at peak rate</span>
+    </div>
+  </div>
+  <div style="background: #0A0A09; padding: 0 24px; display: flex; align-items: center">
+    <div role="status" style="width: 100%; box-sizing: border-box; border-radius: 22px; background: #1E1E1C; color: #EDEDEA; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <svg width="22" height="22" viewBox="0 0 260 260" fill="none" aria-hidden="true" style="border-radius: 5px; background: #121211; box-shadow: 0 0 0 1px #2A2A27"><rect x="56" y="118" width="148" height="24" rx="12" fill="#2A2A27"></rect><rect x="56" y="118" width="121" height="24" rx="12" fill="#EDEDEA"></rect></svg>
+        <span style="flex-grow: 1; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: #A3A39C">NOT A KEY</span>
+        <span style="font-size: 12px; color: #A3A39C">now</span>
+      </div>
+      <span style="font-size: 15px; font-weight: 600">Tonight's charge set</span>
+      <span style="font-size: 15px; line-height: 1.4">Starts 22:00, ready 05:00.</span>
+      <span style="font-size: 13px; font-weight: 500; color: #F59E0B">1 h 30 at peak rate</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":780,"height":320}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

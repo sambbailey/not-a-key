@@ -52,6 +52,7 @@ final class FakeVehicle: VehicleTransport {
         var chargeState = CarServer_ChargeState()
         var climateState = CarServer_ClimateState()
         var driveState = CarServer_DriveState()
+        var closuresState = CarServer_ClosuresState()
         var unansweredWhileAsleep = 0
         var ignoresWake = false
         var encryptedRepliesSent = 0
@@ -119,6 +120,12 @@ final class FakeVehicle: VehicleTransport {
     var driveState: CarServer_DriveState {
         get { state.withLock { $0.driveState } }
         set { state.withLock { $0.driveState = newValue } }
+    }
+
+    /// Closures state, with Sentry Mode, returned to `getClosuresState`.
+    var closuresState: CarServer_ClosuresState {
+        get { state.withLock { $0.closuresState } }
+        set { state.withLock { $0.closuresState = newValue } }
     }
 
     /// Charge state returned to `getChargeState`.
@@ -393,6 +400,9 @@ final class FakeVehicle: VehicleTransport {
                 }
                 if action?.vehicleAction.getVehicleData.hasGetDriveState == true {
                     result.vehicleData.driveState = state.driveState
+                }
+                if action?.vehicleAction.getVehicleData.hasGetClosuresState == true {
+                    result.vehicleData.closuresState = state.closuresState
                 }
             }
             response.protobufMessageAsBytes = try! result.serializedData()

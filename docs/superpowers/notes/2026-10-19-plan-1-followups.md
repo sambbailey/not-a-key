@@ -8,11 +8,11 @@
 - What MOVE does to a liftgate already moving — stop? If so, "Moving boot" copy should become "Stopping boot".
 - Do replies arrive encrypted (firmware 2024.38+)? If yes, Plan 2 can reject unauthenticated replies once a session exists.
 - Haptic on intent result: none / system / UINotificationFeedbackGenerator.
-- Logs: Console.app, subsystem `com.dodimead.sentry` (enable "Include Debug Messages"). Debug screen shows raw error under the friendly copy.
+- Logs: Console.app, subsystem `com.nevelen.notakey` (enable "Include Debug Messages"). Debug screen shows raw error under the friendly copy.
 
 ## Plan 2 backlog
 - Distinguish copy: "Sent – no confirmation" vs "Car refused (reason)" vs "Car didn't respond"; map nominal errors (boot blocked etc.) per spec.
-- Keychain errors before first unlock → "Unlock your iPhone once, then try again" (not "Set up Sentry first"); same on home screen (no destructive re-pair prompt for transient errors).
+- Keychain errors before first unlock → "Unlock your iPhone once, then try again" (not "Set up Not a Key first"); same on home screen (no destructive re-pair prompt for transient errors).
 - Require authenticated replies after a session exists (if car encrypts); log-and-continue on stale fault whose session-info tag fails (Go parity).
 - FakeVehicle: encrypted replies (incl. multi-reply VCSEC), assert flags==2/expiresAt; replayed-counter test.
 - Cache peripheral identifier → `retrievePeripherals` for faster Action Button connects; handle non-connectable beacon (max connections) distinctly; `.resetting` wait-out.

@@ -7,6 +7,27 @@ import Testing
     #expect(try VehicleCommand.climateOn.payload() == Data(hex: "120452020801"))
 }
 
+@Test func chargingCommandsGoToInfotainment() throws {
+    #expect(VehicleCommand.startCharging.domain == .infotainment)
+    #expect(VehicleCommand.setChargeLimit(percent: 80).domain == .infotainment)
+    let start = try CarServer_Action(serializedBytes: VehicleCommand.startCharging.payload())
+    guard case .start? = start.vehicleAction.chargingStartStopAction.chargingAction else {
+        Issue.record("expected start")
+        return
+    }
+    let limit = try CarServer_Action(serializedBytes: VehicleCommand.setChargeLimit(percent: 80).payload())
+    #expect(limit.vehicleAction.chargingSetLimitAction.percent == 80)
+}
+
+@Test func sentryAndAmpsPayloads() throws {
+    #expect(VehicleCommand.setSentryMode(true).domain == .infotainment)
+    #expect(VehicleCommand.setChargingAmps(16).domain == .infotainment)
+    let sentry = try CarServer_Action(serializedBytes: VehicleCommand.setSentryMode(true).payload())
+    #expect(sentry.vehicleAction.vehicleControlSetSentryModeAction.on)
+    let amps = try CarServer_Action(serializedBytes: VehicleCommand.setChargingAmps(16).payload())
+    #expect(amps.vehicleAction.setChargingAmpsAction.chargingAmps == 16)
+}
+
 @Test func moveTrunkPayload() throws {
     #expect(VehicleCommand.moveTrunk.domain == .vehicleSecurity)
     let msg = try VCSEC_UnsignedMessage(serializedBytes: VehicleCommand.moveTrunk.payload())

@@ -2,7 +2,7 @@ import CoreBluetooth
 import Foundation
 import os
 
-private let log = Logger(subsystem: "com.dodimead.sentry", category: "ble")
+private let log = Logger(subsystem: "com.nevelen.notakey", category: "ble")
 
 /// A `VehicleTransport` over Tesla's BLE GATT service.
 ///
@@ -25,7 +25,7 @@ public final class BLETransport: NSObject, VehicleTransport, @unchecked Sendable
 
     public let incoming: AsyncStream<Data>
     private let incomingContinuation: AsyncStream<Data>.Continuation
-    private let queue = DispatchQueue(label: "com.dodimead.sentry.ble")
+    private let queue = DispatchQueue(label: "com.nevelen.notakey.ble")
     private let vin: String
 
     private var central: CBCentralManager?
