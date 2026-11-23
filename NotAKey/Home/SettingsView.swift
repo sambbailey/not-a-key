@@ -9,8 +9,6 @@ struct SettingsView: View {
     @State private var removeError: String?
     @Bindable private var festive = Festive.shared
 
-    private let keyStore = KeyStore()
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -53,7 +51,7 @@ struct SettingsView: View {
                         .overlay(alignment: .bottom) { Paper.rule.frame(height: 1) }
                 }
                 settingsSection("Key") {
-                    row("Car", value: store.vin.flatMap(VIN.modelName) ?? "Tesla")
+                    row("Car", value: store.carName ?? "Tesla")
                     row("VIN", value: store.vin ?? "–")
                     row("Role", value: "Driver")
                     Button(role: .destructive) { confirmingRemove = true } label: {
@@ -147,8 +145,7 @@ struct SettingsView: View {
     private func removeKey() {
         model.stop()
         do {
-            try keyStore.delete()
-            store.isPaired = false
+            try store.removeKey()
         } catch {
             removeError = "Couldn't delete this phone's car key"
         }

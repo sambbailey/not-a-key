@@ -106,7 +106,7 @@ final class HomeModel {
 
     private let store: ChargeStore
     /// Makes a service whose connect gives up looking for the car after the given time.
-    private let makeService: (Duration) throws -> VehicleService
+    private let makeService: (Duration) throws -> any VehicleServing
     private let now: @Sendable () -> Date
     /// Asks the owner to confirm before the doors unlock; false keeps them locked.
     private let confirmUnlock: () async -> Bool
@@ -116,7 +116,7 @@ final class HomeModel {
          parkedRefresh: Duration = HomeModel.parkedRefresh,
          settingSettle: Duration = HomeModel.settingSettle,
          confirmUnlock: @escaping () async -> Bool = { true },
-         makeService: @escaping (_ scanLimit: Duration) throws -> VehicleService) {
+         makeService: @escaping (_ scanLimit: Duration) throws -> any VehicleServing) {
         self.store = store
         self.now = now
         self.drivingRefresh = drivingRefresh
@@ -130,11 +130,18 @@ final class HomeModel {
         sentry = store.lastSentry
     }
 
+    /// Talks to `car`: the real one over Bluetooth with this phone's key, or in demo mode the
+    /// simulated one, with readings kept apart from the real car's.
     convenience init(car: CarStore, keyStore: KeyStore = KeyStore()) {
-        self.init(confirmUnlock: {
+        let confirmUnlock = {
             guard car.faceIDForUnlock else { return true }
             return await OwnerCheck.confirm("Unlock your car")
-        }) { scanLimit in
+        }
+        if let demoCar = car.demoCar {
+            self.init(store: car.chargeStore, confirmUnlock: confirmUnlock) { _ in demoCar }
+            return
+        }
+        self.init(store: car.chargeStore, confirmUnlock: confirmUnlock) { scanLimit in
             let stored: KeyAgreementKey?
             do {
                 stored = try keyStore.load()
@@ -316,7 +323,7 @@ final class HomeModel {
         let interruptedFullRead = await stopRead()
         let interruptedWatch = await stopDriveWatch()
         do {
-            let result = try await makeService(Self.scanLimit).send(command)
+            let result = try await makeService(Self.scanLimit).send(command, before: nil)
             reach = .nearby
             keyIsMissing = false
             apply(BodyReading(result.after, readAt: now()))

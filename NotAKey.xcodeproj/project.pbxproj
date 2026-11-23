@@ -70,8 +70,10 @@
 		BA554F763267F61526D36423 /* vehicle.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECC6E7CF1EB819D1E21011 /* vehicle.pb.swift */; };
 		BB1DB260A8DE20E79B15CCDA /* VINTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED15518AD7A4F36E5C16E19 /* VINTests.swift */; };
 		BC621266B435E5B823EF8EED /* MetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E509EC99A8E023AB0323CB04 /* MetadataTests.swift */; };
+		BCDDBB87CE4E17C6455AADCD /* DemoBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D82DF0C57C94AB4C374868E /* DemoBanner.swift */; };
 		BDB19282DEA37F8176A5FCA0 /* VehicleLocalName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6204B51AE0030D872EE79D63 /* VehicleLocalName.swift */; };
 		BE92839A9D09AAC23572DCCD /* VCSECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A615D734313BD9CB7FF451 /* VCSECResponse.swift */; };
+		C2E41B824935715083642DF8 /* MockVehicleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF8C75F251453F28D8EC98C /* MockVehicleServiceTests.swift */; };
 		C4943FF252A5DFEF09AE6F6C /* signatures.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BADD04F6AF1745861D580C /* signatures.pb.swift */; };
 		C715FE08FEBB2238A09B195D /* VehicleCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE820A79CB4A516104B5D13 /* VehicleCommand.swift */; };
 		C74A155F9313BFF761357469 /* VehicleServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABA20826B76483627C1814F /* VehicleServiceTests.swift */; };
@@ -83,6 +85,7 @@
 		CFA156EF884A6C8F10B94ACC /* VehicleTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251328C3D21E9CCFECF59430 /* VehicleTransport.swift */; };
 		D5D62673F1DC255742C79617 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B851DD6CE80E9F82D283507B /* PrivacyInfo.xcprivacy */; };
 		DB93D4C088E5CCB0475BD2F0 /* keys.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EB0416E69116CED29C75A4 /* keys.pb.swift */; };
+		DD898BC105CFB3D917566415 /* MockVehicleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DA7202A252C0622143FBFA /* MockVehicleService.swift */; };
 		E435207B0DCA91C19F6A3FC3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A5B537CD0C8B7979BD081 /* OnboardingView.swift */; };
 		E9F5F66F868CF7DCB7A9D549 /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD8AAE4B1E8A46C67BD8C03 /* SessionKey.swift */; };
 		EADD6C4DEA75E8D31B2E0C0B /* OwnerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04664061AD4D76DEAC6010FA /* OwnerCheck.swift */; };
@@ -145,12 +148,14 @@
 		04664061AD4D76DEAC6010FA /* OwnerCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnerCheck.swift; sourceTree = "<group>"; };
 		0530DF4E036713228ED731DB /* ClimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimateView.swift; sourceTree = "<group>"; };
 		0623F2BAB08F6BF3F5F0754A /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
+		0CF8C75F251453F28D8EC98C /* MockVehicleServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVehicleServiceTests.swift; sourceTree = "<group>"; };
 		0D8AACCD7A2B6373E2BA78B2 /* DrivingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingView.swift; sourceTree = "<group>"; };
 		0E703EDED8182ED909DA8483 /* Festive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Festive.swift; sourceTree = "<group>"; };
 		1014FAA2585F033588BAA084 /* Snowfall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snowfall.swift; sourceTree = "<group>"; };
 		109C477FE1AA5527CE82D91D /* FestiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestiveTests.swift; sourceTree = "<group>"; };
 		12BC1D2AF8D972A8C74B33A7 /* ChargeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeSnapshot.swift; sourceTree = "<group>"; };
 		1841022B8D0F3553E5991DEC /* TestVectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVectors.swift; sourceTree = "<group>"; };
+		1D82DF0C57C94AB4C374868E /* DemoBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoBanner.swift; sourceTree = "<group>"; };
 		20878D116F0D8E16183DFA00 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
 		251328C3D21E9CCFECF59430 /* VehicleTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTransport.swift; sourceTree = "<group>"; };
 		37A615D734313BD9CB7FF451 /* VCSECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCSECResponse.swift; sourceTree = "<group>"; };
@@ -180,6 +185,7 @@
 		756ADA512E1EF308F2D6E5CA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		76AC09511749267D80815164 /* VehicleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleError.swift; sourceTree = "<group>"; };
 		76D16FE5810237EF5E1F48B2 /* ChargeStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeStateTests.swift; sourceTree = "<group>"; };
+		79DA7202A252C0622143FBFA /* MockVehicleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVehicleService.swift; sourceTree = "<group>"; };
 		7AE59D05F0B16990742D2D85 /* DomainSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainSessionTests.swift; sourceTree = "<group>"; };
 		7AE820A79CB4A516104B5D13 /* VehicleCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleCommand.swift; sourceTree = "<group>"; };
 		7DDA633EB8BED5D4054A4678 /* ChargeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChargeBar.swift; sourceTree = "<group>"; };
@@ -272,6 +278,7 @@
 				82CBFAC63F21C80D3B8D50A9 /* HomeTests.swift */,
 				682AAA8422A66008F7098990 /* IntentMessagesTests.swift */,
 				A59DCA68AFAA77D9A99C2111 /* KeyStoreTests.swift */,
+				0CF8C75F251453F28D8EC98C /* MockVehicleServiceTests.swift */,
 				6ABA20826B76483627C1814F /* VehicleServiceTests.swift */,
 				7ED15518AD7A4F36E5C16E19 /* VINTests.swift */,
 			);
@@ -286,6 +293,15 @@
 				4C0DFF8FB3C34B00D40FE270 /* ToggleBootIntent.swift */,
 			);
 			path = Intents;
+			sourceTree = "<group>";
+		};
+		2796EA941BEA310B3C822830 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				1D82DF0C57C94AB4C374868E /* DemoBanner.swift */,
+				79DA7202A252C0622143FBFA /* MockVehicleService.swift */,
+			);
+			path = Demo;
 			sourceTree = "<group>";
 		};
 		34261468155F621ACD3A9833 /* Session */ = {
@@ -306,6 +322,7 @@
 				B851DD6CE80E9F82D283507B /* PrivacyInfo.xcprivacy */,
 				93242DF8944F1FD82957F707 /* Car */,
 				55A8DE80F40CE446C67FF049 /* Debug */,
+				2796EA941BEA310B3C822830 /* Demo */,
 				9675D20D516086413933F3B4 /* Fonts */,
 				BCB983FFC02798C8B5FFB357 /* Home */,
 				1BF5352CB7E042DBD21E3C4C /* Intents */,
@@ -623,6 +640,7 @@
 				3CBF9D5C731D46570B4692A7 /* ChargeStore.swift in Sources */,
 				9FB2AAD63F7412CDC647BF8D /* ChargingView.swift in Sources */,
 				AA19459F447E84F835AEE383 /* ClimateView.swift in Sources */,
+				BCDDBB87CE4E17C6455AADCD /* DemoBanner.swift in Sources */,
 				1E205A70F621EB2AC7610ED7 /* DemoScreen.swift in Sources */,
 				6D9E5EA2801428B5ECFCA14D /* DrivingView.swift in Sources */,
 				2BF2B998B7DA315E8FD929FB /* Festive.swift in Sources */,
@@ -631,6 +649,7 @@
 				16BDD2FAE1A96B56EC40CB04 /* HomeView.swift in Sources */,
 				F22F73B6925DD4C78B05E3F2 /* IntentMessages.swift in Sources */,
 				A0C5F2D9F22EE3F798023A1B /* KeyStore.swift in Sources */,
+				DD898BC105CFB3D917566415 /* MockVehicleService.swift in Sources */,
 				115CA1CCD51E41DDA506F80E /* NotAKeyApp.swift in Sources */,
 				CE7CAAB8C039585CE669D293 /* NotAKeyShortcuts.swift in Sources */,
 				E435207B0DCA91C19F6A3FC3 /* OnboardingView.swift in Sources */,
@@ -706,6 +725,7 @@
 				5DA57685FAD5FCBAE4A46FFE /* HomeTests.swift in Sources */,
 				17ECEF3CD42FAFDBB0E2D6F7 /* IntentMessagesTests.swift in Sources */,
 				49C17943361752CD8DDE3FB1 /* KeyStoreTests.swift in Sources */,
+				C2E41B824935715083642DF8 /* MockVehicleServiceTests.swift in Sources */,
 				F548C5B65BFF7537CFB59D77 /* TestVectors.swift in Sources */,
 				BB1DB260A8DE20E79B15CCDA /* VINTests.swift in Sources */,
 				C74A155F9313BFF761357469 /* VehicleServiceTests.swift in Sources */,
@@ -876,7 +896,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -941,7 +961,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

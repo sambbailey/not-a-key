@@ -21,9 +21,14 @@ struct ToggleBootIntent: AppIntent {
     /// the Bluetooth stack stops responding.
     static func message(defaults: UserDefaults = .standard, keyStore: KeyStore = KeyStore(),
                         deadline: Duration = .seconds(15),
+                        demoCar: MockVehicleService? = CarStore.isDemoOn ? .shared : nil,
                         connect: @escaping @Sendable (String) async throws -> VehicleTransport = {
                             try await BLETransport.connect(vin: $0)
                         }) async -> String {
+        // In demo mode the simulated car takes the place of the real one.
+        if let demoCar {
+            return await toggle(demoCar, within: deadline)
+        }
         let stored: KeyAgreementKey?
         do {
             stored = try keyStore.load()
@@ -38,7 +43,10 @@ struct ToggleBootIntent: AppIntent {
             log.error("Toggle boot: not set up")
             return IntentMessages.setUpFirst
         }
-        let service = VehicleService(vin: vin, key: key, connect: connect)
+        return await toggle(VehicleService(vin: vin, key: key, connect: connect), within: deadline)
+    }
+
+    private static func toggle(_ service: any VehicleServing, within deadline: Duration) async -> String {
         let until = ContinuousClock.now + deadline
         do {
             let outcome = try await run(within: deadline) { try await service.toggleBoot(before: until) }

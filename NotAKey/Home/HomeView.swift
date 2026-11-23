@@ -135,7 +135,7 @@ struct HomeView: View {
 
     private var header: some View {
         HStack(spacing: 0) {
-            Text(store.vin.flatMap(VIN.modelName) ?? "Your car")
+            Text(store.carName ?? "Your car")
                 .font(.geist(17, .semibold))
                 .tracking(-0.17)
             Spacer()

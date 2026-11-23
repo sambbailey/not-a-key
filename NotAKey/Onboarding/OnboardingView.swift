@@ -11,11 +11,14 @@ struct OnboardingView: View {
     @FocusState private var vinIsFocused: Bool
     @Environment(\.openURL) private var openURL
     private let onDone: () -> Void
+    private let onTryDemo: (() -> Void)?
 
     /// `onDone` runs when the owner leaves the final screen; the car is already paired by then.
-    init(store: CarStore, onDone: @escaping () -> Void = {}) {
+    /// With `onTryDemo`, the welcome offers a demo with a simulated car.
+    init(store: CarStore, onTryDemo: (() -> Void)? = nil, onDone: @escaping () -> Void = {}) {
         _model = State(initialValue: PairingModel(store: store))
         _vinText = State(initialValue: store.vin ?? "")
+        self.onTryDemo = onTryDemo
         self.onDone = onDone
     }
 
@@ -126,6 +129,12 @@ struct OnboardingView: View {
             .font(.geist(12))
             .foregroundStyle(Paper.secondary)
             .padding(.top, 12)
+        if let onTryDemo {
+            Button(action: onTryDemo) { Text("Try Demo").frame(maxWidth: .infinity) }
+                .buttonStyle(PaperButtonStyle(height: 52))
+                .padding(.top, 16)
+                .accessibilityHint("Explore the app with a simulated car. No car or Bluetooth needed.")
+        }
     }
 
     // MARK: VIN
