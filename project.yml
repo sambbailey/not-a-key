@@ -6,7 +6,7 @@ options:
 settings:
   base:
     # One version for the app and its embedded framework; App Store Connect checks both.
-    MARKETING_VERSION: "1.1.0"
+    MARKETING_VERSION: "1.1.1"
     CURRENT_PROJECT_VERSION: "4"
 packages:
   SwiftProtobuf:

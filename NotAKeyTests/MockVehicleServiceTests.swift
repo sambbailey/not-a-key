@@ -88,8 +88,17 @@ struct MockVehicleServiceTests {
         #expect(try await car.send(.setChargeLimit(percent: 30), before: nil).charge?.chargeLimit == 50)
         #expect(try await car.send(.setChargingAmps(32), before: nil).charge?.currentRequest == 32)
         #expect(try await car.send(.setChargingAmps(48), before: nil).charge?.currentRequest == 32)
+        _ = try await car.send(.setChargeLimit(percent: 90), before: nil)
         let charging = try #require(try await car.send(.startCharging, before: nil).charge)
         #expect(charging.chargerPowerKW == 7)
+    }
+
+    @Test func startingChargeAtOrAboveTheLimitCompletes() async throws {
+        let car = car()
+        _ = try await car.send(.setChargeLimit(percent: 50), before: nil)
+        let charge = try #require(try await car.send(.startCharging, before: nil).charge)
+        #expect(!charge.isCharging)
+        #expect(charge.chargingState == .complete)
     }
 
     @Test func climateTurnsOnAndWarmsTheCabinTowardsTheSetTemperature() async throws {
